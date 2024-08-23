@@ -1,0 +1,24 @@
+*{
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+a{
+  text-decoration: none;
+  color: black;
+}
+
+body{
+  background-color: #f2e2ce;
+}
+
+@font-face {
+  font-family: fuente_principal;
+  src: url(../components/font/Lato-Bold.ttf);
+}
+
+:root {
+  --color_principal: #1e6838;
+}
+
