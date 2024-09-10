@@ -1,16 +1,15 @@
-*{
-  margin: 0;
-  padding: 0;
-  border: 0;
+@charset "utf-8";
+html, body, h1, h2, h3, h4, h5, h6, p, ol, ul, li, pre, code, address, form, fieldset, blockquote {
+ padding: 0;
+ margin: 0;
+ border: 0;
+ font-size: 100%;
+ font-weight: normal;
 }
-
-a{
-  text-decoration: none;
-  color: black;
-}
-
-body{
-  background-color: #f2e2ce;
+ul { padding-left: 1.4em; list-style:square; }
+q:before, q:after { content:''; }
+html{
+    scroll-behavior: unset;
 }
 
 @font-face {
@@ -20,5 +19,22 @@ body{
 
 :root {
   --color_principal: #1e6838;
+  --color_secundario: #ffff;
+  --color_terciario: #000000;
+  --color_cuarteario: #f2e2ce;
+  --color_letra_negra: black;
+  --color_letra_blanca: #ffff;
+  --color_letra_hover: rgb(123, 123, 123);
 }
+
+a{
+  text-decoration: none;
+  color: black;
+}
+
+body{
+  background-color: var(--color_secundario);
+}
+
+
 
