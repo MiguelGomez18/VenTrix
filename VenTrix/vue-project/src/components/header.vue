@@ -12,10 +12,10 @@
         />
       </a>
       <ul class="links" id="menu">
-        <li><a id="a1" class="a1" href="/ingresar">Ingresar</a></li>
-        <li><a class="a1" href="/servicios">Servicios</a></li>
-        <li><a class="a1" href="/contacto">Contacto</a></li>
-        <li><a class="a1" href="/acerca_de">Acerca de</a></li>
+        <li><a href=""><router-link class="link" to="/registro">Registrar</router-link></a></li>
+        <li><a class="a1" href=""><router-link class="link" to="">Servicios</router-link></a></li>
+        <li><a class="a1" href=""><router-link class="link" to="">Contacto</router-link></a></li>
+        <li><a class="a1" href=""><router-link class="link" to="">Acerca de</router-link></a></li>
       </ul>
       <div>
         <a href="">

@@ -5,7 +5,7 @@
        <section id="content">
         <article class="cua">
             <h2>6 meses</h2>
-            <h1>$54.900,00</h1>
+            <h1>$54.900</h1>
             <ul class="menu">
                 <li class="li">Disfruta en todas tus pantallas.</li>
                 <li class="li">Chromecast y Airplay disponibles.</li>
@@ -16,7 +16,7 @@
         </article>
         <article class="cua">
             <h2>12 meses</h2>
-            <h1>$169.900,00</h1>
+            <h1>$169.900</h1>
             <ul class="menu">
                 <li class="li">Disfruta en todas tus pantallas.</li>
                 <li class="li">Chromecast y Airplay disponibles.</li>
@@ -27,7 +27,7 @@
         </article>
         <article class="cua1">
             <h2>3 meses</h2>
-            <h1>$24.900,00</h1>
+            <h1>$24.900</h1>
             <ul class="menu1">
                 <li class="li">Disfruta en todas tus pantallas.</li>
                 <li class="li">Chromecast y Airplay disponibles.</li>
