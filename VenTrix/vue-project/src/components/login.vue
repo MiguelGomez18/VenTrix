@@ -7,8 +7,7 @@
         <div class="redes-sociales">
             <img src="../components/icons/icons8-whatsapp-50.png" alt="WhatsApp">
             <img src="../components/icons/icons8-instagram-50.png" alt="Instagram">
-            <img src="../components/icons/icons8-x-50.png" alt="X">
-            <img src="../components/icons/icons8-tik-tok-50.png" alt="TikTok">
+            <img src="../components/icons/icons8-facebook-nuevo-50 (1).png" alt="Facebook">
         </div>
         <span>Use su correo y su contraseña</span>
         <div class="container-input">
@@ -20,6 +19,7 @@
             <input type="password" placeholder="Password" v-model="password" required>
         </div>
         <a href="#">¿Olvidaste tu contraseña?</a>
+        <router-link to="/inicio">Volver..</router-link>
         <button class="button" type="submit">{{ frmlogin ? 'INICIAR SESIÓN' : 'REGISTRARSE' }}</button>
         </form>
     </div>
@@ -30,8 +30,7 @@
         <div class="redes-sociales">
             <img src="../components/icons/icons8-whatsapp-50.png" alt="WhatsApp">
             <img src="../components/icons/icons8-instagram-50.png" alt="Instagram">
-            <img src="../components/icons/icons8-x-50.png" alt="X">
-            <img src="../components/icons/icons8-tik-tok-50.png" alt="TikTok">
+            <img src="../components/icons/icons8-facebook-nuevo-50 (1).png" alt="Facebook">
         </div>
         <span>Use su correo electrónico para registrarse</span>
         <div class="container-input">
@@ -50,6 +49,7 @@
             <img src="../components/icons/icons8-contraseña-50.png" alt="Contraseña">
             <input type="password" placeholder="Password" v-model="password" required>
         </div>
+        <router-link to="/inicio">Volver..</router-link>
         <button class="button" type="submit">{{ frmlogin ? 'INICIAR SESIÓN' : 'REGISTRARSE' }}</button>
         </form>
     </div>
@@ -74,7 +74,10 @@
 import Swal from 'sweetalert2';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 
+
+const router = useRouter();
 const documento = ref('');
 const nombre = ref('');
 const correo = ref('');
@@ -109,6 +112,8 @@ const loginPropietario = async () => {
             title: 'Inicio de sesión exitoso',
             text: 'Bienvenido a tu cuenta'
         });
+
+        router.push('/cuerpo');
 
         limpiarInputs();
 
@@ -197,7 +202,7 @@ function toggleSignUp() {
 }
 
 .container-form {
-    padding: 40px;
+    padding: 20px 40px;
     width: 100%;
     overflow: hidden;
     display: flex;
@@ -224,6 +229,12 @@ function toggleSignUp() {
     font-size: 30px;
     margin-bottom: 20px;
 }
+
+.container-form a:hover{
+    color: blue;
+    text-decoration: underline;
+}
+
 .redes-sociales{
     display: flex;
     gap: 10px;
@@ -272,7 +283,7 @@ function toggleSignUp() {
 .container-form a{
     color: black;
     font-size: 14px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     margin-top: 5px;
 }
 

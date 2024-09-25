@@ -7,7 +7,7 @@
       </div>
       <a href="#menu" class="target">
         <img
-          src="../components/icons/Menu_icon_2_icon-icons.com_71856.svg"
+          src="../components/icons/icons8-menú-24.png"
           class="icon"
         />
       </a>
