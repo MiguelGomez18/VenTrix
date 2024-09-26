@@ -1,8 +1,5 @@
 <template>
-    <div class="contenedorpadre">
-        <productos></productos>
-        <tablacategoria></tablacategoria>
-    </div>
+    <productos></productos>
     
 </template>
 
