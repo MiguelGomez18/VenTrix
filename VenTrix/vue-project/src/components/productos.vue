@@ -13,9 +13,13 @@
       <form class="formulario" @submit.prevent="estaEditando ? actualizarProducto() : agregarProducto()">
         <input type="number" v-model="producto.id" placeholder="ID del producto" required />
         <input type="text" v-model="producto.nombre" placeholder="Nombre del producto" required />
-        <input type="text" v-model="producto.descripcion" placeholder="Descripción" required />
         <input type="number" v-model="producto.precio" placeholder="Precio" required />
-        <input type="text" v-model="producto.categoria" placeholder="Categoría" required />
+        <select v-model="producto.id_categoria" required>
+          <option value="">Seleccione una categoría</option>
+          <option v-for="cate in categoriasFiltradas" :key="cate.id" :value="cate.id">
+            {{ cate.nombre }}
+          </option>
+        </select>
         <button class="btnAggAct" type="submit">{{ estaEditando ? 'Actualizar' : 'Agregar' }}</button>
         <button class="btncancelar" type="button" @click="cancelarEdicion" v-if="estaEditando">Cancelar</button>
       </form>
@@ -26,9 +30,8 @@
         <tr>
           <th>ID</th>
           <th>Nombre</th>
-          <th>Descripción</th>
           <th>Precio</th>
-          <th>Categoría</th>
+          <th>ID_Categoría</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -36,9 +39,11 @@
         <tr v-for="(prod, indice) in productosFiltrados" :key="prod.id">
           <td>{{ prod.id }}</td>
           <td>{{ prod.nombre }}</td>
-          <td>{{ prod.descripcion }}</td>
           <td>{{ prod.precio }}</td>
-          <td>{{ prod.categoria }}</td>
+          <td>
+            <!-- Encuentra la categoría correspondiente al id_categoria del producto -->
+            {{ categoriasFiltradas.find(cate => cate.id === prod.id_categoria)?.nombre || 'Sin Categoría' }}
+          </td>
           <td>
             <button class="btnEditar" @click="editarProducto(indice)">Editar</button>
             <button class="btnEliminar" @click="eliminarProducto(indice)">Eliminar</button>
@@ -55,16 +60,18 @@ import { ref, computed } from 'vue';
 import axios from 'axios';
 
 const productos = ref([]);
+const categorias = ref([]);
 const producto = ref({
   id: '',
   nombre: '',
-  descripcion: '',
   precio: '',
-  categoria: ''
+  id_categoria: ''
 });
+
 const estaEditando = ref(false);
 const indiceEdicion = ref(null);
 const consultaBusqueda = ref('');
+const consultaBusqueda1 = ref('');
 
 const buscar = async () => {
   try {
@@ -75,11 +82,27 @@ const buscar = async () => {
   }
 };
 
+const buscarcategorias = async () => {
+  try {
+    const respuesta = await axios.get('http://127.0.0.1:8000/categoria'); 
+    categorias.value = respuesta.data;
+  } catch (error) {
+    console.error("Error al cargar categorias", error);
+  }
+};
+
 buscar();
+buscarcategorias();
 
 const productosFiltrados = computed(() => {
   return productos.value.filter(prod =>
     prod.nombre.toLowerCase().includes(consultaBusqueda.value.toLowerCase())
+  );
+});
+
+const categoriasFiltradas = computed(() => {
+  return categorias.value.filter(cate =>
+    cate.nombre.toLowerCase().includes(consultaBusqueda1.value.toLowerCase())
   );
 });
 
@@ -159,7 +182,7 @@ const cancelarEdicion = () => {
 };
 
 const resetearFormulario = () => {
-  producto.value = { id: '', nombre: '', descripcion: '', precio: '', categoria: '' };
+  producto.value = { id: '', nombre: '', precio: '', id_categoria: '' };
   estaEditando.value = false;
   indiceEdicion.value = null;
 };
