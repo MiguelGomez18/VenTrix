@@ -1,5 +1,5 @@
 <template>
-    <div class="tarjetaProducto" v-for="prod in productos" :key="prod.id">
+    <div class="tarjetaProducto" v-for="prod in productos" :key="prod.id" @click="seleccionarProducto(prod)">
         <div class="imagenProducto">
             <img src="./img/prueba_imagen_chef1.webp" alt="Imagen del producto" class="imagen" />
         </div>
@@ -10,9 +10,11 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useCart } from '../stores/cart';
 import axios from 'axios';
 
 const productos = ref([]);
+const cart = useCart(); 
 
 const buscar = async () => {
   try {
@@ -23,8 +25,11 @@ const buscar = async () => {
   }
 };
 
-buscar();
+const seleccionarProducto = (producto) => {
+  cart.addProduct(producto); 
+};
 
+buscar();
 </script>
 
 <style>

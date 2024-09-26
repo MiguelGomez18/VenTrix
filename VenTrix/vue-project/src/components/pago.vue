@@ -1,84 +1,77 @@
 <template>
-    <div class="boton">
-        <a href="#pago" @click="openModal" class="target">PAGAR</a>
-    </div>
-   <section class="modal" v-if="showModal" id="pago">
-        <h2>Información de forma de pago</h2>
-        <article class="division">
-            <h3>Total a pagar</h3>
-        </article>
-        <article class="division1">
-            <span>54000</span>
-        </article>
-        <span class="linea"></span>
-        <button class="agregar" @click="addPaymentMethod">Agregar Forma de pago</button>
+  <div class="boton">
+    <a href="#pago" @click="openModal" class="target">PAGAR</a>
+  </div>
+  <section class="modal" v-if="showModal" id="pago">
+    <h2>Información de forma de pago</h2>
+    <article class="division">
+      <h3>Total a pagar</h3>
+    </article>
+    <article class="division1">
+      <!-- Mostrar el total desde el store de Pinia -->
+      <span>{{ cart.total }}</span> 
+    </article>
+    <span class="linea"></span>
+    <button class="agregar" @click="addPaymentMethod">Agregar Forma de pago</button>
 
-        <div v-for="(method, index) in paymentMethods" :key="index" class="payment-method">
-            <select class="pagos" v-model="method.type">
-                <option value="">Seleccionar forma de pago</option>
-                <option value="">Efectivo</option>
-                <option value="">Credito</option>
-                <option value="">Nota Credito</option>
-                <option value="">Puntos</option>
-                <option value="">Tarjeta de credito</option>
-                <option value="">Tajeta debito</option>
-                <option value="">Tranferencias bancarias</option>
-                <option value="">Nequi</option>
-                <option value="">Daviplata</option>
-            </select>
-            <input type="number" class="pago">
-        </div>
-        
-        <button class="pagar" @click="closeModal">Pagar</button>
-   </section>
+    <div v-for="(method, index) in paymentMethods" :key="index" class="payment-method">
+      <select class="pagos" v-model="method.type">
+        <option value="">Seleccionar forma de pago</option>
+        <option value="">Efectivo</option>
+        <option value="">Credito</option>
+        <option value="">Nota Credito</option>
+        <option value="">Puntos</option>
+        <option value="">Tarjeta de credito</option>
+        <option value="">Tarjeta debito</option>
+        <option value="">Tranferencias bancarias</option>
+        <option value="">Nequi</option>
+        <option value="">Daviplata</option>
+      </select>
+      <input type="number" class="pago">
+    </div>
+
+    <button class="pagar" @click="closeModal">Pagar</button>
+  </section>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
+import { useCart } from '../stores/cart'; // Importar el store de carrito
 import Swal from 'sweetalert2';
-export default {
-  data() {
-    return {
-      showModal: true, // Mostrar o no el modal
-      paymentMethods: [
-        {
-          type: "",
-          amount: 54000
-        }
-      ]
-    };
-  },
-  methods: {
-    openModal() {
-      // Mostrar el modal
-      this.showModal = true;
-    },
-    addPaymentMethod() {
-      // Agregar una nueva forma de pago
-      this.paymentMethods.push({
-        type: "",
-        amount: 0 // Por ahora el monto es fijo
-      });
-    },
-    closeModal() {
-      // Cerrar el modal
-      this.showModal = false;
 
-      Swal.fire({
-            icon: 'success',
-            title: 'Pago exitoso',
-            text: 'Gracias por comprar con nosotros'
-        });
+const cart = useCart(); // Obtener el estado global del carrito
 
-      this.paymentMethods = [
+const showModal = ref(false); // Modal oculto por defecto
+const paymentMethods = ref([
+  {
+    type: "",
+    amount: 0
+  }
+]);
+
+const openModal = () => {
+  showModal.value = true;
+};
+
+const closeModal = () => {
+  showModal.value = false;
+
+  Swal.fire({
+    icon: 'success',
+    title: 'Pago exitoso',
+    text: 'Gracias por comprar con nosotros'
+  });
+
+  paymentMethods.value = [
     {
-      type: "", // Tipo de pago vacío
-      amount: 0 // El monto inicial
+      type: "",
+      amount: 0
     }
   ];
-    }
-  }
 };
 </script>
+
+
 
 <style>
 .boton {
