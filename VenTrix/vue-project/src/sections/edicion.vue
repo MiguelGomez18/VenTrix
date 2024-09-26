@@ -1,6 +1,8 @@
 <template>
-    <productos></productos>
-    
+    <div class="contenedorpadre">
+        <tablacategoria></tablacategoria>
+        <productos></productos>
+    </div>
 </template>
 
 <script setup>

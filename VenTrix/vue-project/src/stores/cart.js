@@ -1,18 +1,23 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-export const useCart = defineStore('cart', () => {
-  const products = ref([]);
-  const total = ref(0);
+// Función para definir el estado inicial del carrito
+const initialState = () => ({
+  products: [],
+  total: 0
+});
 
-  const addProduct = (product) => {
-    products.value.push(product);
-    total.value += product.precio;
-  };
-
-  return {
-    products,
-    total,
-    addProduct,
-  };
+export const useCart = defineStore('cart', {
+  state: initialState, // Definir el estado inicial
+  actions: {
+    // Método para agregar un producto al carrito
+    addProduct(product) {
+      this.products.push(product);
+      this.total += product.precio;
+    },
+    // Método para reiniciar el carrito
+    resetCart() {
+      this.$reset(); // Reinicia al estado inicial
+    }
+  }
 });
