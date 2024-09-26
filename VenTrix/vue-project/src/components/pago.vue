@@ -17,17 +17,17 @@
     <div v-for="(method, index) in paymentMethods" :key="index" class="payment-method">
       <select class="pagos" v-model="method.type">
         <option value="">Seleccionar forma de pago</option>
-        <option value="">Efectivo</option>
-        <option value="">Credito</option>
-        <option value="">Nota Credito</option>
-        <option value="">Puntos</option>
-        <option value="">Tarjeta de credito</option>
-        <option value="">Tarjeta debito</option>
-        <option value="">Tranferencias bancarias</option>
-        <option value="">Nequi</option>
-        <option value="">Daviplata</option>
+        <option value="Efectivo">Efectivo</option>
+        <option value="Credito">Crédito</option>
+        <option value="Nota Credito">Nota Crédito</option>
+        <option value="Puntos">Puntos</option>
+        <option value="Tarjeta de credito">Tarjeta de crédito</option>
+        <option value="Tarjeta debito">Tarjeta débito</option>
+        <option value="Tranferencias bancarias">Transferencias bancarias</option>
+        <option value="Nequi">Nequi</option>
+        <option value="Daviplata">Daviplata</option>
       </select>
-      <input type="number" class="pago">
+      <input type="number" class="pago" v-model="method.amount" />
     </div>
 
     <button class="pagar" @click="closeModal">Pagar</button>
@@ -36,12 +36,12 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useCart } from '../stores/cart'; // Importar el store de carrito
+import { useCart } from '../stores/cart'; 
 import Swal from 'sweetalert2';
 
 const cart = useCart(); // Obtener el estado global del carrito
 
-const showModal = ref(false); // Modal oculto por defecto
+const showModal = ref(false);
 const paymentMethods = ref([
   {
     type: "",
@@ -53,6 +53,14 @@ const openModal = () => {
   showModal.value = true;
 };
 
+// Agregar una nueva forma de pago
+const addPaymentMethod = () => {
+  paymentMethods.value.push({
+    type: "",
+    amount: 0
+  });
+};
+
 const closeModal = () => {
   showModal.value = false;
 
@@ -62,12 +70,15 @@ const closeModal = () => {
     text: 'Gracias por comprar con nosotros'
   });
 
+  // Limpiar los métodos de pago
   paymentMethods.value = [
     {
       type: "",
       amount: 0
     }
   ];
+
+  cart.$reset();
 };
 </script>
 
