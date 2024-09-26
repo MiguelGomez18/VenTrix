@@ -5,6 +5,7 @@
     <sobrenosotros v-if="visible"></sobrenosotros>
     <membresias v-if="visible"></membresias>
     <foote v-if="visible"></foote>
+
   </template>
   
   <script setup>
@@ -15,6 +16,7 @@
   import sobrenosotros from '@/components/sobrenosotros.vue';
   import membresias from '@/components/membresias.vue';
   import foote from '@/components/footer.vue';
+
   
   const rutasnomostrar=['/registro', '/cuerpo', '/cuerpo/mesas', '/cuerpo/seleccionarproductos', '/cuerpo/edicion', '/cuerpo/informes'];
   const ruta=useRoute()
