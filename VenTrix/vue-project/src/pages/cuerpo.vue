@@ -8,7 +8,6 @@
 <script setup>
 import headercuerpo from '@/components/headercuerpo.vue';
 import menuinteractivo from '@/components/menuinteractivo.vue';
-
 </script>
 
 <style>

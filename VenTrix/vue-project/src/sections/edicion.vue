@@ -1,4 +1,5 @@
 <template>
+    
     <productos></productos>
 </template>
 
