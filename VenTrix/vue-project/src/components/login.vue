@@ -182,7 +182,6 @@ function toggleSignUp() {
 </script>
   
   
-
 <style>
 .body{
     width: 100%;

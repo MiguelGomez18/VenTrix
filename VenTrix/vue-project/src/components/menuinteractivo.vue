@@ -6,10 +6,6 @@
         </v-btn>
   
         <div v-if="mostrarBotones" class="contenedor-botones">
-          <v-btn class="boton-secundario" color="green darken-1" large @click="navegarARuta('/cuerpo/edicion')">
-            <img src="" class="imagen-icono" />
-            <span>Edicion</span>
-          </v-btn>
           <v-btn class="boton-secundario" color="green darken-1" large @click="navegarARuta('/cuerpo/mesas')">
             <img src="./icons/table-svgrepo-com.svg" class="imagen-icono" />
             <span>Mesas</span>
@@ -18,9 +14,9 @@
             <img src="./icons/data-svgrepo-com.svg" class="imagen-icono" />
             <span>Informes</span>
           </v-btn>
-          <v-btn class="boton-secundario" color="green darken-3" large @click="navegarARuta('/cuerpo/seleccionarproductos')">
+          <v-btn class="boton-secundario" color="green darken-3" large @click="navegarARuta('/cuerpo/edicion')">
             <img src="./icons/edit-svgrepo-com.svg" class="imagen-icono" />
-            <span>Productos</span>
+            <span>Edicion</span>
           </v-btn>
         </div>
       </div>

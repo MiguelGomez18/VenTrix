@@ -1,111 +1,172 @@
 <template>
-    <div class="contenedorProductos">
-      <div class="titulobuscar">
-        <h1>GESTIÓN DE PRODUCTOS</h1>
-        <input 
+  <div class="contenedorProductos">
+    <div class="titulobuscar">
+      <h1>GESTIÓN DE PRODUCTOS</h1>
+      <input 
         type="text" 
         v-model="consultaBusqueda" 
         placeholder="Buscar Producto" 
-        />
-      </div>
-     
-      <div class="contenedorformulario">
-        <form class="formulario" @submit.prevent="estaEditando ? actualizarProducto() : agregarProducto()">
-          <input type="text" v-model="producto.nombre" placeholder="Nombre del producto" required />
-          <input type="number" v-model="producto.precio" placeholder="Precio" required />
-          <input type="text" v-model="producto.categoria" placeholder="Categoría" required />
-          <input type="number" v-model="producto.cantidad" placeholder="Cantidad" required />
-          <button class="btnAggAct" type="submit">{{ estaEditando ? 'Actualizar' : 'Agregar' }}</button>
-          <button class="btncancelar" type="button" @click="cancelarEdicion" v-if="estaEditando">Cancelar</button>
-        </form>
-      </div>
-    
-      
-      <table>
-        <thead class="encabezado">
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Precio</th>
-            <th>Categoría</th>
-            <th>Cantidad</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(prod, indice) in productosFiltrados" :key="prod.id">
-            <td>{{ prod.id }}</td>
-            <td>{{ prod.nombre }}</td>
-            <td>{{ prod.precio }}</td>
-            <td>{{ prod.categoria }}</td>
-            <td>{{ prod.cantidad }}</td>
-            <td>
-              <button class="btnEditar" @click="editarProducto(indice)">Editar</button>
-              <button class="btnEliminar" @click="eliminarProducto(indice)">Eliminar</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      />
     </div>
-  </template>
+
+    <div class="contenedorformulario">
+      <form class="formulario" @submit.prevent="estaEditando ? actualizarProducto() : agregarProducto()">
+        <input type="number" v-model="producto.id" placeholder="ID del producto" required />
+        <input type="text" v-model="producto.nombre" placeholder="Nombre del producto" required />
+        <input type="text" v-model="producto.descripcion" placeholder="Descripción" required />
+        <input type="number" v-model="producto.precio" placeholder="Precio" required />
+        <input type="text" v-model="producto.categoria" placeholder="Categoría" required />
+        <button class="btnAggAct" type="submit">{{ estaEditando ? 'Actualizar' : 'Agregar' }}</button>
+        <button class="btncancelar" type="button" @click="cancelarEdicion" v-if="estaEditando">Cancelar</button>
+      </form>
+    </div>
+
+    <table>
+      <thead class="encabezado">
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Precio</th>
+          <th>Categoría</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(prod, indice) in productosFiltrados" :key="prod.id">
+          <td>{{ prod.id }}</td>
+          <td>{{ prod.nombre }}</td>
+          <td>{{ prod.descripcion }}</td>
+          <td>{{ prod.precio }}</td>
+          <td>{{ prod.categoria }}</td>
+          <td>
+            <button class="btnEditar" @click="editarProducto(indice)">Editar</button>
+            <button class="btnEliminar" @click="eliminarProducto(indice)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+
+<script setup>
+import Swal from 'sweetalert2';
+import { ref, computed } from 'vue';
+import axios from 'axios';
+
+const productos = ref([]);
+const producto = ref({
+  id: '',
+  nombre: '',
+  descripcion: '',
+  precio: '',
+  categoria: ''
+});
+const estaEditando = ref(false);
+const indiceEdicion = ref(null);
+const consultaBusqueda = ref('');
+
+const buscar = async () => {
+  try {
+    const respuesta = await axios.get('http://127.0.0.1:8000/productos'); 
+    productos.value = respuesta.data;
+  } catch (error) {
+    console.error("Error al cargar productos", error);
+  }
+};
+
+buscar();
+
+const productosFiltrados = computed(() => {
+  return productos.value.filter(prod =>
+    prod.nombre.toLowerCase().includes(consultaBusqueda.value.toLowerCase())
+  );
+});
+
+const agregarProducto = async () => {
+  try {
+    const nuevoProducto = { ...producto.value };
+    const response = await axios.post('http://127.0.0.1:8000/registrar_producto', nuevoProducto);
+
+    productos.value.push(response.data);
+    Swal.fire({
+      icon: 'success',
+      title: 'Producto Agregado',
+      text: 'El producto se ha agregado exitosamente.'
+    });
+    resetearFormulario();
+  } catch (error) {
+    console.error('Error al agregar el producto:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Hubo un problema al agregar el producto.'
+    });
+  }
+};
+
+const editarProducto = (indice) => {
+  producto.value = { ...productos.value[indice] };
+  estaEditando.value = true;
+  indiceEdicion.value = indice;
+};
+
+const actualizarProducto = async () => {
+  try {
+    const productoActualizado = { ...producto.value };
+    const response = await axios.put('http://127.0.0.1:8000/actualizar_producto', productoActualizado);
+
+    productos.value[indiceEdicion.value] = response.data;
+    Swal.fire({
+      icon: 'success',
+      title: 'Producto Actualizado',
+      text: 'El producto se ha actualizado exitosamente.'
+    });
+    resetearFormulario();
+  } catch (error) {
+    console.error('Error al actualizar el producto:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Hubo un problema al actualizar el producto.'
+    });
+  }
+};
+
+const eliminarProducto = async (indice) => {
+  try {
+    const productoAEliminar = productos.value[indice];
+    await axios.delete(`http://127.0.0.1:8000/eliminar_producto/${productoAEliminar.id}`);
+    productos.value.splice(indice, 1);
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Producto Eliminado',
+      text: 'El producto ha sido eliminado exitosamente.'
+    });
+  } catch (error) {
+    console.error('Error al eliminar el producto:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Hubo un problema al eliminar el producto.'
+    });
+  }
+};
+
+const cancelarEdicion = () => {
+  resetearFormulario();
+};
+
+const resetearFormulario = () => {
+  producto.value = { id: '', nombre: '', descripcion: '', precio: '', categoria: '' };
+  estaEditando.value = false;
+  indiceEdicion.value = null;
+};
+</script>
+
   
-  <script>
-  export default {
-    data() {
-      return {
-        productos: [], 
-        producto: {
-          nombre: '',
-          precio: '',
-          categoria: '',
-          cantidad: ''
-        },
-        estaEditando: false, 
-        indiceEdicion: null, 
-        consultaBusqueda: '', 
-        siguienteId: 1 
-      };
-    },
-    computed: {
-      productosFiltrados() {
-    
-        return this.productos.filter(prod => 
-          prod.nombre.toLowerCase().includes(this.consultaBusqueda.toLowerCase())
-        );
-      }
-    },
-    methods: {
-      agregarProducto() {
-        const nuevoProducto = { id: this.siguienteId++, ...this.producto }; 
-        this.productos.push(nuevoProducto);
-        this.resetearFormulario();
-      },
-      editarProducto(indice) {
-        this.producto = { ...this.productos[indice] };
-        this.estaEditando = true;
-        this.indiceEdicion = indice;
-      },
-      actualizarProducto() {
-  
-        this.productos[this.indiceEdicion] = { id: this.productos[this.indiceEdicion].id, ...this.producto };
-        this.resetearFormulario();
-      },
-      eliminarProducto(indice) {
-        this.productos.splice(indice, 1);
-      },
-      cancelarEdicion() {
-        this.resetearFormulario();
-      },
-      resetearFormulario() {
-        this.producto = { nombre: '', precio: '', categoria: '', cantidad: '' };
-        this.estaEditando = false;
-        this.indiceEdicion = null;
-      }
-    }
-  };
-  </script>
-  
-  <style>
+<style>
   .titulobuscar{
     display: flex;
     justify-content: space-between;
