@@ -12,7 +12,7 @@
         />
       </a>
       <ul class="links" id="menu">
-        <li><a href=""><router-link class="link" to="/registro">Registrar</router-link></a></li>
+        <li><a href=""><router-link class="link" to="/registro">Iniciar Sesion</router-link></a></li>
         <li><a class="a1" href=""><router-link class="link" to="">Servicios</router-link></a></li>
         <li><a class="a1" href=""><router-link class="link" to="">Contacto</router-link></a></li>
         <li><a class="a1" href=""><router-link class="link" to="">Acerca de</router-link></a></li>
