@@ -1,11 +1,18 @@
 <template>
-    <div class="tarjetaProducto" v-for="prod in productos" :key="prod.id" @click="seleccionarProducto(prod)">
-        <div class="imagenProducto">
-            <img src="./img/prueba_imagen_chef1.webp" alt="Imagen del producto" class="imagen" />
-        </div>
-        <p class="nombreProducto">{{ prod.nombre }}</p>
-        <p class="valorProducto">{{ prod.precio }}</p>
-    </div>
+  <div 
+    class="tarjetaProducto" 
+    v-for="prod in productos" 
+    :key="prod.id" 
+    @click="seleccionarProducto(prod)"
+    :class="{ animated: selectedProductId === prod.id }"
+>
+
+      <div class="imagenProducto">
+          <img src="./img/prueba_imagen_chef1.webp" alt="Imagen del producto" class="imagen" />
+      </div>
+      <p class="nombreProducto">{{ prod.nombre }}</p>
+      <p class="valorProducto">{{ prod.precio }}</p>
+  </div>
 </template>
 
 <script setup>
@@ -14,25 +21,52 @@ import { useCart } from '../stores/cart';
 import axios from 'axios';
 
 const productos = ref([]);
-const cart = useCart(); 
+const cart = useCart();
+const selectedProductId = ref(null); // Estado para el producto seleccionado
 
 const buscar = async () => {
   try {
-    const respuesta = await axios.get('http://127.0.0.1:8000/productos');
-    productos.value = respuesta.data;
+      const respuesta = await axios.get('http://127.0.0.1:8000/productos');
+      productos.value = respuesta.data;
   } catch (error) {
-    console.error("Error al cargar productos", error);
+      console.error("Error al cargar productos", error);
   }
 };
 
 const seleccionarProducto = (producto) => {
-  cart.addProduct(producto); 
+    cart.addProduct(producto);
+    selectedProductId.value = producto.id; // Actualiza el producto seleccionado
+    console.log(`Producto seleccionado: ${producto.id}`); // Agrega este log
+
+    // Resetea el producto seleccionado después de un tiempo
+    setTimeout(() => {
+        selectedProductId.value = null;
+    }, 300); // Debe coincidir con la duración de la animación
 };
+
 
 buscar();
 </script>
 
+
 <style>
+
+.animated {
+    animation: bounce 0.3s ease-in-out; /* Duración debe coincidir con el timeout en el script */
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
 .tarjetaProducto {
     display: flex;
     flex-direction: column;
