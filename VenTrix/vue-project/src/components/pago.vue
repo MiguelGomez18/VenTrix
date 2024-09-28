@@ -1,15 +1,12 @@
 <template>
-  <div class="boton">
-    <a href="#pago" @click="openModal" class="target">PAGAR</a>
-  </div>
-  <section class="modal" v-if="showModal" id="pago">
+  <section class="modal" v-if="showModal">
+    <!-- Contenido del modal -->
     <h2>Información de forma de pago</h2>
     <article class="division">
       <h3>Total a pagar</h3>
     </article>
     <article class="division1">
-      <!-- Mostrar el total desde el store de Pinia -->
-      <span>{{ cart.total }}</span> 
+      <span>{{ cart.total }}</span>
     </article>
     <span class="linea"></span>
     <button class="agregar" @click="addPaymentMethod">Agregar Forma de pago</button>
@@ -36,72 +33,51 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useCart } from '../stores/cart'; 
+import { defineEmits } from 'vue';
+import { useCart } from '../stores/cart'; // Asumo que tienes un store para el carrito
 import Swal from 'sweetalert2';
 
-const cart = useCart(); // Obtener el estado global del carrito
+const cart = useCart();
+const showModal = ref(true); // En tu caso, este valor será controlado desde el componente padre
 
-const showModal = ref(false);
-const paymentMethods = ref([
-  {
-    type: "",
-    amount: 0
-  }
-]);
+const paymentMethods = ref([{ type: "", amount: cart.total }]);
 
-const openModal = () => {
-  showModal.value = true;
-};
-
-// Agregar una nueva forma de pago
 const addPaymentMethod = () => {
-  paymentMethods.value.push({
-    type: "",
-    amount: 0
-  });
+  paymentMethods.value = [{ type: "", amount: 0 }];
+  paymentMethods.value.push({ type: "", amount: 0 });
 };
+
+// En la parte superior de tu script
+const emit = defineEmits(['close-modal']);
+
 
 const closeModal = () => {
-  showModal.value = false;
-
   Swal.fire({
     icon: 'success',
     title: 'Pago exitoso',
-    text: 'Gracias por comprar con nosotros'
+    text: 'Gracias por comprar con nosotros',
   });
 
-  // Limpiar los métodos de pago
-  paymentMethods.value = [
-    {
-      type: "",
-      amount: 0
-    }
-  ];
-
+  paymentMethods.value = [{ type: "", amount: 0 }];
   cart.$reset();
+
+  showModal.value = false; 
+  emit('close-modal'); 
+  console.log("Modal cerrado:", showModal.value);
 };
+
+
 </script>
 
 
-
-<style>
-.boton {
-    padding: 20px;
-    margin: 30px;
-    width: 70px;
-    background-color: chartreuse;
-    border-radius: 20px;
-    font-family: fuente_principal;
-    font-size: 20px;
-}
-
+<style scoped>
 .modal {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
-    box-shadow: 0px 0px 10px 1000px rgba(75, 75, 75, 0.486);
+    box-shadow: 0px 0px 10px rgba(75, 75, 75, 0.486);
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -109,32 +85,33 @@ const closeModal = () => {
     text-align: center;
     width: 42%;
     transition: opacity 0.4s;
-    opacity: 0;
     z-index: 1;
     padding: 15px 10px;
+    opacity: 1; /* Cambia a 1 para que el modal sea visible */
 }
 
+/* Eliminar esta regla a menos que sea necesaria */
 .modal:target {
     opacity: 1;
 }
 
-.modal h2{
+.modal h2 {
     width: 100%;
     border-radius: 10px;
-    padding: 10px 0px;
+    padding: 10px 0;
     background-color: var(--color_principal);
     font-family: fuente_principal;
     color: var(--color_letra_blanca);
 }
 
-.modal .division{
+.modal .division {
     width: 40%;
     margin: 30px 30px 15px;
     text-align: left;
     font-size: 20px;
 }
 
-.modal .division1{
+.modal .division1 {
     width: 40%;
     margin: 30px 20px 5px;
     text-align: right;
@@ -150,9 +127,9 @@ const closeModal = () => {
     border-bottom: 1px solid rgba(67, 67, 67, 0.234);
 }
 
-.modal .agregar{
+.modal .agregar {
     width: 80%;
-    padding: 10px 0px;
+    padding: 10px 0;
     background-color: var(--color_principal);
     border: 0;
     color: var(--color_letra_blanca);
@@ -168,14 +145,14 @@ const closeModal = () => {
     gap: 20px;
 }
 
-.pagos{
+.pagos {
     width: 40%;
     border: 1px solid rgba(67, 67, 67, 0.234);
     padding: 10px 5px;
     margin: 10px 0;
 }
 
-.pago{
+.pago {
     width: 40%;
     text-align: right;
     border: 1px solid rgba(67, 67, 67, 0.234);
@@ -191,4 +168,5 @@ const closeModal = () => {
     border-radius: 5px;
     color: var(--color_letra_blanca);
 }
+
 </style>
