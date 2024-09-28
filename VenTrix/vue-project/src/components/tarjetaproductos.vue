@@ -50,23 +50,6 @@ buscar();
 
 
 <style>
-
-.animated {
-    animation: bounce 0.3s ease-in-out; /* Duración debe coincidir con el timeout en el script */
-}
-
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
-    }
-    40% {
-        transform: translateY(-10px);
-    }
-    60% {
-        transform: translateY(-5px);
-    }
-}
-
 .tarjetaProducto {
     display: flex;
     flex-direction: column;
