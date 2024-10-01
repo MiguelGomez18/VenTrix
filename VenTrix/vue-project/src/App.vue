@@ -1,5 +1,4 @@
 <template>
-
   <inicio></inicio>
 </template>
 

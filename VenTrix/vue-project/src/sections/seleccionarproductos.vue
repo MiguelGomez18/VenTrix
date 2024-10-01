@@ -1,13 +1,13 @@
 <template>
     <div class="cuadro1">
-      <div class="section">
+      <div class="section1">
         <menucategorias></menucategorias>
         <tarjetaproductos></tarjetaproductos>
       </div>
-      <div class="section1">
+      <div class="section2">
         <carritocompras @open-payment-modal="openModal"></carritocompras>
+        <pago v-if="showModal" @close-modal="closeModal"></pago>
       </div>
-      <pago v-if="showModal" @close-modal="closeModal"></pago>
     </div>
   </template>
   
@@ -37,21 +37,22 @@ const closeModal = () => {
   .cuadro1 {
       margin-left: auto;
       margin-right: auto;
-      width: 95%;
+      width: 90%;
       display: flex;
       justify-content: space-evenly;
       align-items: start;
       flex-wrap: nowrap;
-      gap: 10px;
+      gap: 15px;
   }
-  .section {
+  .section1 {
       display: flex;
+      justify-content: start;
       align-items: center;
       flex-wrap: wrap;
       gap: 10px;
   }
-  .section1 {
-      width: 30%;
+  .section2 {
+      width: 60%;
       display: flex;
       flex-wrap: wrap;
       gap: 10px;

@@ -46,10 +46,13 @@ onMounted(() => {
 
 <style scoped>
 .mesas-container {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  margin: 20px; 
+  justify-content: start;
+  align-items: center;
 }
 
 .mesas {
