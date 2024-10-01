@@ -15,7 +15,7 @@
 
     <div class="caja-contenido">
       <div class="caja-imagen">
-        <img src="" alt="Visión">
+        <img src="./img/60352794-icono-del-ojo-símbolo-de-la-visión-del-globo-del-ojo-botón-con-el-icono-de-banda-plana-en-el-fondo.jpg" alt="Visión">
       </div>
       <div class="caja-texto">
         <h2>Visión</h2>
