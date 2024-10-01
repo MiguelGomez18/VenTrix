@@ -113,7 +113,7 @@ const loginPropietario = async () => {
             text: 'Bienvenido a tu cuenta'
         });
 
-        router.push('/cuerpo');
+        router.push('/cuerpo/mesas');
 
         limpiarInputs();
 
