@@ -1,13 +1,13 @@
 <template>
-    <heade v-if="visible"></heade>
-    <router-view></router-view>
-    <mai v-if="visible"></mai>
-    <sobrenosotros v-if="visible"></sobrenosotros>
-    <membresias v-if="visible"></membresias>
-    <foote v-if="visible"></foote>
-  </template>
+  <heade v-if="visible"></heade>
+  <router-view></router-view>
+  <mai v-if="visible"></mai>
+  <sobrenosotros v-if="visible"></sobrenosotros>
+  <membresias v-if="visible"></membresias>
+  <foote v-if="visible"></foote>
+</template>
   
-  <script setup>
+<script setup>
   import { ref, watch } from 'vue';
   import { useRoute } from 'vue-router';
   import heade from '@/components/header.vue';

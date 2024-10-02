@@ -1,5 +1,5 @@
 <template>
-  <section class="contenedor">
+  <section id="cuadro2" class="contenedor">
     <div class="caja-contenido">
       <div class="caja-imagen">
         <img src="./img/pngtree-mission-web-icon-template-png-image_6113420.png" alt="Misión">
@@ -41,7 +41,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 20px;
+  gap: 40px;
   padding: 40px;
   background-color: #f9f9f9;
 }
@@ -56,7 +56,7 @@
 }
 
 .caja-contenido:hover {
-  transform: translateY(-5px);
+  transform: translateY(-15px);
 }
 
 .caja-imagen{

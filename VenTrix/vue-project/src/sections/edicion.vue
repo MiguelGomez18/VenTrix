@@ -3,7 +3,6 @@
         <productos></productos>
         <tablacategoria></tablacategoria>
         <tablamesas></tablamesas>
-    
     </div>
     
 </template>

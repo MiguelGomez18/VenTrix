@@ -52,5 +52,9 @@ body{
   background-color: var(--color_secundario);
 }
 
+html{
+  scroll-padding-top: 50px;
+}
+
 
 

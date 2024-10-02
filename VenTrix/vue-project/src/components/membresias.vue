@@ -12,7 +12,7 @@
                 <li class="li">Ve en 3 dispositivos a la vez.</li>
             </ul>
             <h3>Igual a $17.633,33 al mes</h3>
-            <a class="plan" href="index1.html">ELIGE ESTE PLAN</a>
+            <a class="plan" href="">ELIGE ESTE PLAN</a>
         </article>
         <article class="cua">
             <h2>12 meses</h2>
@@ -23,7 +23,7 @@
                 <li class="li">Ve en 3 dispositivos a la vez.</li>
             </ul>
             <h3>Igual a $14.158,33 al mes</h3>
-            <a class="plan" href="index1.html">ELIGE ESTE PLAN</a>
+            <a class="plan" href="">ELIGE ESTE PLAN</a>
         </article>
         <article class="cua1">
             <h2>3 meses</h2>
@@ -33,7 +33,7 @@
                 <li class="li">Chromecast y Airplay disponibles.</li>
                 <li class="li">Ve en 3 dispositivos a la vez.</li>
             </ul>
-            <a class="plan" href="#">ELIGE ESTE PLAN</a>
+            <a class="plan" href="">ELIGE ESTE PLAN</a>
         </article>
     </section>
     <h3> *Requiere pago anticipado. Ahorro basado en el precio del plan estándar anual comparado con el precio del plan estándar mensual por 12 meses, excluyendo impuestos. Aplican términos. </h3>
@@ -99,6 +99,12 @@
     align-items: center;
     flex-direction: column;
     padding: 15px 0;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.cua:hover{
+    transform: translateY(-15px);
 }
 
 .cua >h2{
@@ -129,6 +135,12 @@
     align-items: center;
     flex-direction: column;
     padding: 15px 0;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.cua1:hover{
+    transform: translateY(-15px);
 }
 
 .cua1 >h2{
