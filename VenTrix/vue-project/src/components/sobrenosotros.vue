@@ -84,12 +84,13 @@
 
 .caja-texto p {
   font-size: 1.1rem;
-  color: #7f8c8d;
+  color: #444;
+  line-height: 1.4;
 }
 
 .caja-concepto {
   width: 100%;
-  background: url('./img/bannerConcepto.jpg') no-repeat center center;
+  background: url('./img/imagenparalax.jpg') no-repeat center center;
   background-size: cover;
   padding: 60px;
   border-radius: 10px;
