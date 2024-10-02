@@ -83,6 +83,7 @@
     border: 1px solid var(--color_principal);
     border-radius: 10px;
     padding: 10px;
+    cursor: pointer;
   }
   
   .categoria-imagen {

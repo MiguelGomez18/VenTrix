@@ -60,6 +60,7 @@ buscar();
     border-radius: 8px;
     max-width: 150px; 
     margin: 10px;
+    cursor: pointer;
 }
 .imagenProducto{
     height: 110px;
