@@ -22,7 +22,7 @@
     display: grid;
     grid-template-columns: 60% 40%; /* Define las proporciones de las columnas */
     gap: 4rem; /* Espacio entre las columnas */
-    margin: 10% 10% 8%;
+    margin: 6% 10% 8%;
 }
 
 .texto_main1 h1 {

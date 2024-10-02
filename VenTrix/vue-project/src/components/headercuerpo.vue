@@ -16,19 +16,8 @@
         <img src="../components/icons/icons8-instagram-48.png" alt="Instagram">
         <img src="../components/icons/icons8-facebook-48 (1).png" alt="Facebook">
         <li><a class="a1" href=""><router-link class="link" to="">SOPORTE</router-link></a></li>
-        <li><a class="a1" href=""><router-link class="link" to="/inicio">login</router-link></a></li>
       </ul>
-      <div>
-        <a href="">
-          <img src="" alt="" />
-        </a>
-        <a href="">
-          <img src="" alt="" />
-        </a>
-        <a href="">
-          <img src="" alt="" />
-        </a>
-      </div>
+      <a href=""><router-link class="link1" to="/inicio"><img class="user1" src="./icons/icons8-user-48.png" alt=""/></router-link></a>
     </nav>
     </header>
 </template>
@@ -83,6 +72,16 @@
 
 .links1 img{
     width: 5%;
+}
+
+.link1{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+
+.user1{
+  width: 60%;
 }
 
 .links1 li a {
