@@ -95,6 +95,7 @@
   border-radius: 10px;
   color: white;
   text-align: center;
+  background-attachment: fixed;
 }
 
 .texto-concepto {
