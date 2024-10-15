@@ -11,13 +11,13 @@
           class="icon"
         />
       </a>
-      <ul class="links1" id="menu">
-        <img src="../components/icons/icons8-whatsapp-48.png" alt="WhatsApp">
-        <img src="../components/icons/icons8-instagram-48.png" alt="Instagram">
-        <img src="../components/icons/icons8-facebook-48 (1).png" alt="Facebook">
+      <ul class="ul">
+        <a href=""><img src="../components/icons/icons8-whatsapp-48.png" alt="WhatsApp"></a>
+        <a href=""><img src="../components/icons/icons8-instagram-48.png" alt="Instagram"></a>
+        <a href=""><img src="../components/icons/icons8-facebook-48 (1).png" alt="Facebook"></a>
         <li><a class="a1" href=""><router-link class="link" to="">SOPORTE</router-link></a></li>
       </ul>
-      <a href=""><router-link class="link1" to="/inicio"><img class="user1" src="./icons/icons8-user-48.png" alt=""/></router-link></a>
+      <a href=""><router-link class="link1" to="/"><img class="user1" src="./icons/icons8-user-48.png" alt=""/></router-link></a>
     </nav>
     </header>
 </template>
@@ -29,7 +29,7 @@
   top: 0;
   left: 0;
   right: 0;
-  padding: 0 30px;
+  padding: 0 15px 0 30px;
   box-shadow: 0px 2px 10px 4px gray;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
@@ -41,7 +41,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 3px 30px;
+  padding: 3px;
 }
 
 .logo1 {
@@ -62,38 +62,52 @@
   color: var(--color_letra_blanca);
 }
 
-.links1 {
+.ul {
   list-style: none;
   display: flex;
-  gap: 10px;
   width: 40%;
   justify-content: right;
-}
-
-.links1 img{
-    width: 5%;
-}
-
-.link1{
-  display: flex;
-  justify-content: end;
   align-items: center;
+}
+
+.ul img{
+  width: 100%;
+  height: 28px;
 }
 
 .user1{
   width: 60%;
 }
 
-.links1 li a {
+.user1:hover{
+  background-image: url(./icons/icons8-usuario-48.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.ul a{
+  padding: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ul a:hover {
+  border-radius: 10px;
+  filter: drop-shadow(0px 0px 3px rgb(51, 51, 51));
+}
+
+.ul li{
   text-decoration: none;
   color: var(--color_letra);
   font-size: 18px;
   font-family: fuente_principal;
   transition: 0.7s;
-  margin: 0 6px;
+  margin: 0 15px;
 }
 
-.links1 li a:hover {
+.ul li a:hover {
   color: var(--color_letra);
   border-radius: 10px;
   font-size: 18px;

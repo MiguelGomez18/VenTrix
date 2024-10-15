@@ -19,7 +19,7 @@
             <input type="password" placeholder="Password" v-model="password" required>
         </div>
         <a href="#">¿Olvidaste tu contraseña?</a>
-        <router-link to="/inicio">Volver..</router-link>
+        <router-link to="/">Volver..</router-link>
         <button class="button" type="submit">{{ frmlogin ? 'INICIAR SESIÓN' : 'REGISTRARSE' }}</button>
         </form>
     </div>
@@ -49,7 +49,7 @@
             <img src="../components/icons/icons8-contraseña-50.png" alt="Contraseña">
             <input type="password" placeholder="Password" v-model="password" required>
         </div>
-        <router-link to="/inicio">Volver..</router-link>
+        <router-link to="/">Volver..</router-link>
         <button class="button" type="submit">{{ frmlogin ? 'INICIAR SESIÓN' : 'REGISTRARSE' }}</button>
         </form>
     </div>

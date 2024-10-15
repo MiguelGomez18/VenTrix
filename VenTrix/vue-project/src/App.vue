@@ -1,10 +1,8 @@
 <template>
-  <inicio></inicio>
+  <router-view></router-view>
 </template>
 
 <script setup>
-
-import inicio from './pages/inicio.vue';
 
 </script>
 
