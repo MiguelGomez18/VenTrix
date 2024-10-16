@@ -6,6 +6,7 @@ import edicion from "@/sections/edicion.vue";
 import mesas from "@/sections/mesas.vue";
 import informes from "@/sections/informes.vue";
 import seleccionarproductos from "@/sections/seleccionarproductos.vue";
+import sucursal from "@/components/sucursal.vue";
 
 const routes = [
   {
@@ -17,6 +18,12 @@ const routes = [
     path: '/',
     name: 'Inicio',
     component: inicio,
+  },
+  {
+    path: '/sucursal/:documento',
+    name: 'Sucursal',
+    component: sucursal,
+    props: true // Esto permite pasar el parámetro como prop al componente
   },
   {
     path: '/cuerpo',

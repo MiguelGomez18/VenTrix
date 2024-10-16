@@ -79,6 +79,7 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const documento = ref('');
+const documento1 = ref('');
 const nombre = ref('');
 const correo = ref('');
 const password = ref('');
@@ -107,13 +108,15 @@ const loginPropietario = async () => {
             password: password.value
         });
 
+        await buscar(correo.value);
+
         Swal.fire({
             icon: 'success',
             title: 'Inicio de sesión exitoso',
             text: 'Bienvenido a tu cuenta'
         });
 
-        router.push('/cuerpo/mesas');
+        router.push({ name: 'Sucursal', params: { documento: documento1.value } });
 
         limpiarInputs();
 
@@ -133,7 +136,7 @@ const loginPropietario = async () => {
                 correo: correo.value,
                 password: password.value
             });
-            console.log('Registro OK', response.data);
+            console.log('Registro OK');
             Swal.fire({
                 icon: 'success',
                 title: 'Propietario Registrado',
@@ -169,6 +172,15 @@ if (!frmlogin.value) {
 }
 });
 
+const buscar = async (correo) => {
+  try {
+    const respuesta = await axios.get(`http://127.0.0.1:8000/correo/${correo}`); 
+    documento1.value = respuesta.data;
+  } catch (error) {
+    console.error("Error al el documento", error);
+  }
+};
+
 function toggleSignIn() {
     frmlogin.value = false;
     isToggled.value = true;
@@ -192,6 +204,7 @@ function toggleSignUp() {
     background-color: #F0F4F3;
     box-shadow: 0 0 10px rgb(0,0,0,0.3);
 }
+
 .container{
     display: flex;
     position: relative;
