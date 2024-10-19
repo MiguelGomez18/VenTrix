@@ -6,7 +6,8 @@
       <h3>Total a pagar</h3>
     </article>
     <article class="division1">
-      <span>{{ cart.total }}</span>
+      <!-- Mostrar el total del carrito formateado manualmente -->
+      <span>{{ formattedTotalCarrito }}</span>
     </article>
     <span class="linea"></span>
     <button class="agregar" @click="addPaymentMethod">Agregar Forma de pago</button>
@@ -24,49 +25,94 @@
         <option value="Nequi">Nequi</option>
         <option value="Daviplata">Daviplata</option>
       </select>
-      <input type="number" class="pago" v-model="method.amount" />
+      <input 
+        type="number" 
+        class="pago" 
+        v-model="method.amount" 
+        :max="remainingAmount" 
+        @input="validatePaymentAmount"
+      />
     </div>
 
-    <button class="pagar" @click="closeModal">Pagar</button>
+    <button class="pagar" :disabled="remainingAmount > 0" @click="closeModal">Pagar</button>
+    <p v-if="remainingAmount > 0" class="remaining-alert">Faltan {{ formattedRemainingAmount }} para completar el pago</p>
   </section>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { defineEmits } from 'vue';
-import { useCart } from '../stores/cart'; // Asumo que tienes un store para el carrito
+import { useCart } from '../stores/cart'; // Store del carrito
+import { useRoute } from 'vue-router'; // Para obtener el mesaId de la ruta
 import Swal from 'sweetalert2';
 
+// Store del carrito
 const cart = useCart();
-const showModal = ref(true); // En tu caso, este valor será controlado desde el componente padre
+const showModal = ref(true); // Controlado desde el padre
+const route = useRoute();
+const mesaId = route.params.id_mesa; // Obtener el id_mesa de los parámetros de la ruta
 
-const paymentMethods = ref([{ type: "", amount: cart.total }]);
+// Total del carrito
+const totalCarrito = computed(() => cart.total(mesaId));
 
+// Formatear el total del carrito como moneda
+const formattedTotalCarrito = computed(() => {
+  return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(totalCarrito.value);
+});
+
+const paymentMethods = ref([{ type: "", amount: totalCarrito.value }]);
+
+// Para emitir el evento de cierre del modal
+const emit = defineEmits(['close-modal']);
+
+// Calcular el monto restante por pagar
+const remainingAmount = computed(() => {
+  const totalPaid = paymentMethods.value.reduce((acc, method) => acc + Number(method.amount || 0), 0);
+  return totalCarrito.value - totalPaid;
+});
+
+// Formatear el monto restante como moneda
+const formattedRemainingAmount = computed(() => {
+  return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(remainingAmount.value);
+});
+
+// Validar que la suma no exceda el total del carrito
+const validatePaymentAmount = () => {
+  if (remainingAmount.value < 0) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'El monto total excede el valor de la compra',
+    });
+  }
+};
+
+// Agregar nueva forma de pago
 const addPaymentMethod = () => {
-  paymentMethods.value = [{ type: "", amount: 0 }];
   paymentMethods.value.push({ type: "", amount: 0 });
 };
 
-// En la parte superior de tu script
-const emit = defineEmits(['close-modal']);
-
-
+// Cerrar el modal
 const closeModal = () => {
-  Swal.fire({
-    icon: 'success',
-    title: 'Pago exitoso',
-    text: 'Gracias por comprar con nosotros',
-  });
+  if (remainingAmount.value === 0) {
+    Swal.fire({
+      icon: 'success',
+      title: 'Pago exitoso',
+      text: 'Gracias por comprar con nosotros',
+    });
 
-  paymentMethods.value = [{ type: "", amount: 0 }];
-  cart.$reset();
-
-  showModal.value = false; 
-  emit('close-modal'); 
-  console.log("Modal cerrado:", showModal.value);
+    paymentMethods.value = [{ type: "", amount: 0 }];
+    cart.resetCart(mesaId); // Asegúrate de pasar el 'mesaId' al método
+    showModal.value = false;
+    emit('close-modal');
+  } else {
+    Swal.fire({
+      icon: 'error',
+      title: 'Pago incompleto',
+      text: 'Asegúrate de cubrir el monto total antes de pagar',
+    });
+  }
 };
-
-
 </script>
 
 

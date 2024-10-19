@@ -6,7 +6,7 @@
       class="mesas"
       color="green darken-1"
       large
-      @click="navegarARuta('/cuerpo/seleccionarproductos')"
+      @click="navegarARuta(mesa.id)"
     >
       <img src="./icons/table-svgrepo-com (1).svg" alt="Mesa Icon" />
       <span>{{ mesa.nombre }}</span>
@@ -22,10 +22,9 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const mesas = ref([]); 
 
-
-const navegarARuta = (ruta) => {
+const navegarARuta = (mesaId) => {
   window.dispatchEvent(new Event('ocultarInicio'));
-  router.push(ruta);
+  router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId } });  // Pasa el id de la mesa como parámetro
 };
 
 

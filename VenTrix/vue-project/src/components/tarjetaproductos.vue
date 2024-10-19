@@ -1,52 +1,56 @@
 <template>
-  <div 
-    class="tarjetaProducto" 
-    v-for="prod in productos" 
-    :key="prod.id" 
-    @click="seleccionarProducto(prod)"
-    :class="{ animated: selectedProductId === prod.id }"
->
-
-      <div class="imagenProducto">
-          <img src="./img/prueba_imagen_chef1.webp" alt="Imagen del producto" class="imagen" />
-      </div>
-      <p class="nombreProducto">{{ prod.nombre }}</p>
-      <p class="valorProducto">{{ prod.precio }}</p>
-  </div>
-</template>
-
-<script setup>
-import { ref } from 'vue';
-import { useCart } from '../stores/cart';
-import axios from 'axios';
-
-const productos = ref([]);
-const cart = useCart();
-const selectedProductId = ref(null); // Estado para el producto seleccionado
-
-const buscar = async () => {
-  try {
-      const respuesta = await axios.get('http://127.0.0.1:8000/productos');
-      productos.value = respuesta.data;
-  } catch (error) {
-      console.error("Error al cargar productos", error);
-  }
-};
-
-const seleccionarProducto = (producto) => {
-    cart.addProduct(producto);
-    selectedProductId.value = producto.id; // Actualiza el producto seleccionado
-    console.log(`Producto seleccionado: ${producto.id}`); // Agrega este log
-
-    // Resetea el producto seleccionado después de un tiempo
-    setTimeout(() => {
-        selectedProductId.value = null;
-    }, 300); // Debe coincidir con la duración de la animación
-};
-
-
-buscar();
-</script>
+    <div 
+      class="tarjetaProducto" 
+      v-for="prod in productos" 
+      :key="prod.id" 
+      @click="seleccionarProducto(prod)"
+      :class="{ animated: selectedProductId === prod.id }"
+    >
+        <div class="imagenProducto">
+            <img src="./img/prueba_imagen_chef1.webp" alt="Imagen del producto" class="imagen" />
+        </div>
+        <p class="nombreProducto">{{ prod.nombre }}</p>
+        <p class="valorProducto">{{ prod.precio }}</p>
+    </div>
+  </template>
+  
+  <script setup>
+  import { ref } from 'vue';
+  import { useCart } from '../stores/cart';
+  import axios from 'axios';
+  import { useRoute } from 'vue-router'; // Para obtener el mesaId de la ruta
+  
+  const productos = ref([]);
+  const cart = useCart();
+  const selectedProductId = ref(null); // Estado para el producto seleccionado
+  const route = useRoute();
+  const mesaId = route.params.id_mesa; // Obtener el id_mesa de los parámetros de la ruta
+  
+  const buscar = async () => {
+    try {
+        const respuesta = await axios.get('http://127.0.0.1:8000/productos');
+        productos.value = respuesta.data;
+    } catch (error) {
+        console.error("Error al cargar productos", error);
+    }
+  };
+  
+  const seleccionarProducto = (producto) => {
+      // Agregar mesaId al producto antes de enviarlo al carrito
+      const productoConMesaId = { ...producto, mesaId };
+  
+      cart.addProduct(productoConMesaId); // Enviar el producto con mesaId al carrito
+      selectedProductId.value = producto.id; // Actualiza el producto seleccionado
+      console.log(`Producto seleccionado: ${producto.id} en la mesa: ${mesaId}`); // Agrega este log
+  
+      // Resetea el producto seleccionado después de un tiempo
+      setTimeout(() => {
+          selectedProductId.value = null;
+      }, 300); // Debe coincidir con la duración de la animación
+  };
+  
+  buscar();
+  </script>
 
 
 <style>

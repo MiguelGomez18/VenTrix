@@ -1,54 +1,68 @@
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
 
 // Función para definir el estado inicial del carrito
 const initialState = () => ({
-  products: [],
+  products: {}, // Cambiamos a un objeto (diccionario) donde la clave será id_mesa
 });
 
 export const useCart = defineStore('cart', {
-  state: initialState, // Definir el estado inicial
+  state: initialState,
   getters: {
-    // Calcula el total del carrito dinámicamente
-    total: (state) => {
-      return state.products.reduce((acc, product) => acc + product.precio * product.cantidad, 0);
+    // Calcula el total del carrito para una mesa específica
+    total: (state) => (mesaId) => {
+      // Obtener los productos asociados a la mesa
+      const mesaProducts = state.products[mesaId] || [];
+      
+      // Calcular el total sumando precio * cantidad de cada producto
+      return mesaProducts.reduce((acc, product) => {
+        return acc + product.precio * product.cantidad;
+      }, 0);
     },
   },
   actions: {
-    // Método para agregar un producto al carrito
+    // Método para agregar un producto al carrito de una mesa específica
     addProduct(product) {
-      const existingProduct = this.products.find(p => p.id === product.id);
-
+      const { mesaId } = product;
+      if (!this.products[mesaId]) {
+        this.products[mesaId] = []; // Crea una nueva lista de productos si no existe
+      }
+      const existingProduct = this.products[mesaId].find(p => p.id === product.id);
       if (existingProduct) {
-        // Si el producto ya existe, aumentar la cantidad
         existingProduct.cantidad += 1;
       } else {
-        // Si es nuevo, agregar el producto con cantidad 1
-        this.products.push({ ...product, cantidad: 1 });
+        this.products[mesaId].push({ ...product, cantidad: 1 });
       }
     },
-    // Método para aumentar la cantidad de un producto
-    increaseQuantity(productId) {
-      const product = this.products.find(p => p.id === productId);
+    
+    // Método para aumentar la cantidad de un producto para una mesa específica
+    increaseQuantity(mesaId, productId) {
+      const product = this.products[mesaId]?.find(p => p.id === productId);
       if (product) {
         product.cantidad += 1;
       }
     },
-    // Método para disminuir la cantidad de un producto
-    decreaseQuantity(productId) {
-      const product = this.products.find(p => p.id === productId);
+    // Método para disminuir la cantidad de un producto para una mesa específica
+    decreaseQuantity(mesaId, productId) {
+      const product = this.products[mesaId]?.find(p => p.id === productId);
       if (product && product.cantidad > 1) {
         product.cantidad -= 1;
       }
     },
-    // Método para eliminar un producto del carrito
-    removeProduct(productId) {
-      this.products = this.products.filter(p => p.id !== productId);
+    // Método para eliminar un producto del carrito de una mesa específica
+    removeProduct(mesaId, productId) {
+      if (this.products[mesaId]) {
+        this.products[mesaId] = this.products[mesaId].filter(p => p.id !== productId);
+      }
     },
-    // Método para reiniciar el carrito
-    resetCart() {
-      this.$reset(); // Reinicia al estado inicial
+    // Método para reiniciar el carrito de una mesa específica
+    resetCart(mesaId) {
+      if (mesaId) {
+        // Reinicia solo los productos de esa mesa
+        this.products[mesaId] = [];
+      } else {
+        // En caso de no pasar mesaId, reinicia todo el estado (opcional)
+        this.$reset();
+      }
     }
   }
 });
-
