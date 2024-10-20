@@ -3,6 +3,7 @@
         <productos></productos>
         <tablacategoria></tablacategoria>
         <tablamesas></tablamesas>
+        <pagosedicion></pagosedicion>
     </div>
     
 </template>
@@ -11,6 +12,7 @@
 import productos from '@/components/productos.vue';
 import tablacategoria from '@/components/tablacategoria.vue';
 import tablamesas from '@/components/tablamesas.vue';
+import pagosedicion from '@/components/pagosedicion.vue';
 </script>
 
 <style>
