@@ -46,6 +46,7 @@ const navegarARuta = (ruta) => {
     position: relative;
     bottom: 20px;
     left: 20px; 
+    z-index: 2;
   }
   
   /* Estilos del botón flotante principal */

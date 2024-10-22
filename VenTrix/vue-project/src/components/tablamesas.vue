@@ -46,7 +46,8 @@
   
   const mesas = ref([]);
   const mesa = ref({
-    nombre: ''
+    nombre: '',
+    estado: ''
   });
   
   const estaEditando = ref(false);

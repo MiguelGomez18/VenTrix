@@ -82,6 +82,7 @@ const openPaymentModal = () => {
     border: 1px solid #ccc;
     border-radius: 10px;
     background-color: #f9f9f9;
+    border: 3px solid var(--color_principal);
   }
   
   .cart-title {
@@ -107,6 +108,7 @@ const openPaymentModal = () => {
     padding: 10px;
     border: 1px solid #ddd;
     text-align: center;
+    border: 2px solid var(--color_principal);
   }
   
   .quantity-btn,.quantity-btn1,

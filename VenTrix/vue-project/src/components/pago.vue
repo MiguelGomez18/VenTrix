@@ -1,4 +1,5 @@
 <template>
+  <div class="modal-backdrop ">
   <section class="modal" v-if="showModal">
     <!-- Contenido del modal -->
     <h2>Información de forma de pago</h2>
@@ -13,17 +14,11 @@
     <button class="agregar" @click="addPaymentMethod">Agregar Forma de pago</button>
 
     <div v-for="(method, index) in paymentMethods" :key="index" class="payment-method">
-      <select class="pagos" v-model="method.type">
-        <option value="">Seleccionar forma de pago</option>
-        <option value="Efectivo">Efectivo</option>
-        <option value="Credito">Crédito</option>
-        <option value="Nota Credito">Nota Crédito</option>
-        <option value="Puntos">Puntos</option>
-        <option value="Tarjeta de credito">Tarjeta de crédito</option>
-        <option value="Tarjeta debito">Tarjeta débito</option>
-        <option value="Tranferencias bancarias">Transferencias bancarias</option>
-        <option value="Nequi">Nequi</option>
-        <option value="Daviplata">Daviplata</option>
+      <select class="pagos" v-model="method.type" required>
+        <option value="" disabled>Seleccionar forma de pago</option>
+        <option v-for="tipo in tiposPagoFiltrados" :key="tipo.id" :value="tipo.id">
+            {{ tipo.descripcion }}
+          </option>
       </select>
       <input 
         type="number" 
@@ -34,16 +29,19 @@
       />
     </div>
 
-    <button class="pagar" :disabled="remainingAmount > 0" @click="closeModal">Pagar</button>
-    <p v-if="remainingAmount > 0" class="remaining-alert">Faltan {{ formattedRemainingAmount }} para completar el pago</p>
+    <button class="pagar" :disabled="remainingAmount > 0 || !allPaymentMethodsValid"  @click="closeModal">Pagar</button>
+    <p v-if="remainingAmount > 0" class="remaining-alert">
+      Faltan {{ formattedRemainingAmount }} para completar el pago
+    </p>
   </section>
+</div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import { defineEmits } from 'vue';
+import { ref, computed, onMounted, defineEmits } from 'vue';
 import { useCart } from '../stores/cart'; // Store del carrito
 import { useRoute } from 'vue-router'; // Para obtener el mesaId de la ruta
+import axios from 'axios';
 import Swal from 'sweetalert2';
 
 // Store del carrito
@@ -51,6 +49,34 @@ const cart = useCart();
 const showModal = ref(true); // Controlado desde el padre
 const route = useRoute();
 const mesaId = route.params.id_mesa; // Obtener el id_mesa de los parámetros de la ruta
+const tiposPago = ref([]); // Lista de tipos de pago
+const tipoPago = ref({
+  id: '',         // ID del tipo de pago
+  descripcion: '' // Descripción del tipo de pago
+});
+const consultaBusqueda = ref(''); // Campo de búsqueda
+
+// Función para cargar los tipos de pago
+const buscarTiposPago = async () => {
+  try {
+    const respuesta = await axios.get('http://127.0.0.1:8000/tipo_pago');
+    tiposPago.value = respuesta.data; // Asignar la respuesta a la lista de tipos de pago
+  } catch (error) {
+    console.error("Error al cargar tipos de pago", error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudieron cargar los tipos de pago.'
+    });
+  }
+};
+
+
+const tiposPagoFiltrados = computed(() => {
+  return tiposPago.value.filter(tp =>
+    tp.descripcion.toLowerCase().includes(consultaBusqueda.value.toLowerCase())
+  );
+});
 
 // Total del carrito
 const totalCarrito = computed(() => cart.total(mesaId));
@@ -92,9 +118,14 @@ const addPaymentMethod = () => {
   paymentMethods.value.push({ type: "", amount: 0 });
 };
 
+// Validar que todos los métodos de pago tengan un tipo seleccionado
+const allPaymentMethodsValid = computed(() => {
+  return paymentMethods.value.every(method => method.type !== "");
+});
+
 // Cerrar el modal
 const closeModal = () => {
-  if (remainingAmount.value === 0) {
+  if (remainingAmount.value === 0 && allPaymentMethodsValid.value) {
     Swal.fire({
       icon: 'success',
       title: 'Pago exitoso',
@@ -109,10 +140,16 @@ const closeModal = () => {
     Swal.fire({
       icon: 'error',
       title: 'Pago incompleto',
-      text: 'Asegúrate de cubrir el monto total antes de pagar',
+      text: 'Asegúrate de seleccionar un método de pago y cubrir el monto total antes de pagar',
     });
   }
 };
+
+// Llamar a buscarTiposPago cuando el componente se monte
+onMounted(() => {
+  buscarTiposPago();
+});
+
 </script>
 
 
@@ -123,7 +160,7 @@ const closeModal = () => {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
-    box-shadow: 0px 0px 10px rgba(75, 75, 75, 0.486);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Sombra más moderada para el modal */
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -131,9 +168,22 @@ const closeModal = () => {
     text-align: center;
     width: 42%;
     transition: opacity 0.4s;
-    z-index: 1;
+    z-index: 2; /* Asegura que el modal esté por encima de la sombra de fondo */
     padding: 15px 10px;
-    opacity: 1; /* Cambia a 1 para que el modal sea visible */
+    opacity: 1; /* Controla la visibilidad */
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Oscurece todo el fondo */
+    backdrop-filter: blur(2px); /* Añade desenfoque al fondo */
+    z-index: 1; /* Coloca la sombra debajo del modal */
+    opacity: 1;
+    transition: opacity 0.4s;
 }
 
 /* Eliminar esta regla a menos que sea necesaria */

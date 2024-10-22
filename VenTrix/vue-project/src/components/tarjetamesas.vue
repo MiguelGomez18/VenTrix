@@ -45,9 +45,7 @@ onMounted(() => {
 
 <style scoped>
 .mesas-container {
-  width: 60%;
-  margin-left: auto;
-  margin-right: auto;
+  width: 70%;
   display: flex;
   flex-wrap: wrap;
   justify-content: start;
@@ -67,7 +65,7 @@ onMounted(() => {
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   cursor: pointer;
-  margin: 20px;
+  margin: 0px 20px;
 }
 
 .mesas img {

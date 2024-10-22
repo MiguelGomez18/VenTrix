@@ -37,7 +37,7 @@ const closeModal = () => {
   .cuadro1 {
       margin-left: auto;
       margin-right: auto;
-      width: 90%;
+      width: 88%;
       display: flex;
       justify-content: space-evenly;
       align-items: start;
