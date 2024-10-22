@@ -45,7 +45,7 @@ onMounted(() => {
 
 <style scoped>
 .mesas-container {
-  width: 90%;
+  width: 60%;
   margin-left: auto;
   margin-right: auto;
   display: flex;
