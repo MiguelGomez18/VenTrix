@@ -79,10 +79,12 @@ onMounted(() => {
       mesaItem.nombre.toLowerCase().includes(consultaBusqueda.value.toLowerCase())
     );
   });
-  
+
+
   const agregarMesa = async () => {
     try {
       const nuevaMesa = { ...mesa.value };
+      console.log(mesa.value)
       const response = await axios.post('http://127.0.0.1:8000/registrar_mesa', nuevaMesa);
   
       mesas.value.push(response.data);
@@ -112,15 +114,16 @@ onMounted(() => {
     try {
       const mesaActualizada = { ...mesa.value };
       console.log(mesa.value)
-      const response = await axios.put('http://127.0.0.1:8000/actualizar_mesa', mesaActualizada);
+      const response = await axios.put('http://127.0.0.1:8000/actualizar_mesa/', mesaActualizada);
   
       mesas.value[indiceEdicion.value] = response.data;
+      resetearFormulario();
       Swal.fire({
         icon: 'success',
         title: 'Mesa Actualizada',
         text: 'La mesa se ha actualizado exitosamente.'
       });
-      resetearFormulario();
+
     } catch (error) {
       console.error('Error al actualizar la mesa:', error);
       Swal.fire({
@@ -157,7 +160,7 @@ onMounted(() => {
   };
   
   const resetearFormulario = () => {
-    mesa.value = { nombre: '' };
+    mesa.value = { nombre: '', estado: 'Fisica', id_sucursal: nit };
     estaEditando.value = false;
     indiceEdicion.value = null;
   };
