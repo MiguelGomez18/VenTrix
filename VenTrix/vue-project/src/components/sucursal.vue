@@ -142,7 +142,6 @@ const loginSucursal = async () => {
         cart.nit = nit2.value; // Asigna el nit seleccionado
         console.log(nit2.value)
         router.push({ name: 'Mesas', params: { nit: nit2.value } });
-
         } else {
 
             const response = await axios.post('http://127.0.0.1:8000/registro_sucursal', {

@@ -47,7 +47,7 @@ const routes = [
         component: informes,
       },
       {
-        path: '/seleccionarproductos/:id_mesa',
+        path: '/seleccionarproductos/:id_mesa/:nit',
         name: 'SeleccionarProductos',
         component: seleccionarproductos,
         props: true

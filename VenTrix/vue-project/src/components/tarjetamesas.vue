@@ -32,7 +32,7 @@ console.log(nit)
 
 const navegarARuta = (mesaId) => {
   window.dispatchEvent(new Event('ocultarInicio'));
-  router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId } });  // Pasa el id de la mesa como parámetro
+  router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId ,nit} });  // Pasa el id de la mesa como parámetro
 };
 
 

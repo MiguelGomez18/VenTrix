@@ -56,16 +56,20 @@
 
 <script setup>
 import Swal from 'sweetalert2';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
+import { useCart } from '@/stores/cart';
 
+const cart = useCart();
+const nit = cart.getNit;
 const productos = ref([]);
 const categorias = ref([]);
 const producto = ref({
   id: '',
   nombre: '',
   precio: '',
-  id_categoria: ''
+  id_categoria: '',
+  id_sucursal: nit
 });
 
 const estaEditando = ref(false);
@@ -73,9 +77,11 @@ const indiceEdicion = ref(null);
 const consultaBusqueda = ref('');
 const consultaBusqueda1 = ref('');
 
-const buscar = async () => {
+const buscar = async (nit) => {
   try {
-    const respuesta = await axios.get('http://127.0.0.1:8000/productos'); 
+    console.log('Buscando productos para NIT:', nit);
+    const respuesta = await axios.get(`http://127.0.0.1:8000/productos/${nit}`);
+    console.log('Productos cargados:', respuesta.data); // Añade este log para ver los datos
     productos.value = respuesta.data;
   } catch (error) {
     console.error("Error al cargar productos", error);
@@ -91,14 +97,22 @@ const buscarcategorias = async () => {
   }
 };
 
-buscar();
-buscarcategorias();
+
+
+onMounted(() => {
+  console.log('NIT al montar el componente:', nit);
+  buscar(nit);
+  buscarcategorias();
+});
+
 
 const productosFiltrados = computed(() => {
-  return productos.value.filter(prod =>
-    prod.nombre.toLowerCase().includes(consultaBusqueda.value.toLowerCase())
+  const searchTerm = consultaBusqueda.value.toLowerCase();
+  return productos.value.filter(prod => 
+    prod.nombre.toLowerCase().includes(searchTerm)
   );
 });
+
 
 const categoriasFiltradas = computed(() => {
   return categorias.value.filter(cate =>
@@ -109,6 +123,8 @@ const categoriasFiltradas = computed(() => {
 const agregarProducto = async () => {
   try {
     const nuevoProducto = { ...producto.value };
+    console.log(producto.value);
+    
     const response = await axios.post('http://127.0.0.1:8000/registrar_producto', nuevoProducto);
 
     productos.value.push(response.data);
@@ -182,7 +198,12 @@ const cancelarEdicion = () => {
 };
 
 const resetearFormulario = () => {
-  producto.value = { id: '', nombre: '', precio: '', id_categoria: '' };
+  producto.value = { 
+    id: '', nombre: '',
+    precio: '', 
+    id_categoria: '', 
+    id_sucursal : nit 
+  };
   estaEditando.value = false;
   indiceEdicion.value = null;
 };

@@ -2,7 +2,7 @@
     <div class="cuadro1">
       <div class="section1">
         <menucategorias></menucategorias>
-        <tarjetaproductos></tarjetaproductos>
+        <tarjetaproductos :nit="nitSucursal"></tarjetaproductos>
       </div>
       <div class="section2">
         <carritocompras @open-payment-modal="openModal"></carritocompras>
@@ -17,6 +17,16 @@
   import carritocompras from '@/components/carritocompras.vue';
   import tarjetaproductos from '@/components/tarjetaproductos.vue';
   import pago from '@/components/pago.vue';
+
+  const props = defineProps({
+    nit: {
+      type: String,
+      required: true
+    }
+  })
+
+  const {nit} = props;
+  const nitSucursal = nit;
   
   const showModal = ref(false);
   

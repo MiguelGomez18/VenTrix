@@ -15,25 +15,40 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue';
+  import { onMounted, ref } from 'vue';
   import { useCart } from '../stores/cart';
   import axios from 'axios';
   import { useRoute } from 'vue-router'; // Para obtener el mesaId de la ruta
   
+  const props = defineProps({
+    nit: {
+        type: String,
+        required: true
+    }
+  })
+
   const productos = ref([]);
   const cart = useCart();
   const selectedProductId = ref(null); // Estado para el producto seleccionado
   const route = useRoute();
+  const{nit} = props
   const mesaId = route.params.id_mesa; // Obtener el id_mesa de los parámetros de la ruta
   
   const buscar = async () => {
     try {
-        const respuesta = await axios.get('http://127.0.0.1:8000/productos');
+        const respuesta = await axios.get(`http://127.0.0.1:8000/productos/${nit}`);
         productos.value = respuesta.data;
     } catch (error) {
         console.error("Error al cargar productos", error);
     }
   };
+
+  onMounted(() =>{
+    if(nit) {
+        console.log("NIT RECIBIDO", nit)
+        buscar(nit)
+    }
+  })
   
   const seleccionarProducto = (producto) => {
       // Agregar mesaId al producto antes de enviarlo al carrito
