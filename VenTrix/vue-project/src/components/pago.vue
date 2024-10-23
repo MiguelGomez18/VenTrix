@@ -161,6 +161,7 @@ onMounted(() => {
     transform: translate(-50%, -50%);
     background-color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Sombra más moderada para el modal */
+    border-radius: 15px;
     display: flex;
     justify-content: space-around;
     align-items: center;
