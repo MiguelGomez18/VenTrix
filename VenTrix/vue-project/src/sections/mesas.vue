@@ -1,13 +1,24 @@
 <template>
     <div class="contenedormesas">
-        <tarjetamesas></tarjetamesas>
-        <comprarapida></comprarapida>
+        <tarjetamesas :nit="nitSucursal"></tarjetamesas>
+        <comprarapida :nit="nitSucursal"></comprarapida>
     </div>
 </template>
 
 <script setup>
+import { defineProps } from 'vue';
 import tarjetamesas from '@/components/tarjetamesas.vue';
 import comprarapida from '@/components/comprarapida.vue';
+const props = defineProps({
+  nit: {
+    type: String,
+    required: true
+  }
+});
+const { nit } = props;
+console.log(nit)
+const nitSucursal = nit;
+
 </script>
 
 <style>

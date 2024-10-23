@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 // Función para definir el estado inicial del carrito
 const initialState = () => ({
   products: {}, // Cambiamos a un objeto (diccionario) donde la clave será id_mesa
+  nit: '', 
 });
 
 export const useCart = defineStore('cart', {
@@ -18,8 +19,14 @@ export const useCart = defineStore('cart', {
         return acc + product.precio * product.cantidad;
       }, 0);
     },
+    getNit: (state) => {
+      return state.nit;
+    },
   },
   actions: {
+    setNit(nitValue) {
+      this.nit = nitValue;
+    },
     // Método para agregar un producto al carrito de una mesa específica
     addProduct(product) {
       const { mesaId } = product;
@@ -63,6 +70,6 @@ export const useCart = defineStore('cart', {
         // En caso de no pasar mesaId, reinicia todo el estado (opcional)
         this.$reset();
       }
-    }
+    },
   }
 });

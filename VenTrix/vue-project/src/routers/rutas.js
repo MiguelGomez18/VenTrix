@@ -31,9 +31,10 @@ const routes = [
     component: cuerpo,
     children: [
       {
-        path: 'mesas', 
+        path: '/mesas/:nit', 
         name: 'Mesas',
         component: mesas,
+        props: true 
       },
       {
         path: 'edicion', 

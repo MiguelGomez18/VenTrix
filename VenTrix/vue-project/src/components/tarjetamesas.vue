@@ -15,12 +15,20 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineProps } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 
+const props = defineProps({
+  nit: {
+    type: String,
+    required: true
+  }
+});
 const router = useRouter();
 const mesas = ref([]); 
+const { nit } = props;
+console.log(nit)
 
 const navegarARuta = (mesaId) => {
   window.dispatchEvent(new Event('ocultarInicio'));
@@ -28,18 +36,20 @@ const navegarARuta = (mesaId) => {
 };
 
 
-const obtenerMesas = async () => {
+const obtenerMesas = async (nit) => {
   try {
-    const response = await axios.get('http://localhost:8000/mesas'); 
+    const response = await axios.get(`http://localhost:8000/mesas/${nit}`); 
     mesas.value = response.data; 
   } catch (error) {
     console.error('Error al obtener las mesas:', error);
   }
 };
 
-
 onMounted(() => {
-  obtenerMesas();
+  if (nit) {
+    console.log('NIT recibido:', nit);
+    obtenerMesas(nit);
+  }
 });
 </script>
 

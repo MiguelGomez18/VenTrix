@@ -43,20 +43,23 @@
   import Swal from 'sweetalert2';
   import { ref, computed } from 'vue';
   import axios from 'axios';
+  import { useCart } from '@/stores/cart';
   
   const mesas = ref([]);
   const mesa = ref({
     nombre: '',
     estado: ''
   });
+  const cart = useCart();
+  const nit = cart.nit;
   
   const estaEditando = ref(false);
   const indiceEdicion = ref(null);
   const consultaBusqueda = ref('');
   
-  const buscarMesas = async () => {
+  const buscarMesas = async (nit) => {
   try {
-    const respuesta = await axios.get('http://127.0.0.1:8000/mesas'); 
+    const respuesta = await axios.get(`http://127.0.0.1:8000/mesas/${nit}`); 
     mesas.value = respuesta.data;
   } catch (error) {
     console.error("Error al cargar mesas", error);
@@ -67,7 +70,7 @@
 import { onMounted } from 'vue';
 
 onMounted(() => {
-  buscarMesas();
+  buscarMesas(nit);
 });
 
   

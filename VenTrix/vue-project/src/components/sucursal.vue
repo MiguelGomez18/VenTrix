@@ -4,7 +4,7 @@
         <div class="container-form1">
             <form class="sign-in1" @submit.prevent="loginSucursal">
                 <h2>SUCURSAL</h2>
-                <select v-model="sucursal.nit" required>
+                <select v-model="nit2" required>
                     <option value="">Seleccione su sucursal</option>
                     <option v-for="sucu in sucursalesFiltradas" :key="sucu.nit" :value="sucu.nit">
                         {{ sucu.nombre }}
@@ -68,6 +68,7 @@ import Swal from 'sweetalert2';
 import { ref, computed, onMounted, defineProps } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { useCart } from '../stores/cart'
 
 const props = defineProps({
   documento: {
@@ -78,8 +79,10 @@ const props = defineProps({
 
 // Ahora puedes usar `props.documento` o desestructurarlo
 const { documento } = props;
+const cart = useCart(); // Instancia de la tienda del carrito
 const router = useRouter();
 const nit = ref('');
+const nit2 = ref('');
 const rut = ref('');
 const nombre = ref('');
 const direccion = ref('');
@@ -136,8 +139,9 @@ const loginSucursal = async () => {
             title: 'Inicio de sesión exitoso',
             text: 'Bienvenido a su sucursal'
         });
-
-        router.push('/cuerpo/mesas');
+        cart.nit = nit2.value; // Asigna el nit seleccionado
+        console.log(nit2.value)
+        router.push({ name: 'Mesas', params: { nit: nit2.value } });
 
         } else {
 

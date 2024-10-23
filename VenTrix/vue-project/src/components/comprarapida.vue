@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineProps } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 
@@ -24,10 +24,17 @@ const mesa = ref({
   estado: 'Rapida'
 });
 const mesaCompraRapida = ref([]); 
+const props = defineProps({
+  nit: {
+    type: String,
+    required: true
+  }
+});
+console.log(props.nit)
 
-const buscarMesas = async () => {
+const buscarMesas = async (nit) => {
   try {
-    const respuesta = await axios.get('http://127.0.0.1:8000/mesarapida'); 
+    const respuesta = await axios.get(`http://127.0.0.1:8000/mesarapida/${nit}`); 
     mesaCompraRapida.value = respuesta.data;
     console.log(mesaCompraRapida.value)
   } catch (error) {
@@ -48,7 +55,7 @@ const agregarMesa = async () => {
 };
 
 onMounted(() => {
-  buscarMesas();
+  buscarMesas(props.nit);
   agregarMesa();
 });
 </script>
