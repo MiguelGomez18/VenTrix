@@ -7,7 +7,7 @@
       large
       @click="navegarARuta(mesaCompraRapida[0].id)"
     >
-      <img src="./icons/icons8-pagado-50.png" alt="Compra Rápida Icon" />
+      <img src="./img/mesa.png" alt="Compra Rápida Icon" />
       <span>{{ mesaCompraRapida.nombre }}</span>
     </v-btn>
   </div>
@@ -66,10 +66,10 @@ onMounted(() => {
 <style>
   
   .compra-rapida-container {
-    width: 18%; 
+    width: 16%; 
     height: 500px; 
-    background-color: #f0f0f0; 
-    border: 5px solid var(--color_principal);
+    background-color: var(--color_principal); 
+    border: 5px solid #f0f0f0;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
@@ -85,8 +85,8 @@ onMounted(() => {
   }
   
   .compra-rapida img {
-    width: 100px;
-    height: 100px;
+    width: 100%;
+    height: 350px;
   }
   </style>
   
