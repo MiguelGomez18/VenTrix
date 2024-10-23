@@ -59,7 +59,6 @@ onMounted(() => {
   display: flex;
   flex-wrap: wrap;
   justify-content: start;
-  align-items: center;
 }
 
 .mesas {

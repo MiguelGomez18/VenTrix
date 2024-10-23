@@ -20,14 +20,12 @@
       <table>
         <thead class="encabezado">
           <tr>
-            <th>ID</th>
             <th>Nombre</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(mesaItem, indice) in mesasFiltradas" :key="mesaItem.id">
-            <td>{{ mesaItem.id }}</td>
             <td>{{ mesaItem.nombre }}</td>
             <td>
               <button class="btnEditar" @click="editarMesa(indice)">Editar</button>
@@ -113,6 +111,7 @@ onMounted(() => {
   const actualizarMesa = async () => {
     try {
       const mesaActualizada = { ...mesa.value };
+      console.log(mesa.value)
       const response = await axios.put('http://127.0.0.1:8000/actualizar_mesa', mesaActualizada);
   
       mesas.value[indiceEdicion.value] = response.data;
