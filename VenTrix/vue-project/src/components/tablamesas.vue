@@ -45,13 +45,15 @@
   import axios from 'axios';
   import { useCart } from '@/stores/cart';
   
+  const cart = useCart();
+  const nit = cart.nit;
   const mesas = ref([]);
   const mesa = ref({
     nombre: '',
-    estado: ''
+    estado: 'Fisica',
+    id_sucursal: nit
   });
-  const cart = useCart();
-  const nit = cart.nit;
+
   
   const estaEditando = ref(false);
   const indiceEdicion = ref(null);
