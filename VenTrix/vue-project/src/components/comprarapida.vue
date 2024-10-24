@@ -50,11 +50,14 @@ const navegarARuta = (mesaId) => {
 };
 
 const agregarMesa = async () => {
-  const nuevaMesa = { ...mesa.value };
-  console.log(mesa.value)
-  const response = await axios.post('http://127.0.0.1:8000/registrar_mesa', nuevaMesa);
+  if (mesaCompraRapida.value == []) {
+    const nuevaMesa = { ...mesa.value };
+    console.log(mesa.value)
+    const response = await axios.post('http://127.0.0.1:8000/registrar_mesa', nuevaMesa);
 
-  mesaCompraRapida.value.push(response.data);
+    mesaCompraRapida.value.push(response.data);
+  }
+  
 };
 
 onMounted(() => {
