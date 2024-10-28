@@ -80,9 +80,12 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const documento = ref('');
 const documento1 = ref('');
+const idrestaurante = ref('');
 const nombre = ref('');
 const correo = ref('');
 const password = ref('');
+const rol = ref('ADMINISTRADOR');
+const fecha_creacion = ref('2024-10-15');
 const frmlogin = ref(true);
 const menError = ref('');
 const isToggled = ref(false);
@@ -103,12 +106,13 @@ const validarPassword = (password) => {
 const loginPropietario = async () => {
     try {
         if (frmlogin.value) {
-        const response = await axios.post('http://127.0.0.1:8000/login', {
+        const response = await axios.post('http://127.0.0.1:8080/usuario/login', {
             correo: correo.value,
             password: password.value
         });
 
-        await buscar(correo.value);
+        await buscardocumento(correo.value);
+        await buscarid_restaurante(documento1.value);
 
         Swal.fire({
             icon: 'success',
@@ -116,7 +120,7 @@ const loginPropietario = async () => {
             text: 'Bienvenido a tu cuenta'
         });
 
-        router.push({ name: 'Sucursal', params: { documento: documento1.value } });
+        router.push({ name: 'Sucursal', params: { idrestaurante: idrestaurante.value } });
 
         limpiarInputs();
 
@@ -130,11 +134,13 @@ const loginPropietario = async () => {
                 });
                 return; 
             }
-            const response = await axios.post('http://127.0.0.1:8000/registro_propietario', {
+            const response = await axios.post('http://127.0.0.1:8080/usuario', {
                 documento: documento.value,
                 nombre: nombre.value,
                 correo: correo.value,
-                password: password.value
+                password: password.value,
+                rol: rol.value,
+                fecha_creacion: fecha_creacion.value
             });
             console.log('Registro OK');
             Swal.fire({
@@ -172,12 +178,21 @@ if (!frmlogin.value) {
 }
 });
 
-const buscar = async (correo) => {
+const buscardocumento = async (correo) => {
   try {
-    const respuesta = await axios.get(`http://127.0.0.1:8000/correo/${correo}`); 
+    const respuesta = await axios.get(`http://127.0.0.1:8080/usuario/correo/${correo}`); 
     documento1.value = respuesta.data;
   } catch (error) {
     console.error("Error al el documento", error);
+  }
+};
+
+const buscarid_restaurante = async (documento1) => {
+  try {
+    const respuesta = await axios.get(`http://127.0.0.1:8080/restaurante/id_usuario/${documento1}`); 
+    idrestaurante.value = respuesta.data;
+  } catch (error) {
+    console.error("Error al el id de restaurante", error);
   }
 };
 

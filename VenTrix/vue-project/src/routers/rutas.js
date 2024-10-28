@@ -20,7 +20,7 @@ const routes = [
     component: inicio,
   },
   {
-    path: '/sucursal/:documento',
+    path: '/sucursal/:idrestaurante',
     name: 'Sucursal',
     component: sucursal,
     props: true // Esto permite pasar el parámetro como prop al componente

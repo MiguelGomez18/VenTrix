@@ -6,7 +6,7 @@
                 <h2>SUCURSAL</h2>
                 <select v-model="nit2" required>
                     <option value="">Seleccione su sucursal</option>
-                    <option v-for="sucu in sucursalesFiltradas" :key="sucu.nit" :value="sucu.nit">
+                    <option v-for="sucu in sucursalesFiltradas" :key="sucu.id" :value="sucu.id">
                         {{ sucu.nombre }}
                     </option>
                 </select>
@@ -19,12 +19,8 @@
             <form class="sign-up1" @submit.prevent="loginSucursal">
                 <h2>REGISTRAR SUCURSAL</h2>
                 <div class="container-input1">
-                    <img src="../components/icons/icons8-contraseña-50.png" alt="Nit">
-                    <input type="text" placeholder="Nit" v-model="nit" required>
-                </div>
-                <div class="container-input1">
-                    <img src="../components/icons/icons8-contraseña-50.png" alt="Rut">
-                    <input type="text" placeholder="Rut" v-model="rut" required>
+                    <img src="../components/icons/icons8-contraseña-50.png" alt="Id">
+                    <input type="text" placeholder="Nit" v-model="id" required>
                 </div>
                 <div class="container-input1">
                     <img src="../components/icons/icons8-usuario-50.png" alt="Nombre">
@@ -35,12 +31,16 @@
                     <input type="text" placeholder="Direccion" v-model="direccion" required>
                 </div>
                 <div class="container-input1">
+                    <img src="../components/icons/icons8-contraseña-50.png" alt="Ciudad">
+                    <input type="text" placeholder="Ciudad" v-model="ciudad" required>
+                </div>
+                <div class="container-input1">
                     <img src="../components/icons/icons8-contraseña-50.png" alt="Telefono">
                     <input type="text" placeholder="Telefono" v-model="telefono" required>
                 </div>
                 <div class="container-input1">
                     <img src="../components/icons/icons8-correo-50.png" alt="Correo">
-                    <input type="email" placeholder="Email" v-model="correo" required>
+                    <input type="Date" placeholder="Fecha apertura" v-model="fecha_apertura" required>
                 </div>
                 <router-link to="/registro">Volver..</router-link>
                 <button class="button1" type="submit">{{ frmlogin1 ? 'INICIAR' : 'REGISTRAR' }}</button>
@@ -71,58 +71,60 @@ import { useRouter } from 'vue-router';
 import { useCart } from '../stores/cart'
 
 const props = defineProps({
-  documento: {
+    idrestaurante: {
     type: String,
     required: true
   }
 });
 
 // Ahora puedes usar `props.documento` o desestructurarlo
-const { documento } = props;
+const { idrestaurante } = props;
 const cart = useCart(); // Instancia de la tienda del carrito
 const router = useRouter();
-const nit = ref('');
+const id = ref('');
 const nit2 = ref('');
-const rut = ref('');
 const nombre = ref('');
 const direccion = ref('');
+const ciudad = ref('');
 const telefono = ref('');
-const correo = ref('');
+const fecha_apertura = ref('');
+const id_restaurante = ref('');
 const frmlogin1 = ref(true);
 const menError = ref('');
 const isToggled1 = ref(false);
 const sucursales = ref([]);
 const sucursal = ref({
-  nit: '',
-  rut: '',
+  id: '',
   nombre: '',
   direccion: '',
+  ciudad: '',
   telefono: '',
-  correo: '',
-  documento: ''
+  fecha_apertura: '',
+  estado: '',
+  id_restaurante: ''
 });
 const consultaBusqueda = ref('');
 
 
 const limpiarInputs = () => {
-  nit.value = '';
-  rut.value = '';
+  id.value = '';
   nombre.value = '';
   direccion.value = '';
+  ciudad.value = '';
   telefono.value = '';
-  correo.value = '';
+  fecha_apertura.value = '';
 };
 
-const buscar = async (documento) => {
+const buscar = async (idrestaurante) => {
   try {
-    const respuesta = await axios.get(`http://127.0.0.1:8000/sucursales/${documento}`); 
+    const respuesta = await axios.get(`http://127.0.0.1:8080/sucursal/id_sucursal/${idrestaurante}`); 
     sucursales.value = respuesta.data;
   } catch (error) {
     console.error("Error al cargar sucursales", error);
   }
 };
 
-buscar(documento);
+buscar(idrestaurante);
 
 const sucursalesFiltradas = computed(() => {
   return sucursales.value.filter(sucur =>
@@ -139,22 +141,26 @@ const loginSucursal = async () => {
             title: 'Inicio de sesión exitoso',
             text: 'Bienvenido a su sucursal'
         });
-        cart.nit = nit2.value; // Asigna el nit seleccionado
-        console.log(nit2.value)
-        router.push({ name: 'Mesas', params: { nit: nit2.value } });
-        } else {
 
-            const response = await axios.post('http://127.0.0.1:8000/registro_sucursal', {
-                nit: nit.value,
-                rut: rut.value,
+        cart.nit = nit2.value; // Asigna el nit seleccionado
+        router.push({ name: 'Mesas', params: { nit: nit2.value } });
+
+        } else {
+            console.log(idrestaurante)
+            const response = await axios.post('http://127.0.0.1:8080/sucursal', {
+                id: id.value,
                 nombre: nombre.value,
                 direccion: direccion.value,
+                ciudad: ciudad.value,
                 telefono: telefono.value,
-                correo: correo.value,
-                documento: documento
+                fecha_apertura: fecha_apertura.value,
+                estado: 'ACTIVO',
+                restaurante: {
+                    "id": idrestaurante
+                }
             });
 
-            buscar(documento);
+            buscar(idrestaurante);
 
             console.log('Registro OK');
 
@@ -184,7 +190,7 @@ const loginSucursal = async () => {
 onMounted(async () => {
     if (!frmlogin1.value) {
         try {
-            const response = await axios.get('http://127.0.0.1:8000/propietario/documento/');
+            const response = await axios.get('http://127.0.0.1:8080/propietario/documento/');
             console.log("Documentos de los propietarios ", response.data);
         } catch (error) {
             console.error("Error en la consulta de documentos", error);
