@@ -11,10 +11,10 @@
 
     <div class="contenedorformulario">
       <form class="formulario" @submit.prevent="estaEditando ? actualizarProducto() : agregarProducto()">
-        <input type="number" v-model="producto.id" placeholder="ID del producto" required />
+        <input type="number" v-model="producto.id_producto" placeholder="ID del producto" required />
         <input type="text" v-model="producto.nombre" placeholder="Nombre del producto" required />
         <input type="number" v-model="producto.precio" placeholder="Precio" required />
-        <select v-model="producto.id_categoria" required>
+        <select v-model="producto.categoria.id" required>
           <option value="">Seleccione una categoría</option>
           <option v-for="cate in categoriasFiltradas" :key="cate.id" :value="cate.id">
             {{ cate.nombre }}
@@ -36,13 +36,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(prod, indice) in productosFiltrados" :key="prod.id">
-          <td>{{ prod.id }}</td>
+        <tr v-for="(prod, indice) in productosFiltrados" :key="prod.id_producto">
+          <td>{{ prod.id_producto }}</td>
           <td>{{ prod.nombre }}</td>
           <td>{{ prod.precio }}</td>
           <td>
             <!-- Encuentra la categoría correspondiente al id_categoria del producto -->
-            {{ categoriasFiltradas.find(cate => cate.id === prod.id_categoria)?.nombre || 'Sin Categoría' }}
+            {{ categoriasFiltradas.find(cate => cate.id_categoria === prod.id_categoria)?.nombre || 'Sin Categoría' }}
           </td>
           <td>
             <button class="btnEditar" @click="editarProducto(indice)">Editar</button>
@@ -65,11 +65,15 @@ const nit = cart.getNit;
 const productos = ref([]);
 const categorias = ref([]);
 const producto = ref({
-  id: '',
-  nombre: '',
+  id_producto: '',
   precio: '',
-  id_categoria: '',
-  id_sucursal: nit
+  categoria:{
+    "id" : ''
+  },
+  nombre: '',
+  descripcion: 'asfasfa',
+  imagen : '88888',
+  disponibilidad : 'SI'
 });
 
 const estaEditando = ref(false);
@@ -77,10 +81,9 @@ const indiceEdicion = ref(null);
 const consultaBusqueda = ref('');
 const consultaBusqueda1 = ref('');
 
-const buscar = async (nit) => {
+const buscar = async () => {
   try {
-    console.log('Buscando productos para NIT:', nit);
-    const respuesta = await axios.get(`http://127.0.0.1:8000/productos/${nit}`);
+    const respuesta = await axios.get('http://127.0.0.1:8080/producto');
     console.log('Productos cargados:', respuesta.data); // Añade este log para ver los datos
     productos.value = respuesta.data;
   } catch (error) {
@@ -90,7 +93,8 @@ const buscar = async (nit) => {
 
 const buscarcategorias = async () => {
   try {
-    const respuesta = await axios.get('http://127.0.0.1:8000/categoria'); 
+    const respuesta = await axios.get('http://127.0.0.1:8080/categoria'); 
+    console.log(categorias.value)
     categorias.value = respuesta.data;
   } catch (error) {
     console.error("Error al cargar categorias", error);
@@ -100,8 +104,7 @@ const buscarcategorias = async () => {
 
 
 onMounted(() => {
-  console.log('NIT al montar el componente:', nit);
-  buscar(nit);
+  buscar();
   buscarcategorias();
 });
 
@@ -125,15 +128,17 @@ const agregarProducto = async () => {
     const nuevoProducto = { ...producto.value };
     console.log(producto.value);
     
-    const response = await axios.post('http://127.0.0.1:8000/registrar_producto', nuevoProducto);
-
-    productos.value.push(response.data);
+    const response = await axios.post('http://127.0.0.1:8080/producto/registrar_producto', nuevoProducto);
+    
     Swal.fire({
       icon: 'success',
       title: 'Producto Agregado',
       text: 'El producto se ha agregado exitosamente.'
     });
+
+    buscar()
     resetearFormulario();
+
   } catch (error) {
     console.error('Error al agregar el producto:', error);
     Swal.fire({
@@ -145,15 +150,28 @@ const agregarProducto = async () => {
 };
 
 const editarProducto = (indice) => {
-  producto.value = { ...productos.value[indice] };
-  estaEditando.value = true;
-  indiceEdicion.value = indice;
+  // Imprimir el producto seleccionado para verificar su estructura
+  console.log(productos.value[indice]);
+
+  const categoria = productos.value[indice].categoria;
+
+  const { id_producto, nombre, precio } = productos.value[indice];
+
+  // Asigna el nuevo objeto producto con las propiedades requeridas
+  producto.value = { id_producto, nombre, precio, categoria: { id: categoria } };
+
+  // Muestra el objeto actualizado en la consola
+  console.log(producto.value); // Muestra el objeto actualizado
+  console.log(categoria); // Accede al id_producto correctamente
+  
+  estaEditando.value = true; // Marca que se está editando
+  indiceEdicion.value = indice; // Guarda el índice de edición
 };
 
 const actualizarProducto = async () => {
   try {
     const productoActualizado = { ...producto.value };
-    const response = await axios.put('http://127.0.0.1:8000/actualizar_producto', productoActualizado);
+    const response = await axios.put(`http://127.0.0.1:8080/producto/${indiceEdicion}`, productoActualizado);
 
     productos.value[indiceEdicion.value] = response.data;
     Swal.fire({
@@ -175,7 +193,7 @@ const actualizarProducto = async () => {
 const eliminarProducto = async (indice) => {
   try {
     const productoAEliminar = productos.value[indice];
-    await axios.delete(`http://127.0.0.1:8000/eliminar_producto/${productoAEliminar.id}`);
+    await axios.delete(`http://127.0.0.1:8080/producto/${productoAEliminar.id_producto}`);
     productos.value.splice(indice, 1);
 
     Swal.fire({
@@ -199,10 +217,13 @@ const cancelarEdicion = () => {
 
 const resetearFormulario = () => {
   producto.value = { 
-    id: '', nombre: '',
-    precio: '', 
-    id_categoria: '', 
-    id_sucursal : nit 
+    id_producto: '',
+    precio: '',
+    categoria: { "id": '' },
+    nombre: '',
+    descripcion: '',  // Agregar si se utiliza
+    imagen: '',       // Agregar si se utiliza
+    disponibilidad: 'SI' // Agregar si se utiliza
   };
   estaEditando.value = false;
   indiceEdicion.value = null;
@@ -293,4 +314,4 @@ const resetearFormulario = () => {
     border-radius: 10px;
     padding: 4px;
   }
-  </style>
+</style>
