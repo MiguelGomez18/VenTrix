@@ -20,6 +20,8 @@
             {{ cate.nombre }}
           </option>
         </select>
+        <input type="text" v-model="producto.descripcion" placeholder="Descripcion"/>
+        <label for="">Disponible<input type="checkbox" v-model="producto.disponibilidad"/></label>
         <button class="btnAggAct" type="submit">{{ estaEditando ? 'Actualizar' : 'Agregar' }}</button>
         <button class="btncancelar" type="button" @click="cancelarEdicion" v-if="estaEditando">Cancelar</button>
       </form>
@@ -42,7 +44,7 @@
           <td>{{ prod.precio }}</td>
           <td>
             <!-- Encuentra la categoría correspondiente al id_categoria del producto -->
-            {{ categoriasFiltradas.find(cate => cate.id_categoria === prod.id_categoria)?.nombre || 'Sin Categoría' }}
+            {{ categoriasFiltradas.find(cate => cate.producto.some(pro => pro.id_producto === prod.id_producto))?.nombre || 'Sin Categoría' }}
           </td>
           <td>
             <button class="btnEditar" @click="editarProducto(indice)">Editar</button>
@@ -68,24 +70,26 @@ const producto = ref({
   id_producto: '',
   precio: '',
   categoria:{
-    "id" : ''
+    id: ''
   },
   nombre: '',
-  descripcion: 'asfasfa',
+  descripcion: '',
   imagen : '88888',
-  disponibilidad : 'SI'
+  disponibilidad : false
 });
 
 const estaEditando = ref(false);
 const indiceEdicion = ref(null);
+const indiceEd = ref(null);
 const consultaBusqueda = ref('');
 const consultaBusqueda1 = ref('');
 
 const buscar = async () => {
   try {
     const respuesta = await axios.get('http://127.0.0.1:8080/producto');
-    console.log('Productos cargados:', respuesta.data); // Añade este log para ver los datos
+    console.log('Productos cargados:', respuesta.data); 
     productos.value = respuesta.data;
+    console.log('Productos cargados:', productos.value); 
   } catch (error) {
     console.error("Error al cargar productos", error);
   }
@@ -94,8 +98,8 @@ const buscar = async () => {
 const buscarcategorias = async () => {
   try {
     const respuesta = await axios.get('http://127.0.0.1:8080/categoria'); 
-    console.log(categorias.value)
     categorias.value = respuesta.data;
+    console.log(categorias.value)
   } catch (error) {
     console.error("Error al cargar categorias", error);
   }
@@ -136,7 +140,8 @@ const agregarProducto = async () => {
       text: 'El producto se ha agregado exitosamente.'
     });
 
-    buscar()
+    await buscar()
+    await buscarcategorias()
     resetearFormulario();
 
   } catch (error) {
@@ -150,35 +155,37 @@ const agregarProducto = async () => {
 };
 
 const editarProducto = (indice) => {
-  // Imprimir el producto seleccionado para verificar su estructura
-  console.log(productos.value[indice]);
 
-  const categoria = productos.value[indice].categoria;
+  const id_categoria = categorias.value.find(cate => cate.producto.some(prod => prod.id_producto === productos.value[indice].id_producto))?.id;
 
   const { id_producto, nombre, precio } = productos.value[indice];
 
-  // Asigna el nuevo objeto producto con las propiedades requeridas
-  producto.value = { id_producto, nombre, precio, categoria: { id: categoria } };
-
-  // Muestra el objeto actualizado en la consola
-  console.log(producto.value); // Muestra el objeto actualizado
-  console.log(categoria); // Accede al id_producto correctamente
+  producto.value = { id_producto, nombre, precio, categoria: { id: id_categoria } };
   
-  estaEditando.value = true; // Marca que se está editando
-  indiceEdicion.value = indice; // Guarda el índice de edición
+  estaEditando.value = true;
+  indiceEdicion.value = id_producto; 
+  indiceEd.value = indice;
 };
 
 const actualizarProducto = async () => {
   try {
-    const productoActualizado = { ...producto.value };
-    const response = await axios.put(`http://127.0.0.1:8080/producto/${indiceEdicion}`, productoActualizado);
 
-    productos.value[indiceEdicion.value] = response.data;
+    const response = await axios.put(`http://127.0.0.1:8080/producto/${producto.value.id_producto}`, {
+      nombre: producto.value.nombre,
+      precio: producto.value.precio,
+      categoria: { 
+        id: producto.value.categoria.id
+      },
+    });
+
+    await buscar()
+    await buscarcategorias()
     Swal.fire({
       icon: 'success',
       title: 'Producto Actualizado',
       text: 'El producto se ha actualizado exitosamente.'
     });
+    
     resetearFormulario();
   } catch (error) {
     console.error('Error al actualizar el producto:', error);
@@ -219,11 +226,11 @@ const resetearFormulario = () => {
   producto.value = { 
     id_producto: '',
     precio: '',
-    categoria: { "id": '' },
+    categoria: { id: '' },
     nombre: '',
-    descripcion: '',  // Agregar si se utiliza
-    imagen: '',       // Agregar si se utiliza
-    disponibilidad: 'SI' // Agregar si se utiliza
+    descripcion: '', 
+    imagen: '',      
+    disponibilidad: false 
   };
   estaEditando.value = false;
   indiceEdicion.value = null;
