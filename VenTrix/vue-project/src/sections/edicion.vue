@@ -5,7 +5,6 @@
         <tablamesas></tablamesas>
         <pagosedicion></pagosedicion>
     </div>
-    
 </template>
 
 <script setup>
@@ -21,8 +20,9 @@ import pagosedicion from '@/components/pagosedicion.vue';
     flex-direction: column;
     align-items: center;
     gap: 20px;
-    width: 80%;
+    width: 90%;
     justify-content: center;
-    margin-left: 10%;
+    margin-left: auto;
+    margin-right: auto;
 }
 </style>
