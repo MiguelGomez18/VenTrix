@@ -7,7 +7,7 @@
       :class="{ animated: selectedProductId === prod.id }"
     >
         <div class="imagenProducto">
-            <img src="./img/prueba_imagen_chef1.webp" alt="Imagen del producto" class="imagen" />
+            <img :src="`http://127.0.0.1:8080${prod.imagen}`" alt="Imagen del producto" class="imagen" />
         </div>
         <p class="nombreProducto">{{ prod.nombre }}</p>
         <p class="valorProducto">{{ prod.precio }}</p>
@@ -31,13 +31,14 @@
   const cart = useCart();
   const selectedProductId = ref(null); // Estado para el producto seleccionado
   const route = useRoute();
-  const{nit} = props
+  const {nit} = props
   const mesaId = route.params.id_mesa; // Obtener el id_mesa de los parámetros de la ruta
   
   const buscar = async () => {
     try {
-        const respuesta = await axios.get(`http://127.0.0.1:8000/productos/${nit}`);
+        const respuesta = await axios.get('http://127.0.0.1:8080/producto');
         productos.value = respuesta.data;
+        console.log(productos.value)
     } catch (error) {
         console.error("Error al cargar productos", error);
     }

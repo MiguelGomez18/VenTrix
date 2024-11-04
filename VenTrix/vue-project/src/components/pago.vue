@@ -71,7 +71,6 @@ const buscarTiposPago = async () => {
   }
 };
 
-
 const tiposPagoFiltrados = computed(() => {
   return tiposPago.value.filter(tp =>
     tp.descripcion.toLowerCase().includes(consultaBusqueda.value.toLowerCase())

@@ -30,6 +30,7 @@
       <p class="cart-total">Total: {{ mesaTotal | currency }}</p>
       <!-- Botón para abrir el modal -->
       <button class="pay-btn" @click="openPaymentModal">Pagar</button>
+      <button class="pay-btn" @click="comandar">Comandar</button>
     </div>
   </div>
 </template>
@@ -71,6 +72,10 @@ const eliminarProducto = (producto) => {
 // Método para abrir el modal de pago
 const openPaymentModal = () => {
   emit('open-payment-modal'); // Emitir evento al padre
+};
+
+const comandar = () => {
+  emit('open-comienda'); // Emitir evento al padre
 };
 </script>
   
@@ -153,6 +158,7 @@ const openPaymentModal = () => {
   .pay-btn {
     background-color: var(--color_principal);
     color: white;
+    margin-left: 10px;
     padding: 10px 20px;
     border: none;
     cursor: pointer;

@@ -21,6 +21,7 @@
           </option>
         </select>
         <input type="text" v-model="producto.descripcion" placeholder="Descripcion"/>
+        <input type="file" @change="onFileChange" id="file" required/>
         <label for="">Disponible<input type="checkbox" v-model="producto.disponibilidad"/></label>
         <button class="btnAggAct" type="submit">{{ estaEditando ? 'Actualizar' : 'Agregar' }}</button>
         <button class="btncancelar" type="button" @click="cancelarEdicion" v-if="estaEditando">Cancelar</button>
@@ -33,7 +34,7 @@
           <th>ID</th>
           <th>Nombre</th>
           <th>Precio</th>
-          <th>ID_Categoría</th>
+          <th>Categoría</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -43,7 +44,6 @@
           <td>{{ prod.nombre }}</td>
           <td>{{ prod.precio }}</td>
           <td>
-            <!-- Encuentra la categoría correspondiente al id_categoria del producto -->
             {{ categoriasFiltradas.find(cate => cate.producto.some(pro => pro.id_producto === prod.id_producto))?.nombre || 'Sin Categoría' }}
           </td>
           <td>
@@ -64,8 +64,12 @@ import { useCart } from '@/stores/cart';
 
 const cart = useCart();
 const nit = cart.getNit;
+const file = ref(null);
 const productos = ref([]);
 const categorias = ref([]);
+const onFileChange = (event) => {
+  file.value = event.target.files[0];
+};
 const producto = ref({
   id_producto: '',
   precio: '',
@@ -74,7 +78,7 @@ const producto = ref({
   },
   nombre: '',
   descripcion: '',
-  imagen : '88888',
+  imagen : '',
   disponibilidad : false
 });
 
@@ -87,9 +91,7 @@ const consultaBusqueda1 = ref('');
 const buscar = async () => {
   try {
     const respuesta = await axios.get('http://127.0.0.1:8080/producto');
-    console.log('Productos cargados:', respuesta.data); 
     productos.value = respuesta.data;
-    console.log('Productos cargados:', productos.value); 
   } catch (error) {
     console.error("Error al cargar productos", error);
   }
@@ -99,12 +101,10 @@ const buscarcategorias = async () => {
   try {
     const respuesta = await axios.get('http://127.0.0.1:8080/categoria'); 
     categorias.value = respuesta.data;
-    console.log(categorias.value)
   } catch (error) {
     console.error("Error al cargar categorias", error);
   }
 };
-
 
 
 onMounted(() => {
@@ -129,10 +129,23 @@ const categoriasFiltradas = computed(() => {
 
 const agregarProducto = async () => {
   try {
-    const nuevoProducto = { ...producto.value };
-    console.log(producto.value);
-    
-    const response = await axios.post('http://127.0.0.1:8080/producto/registrar_producto', nuevoProducto);
+    const formData = new FormData();
+    formData.append("id_producto", producto.value.id_producto);
+    formData.append("nombre", producto.value.nombre);
+    formData.append("precio", producto.value.precio);
+    formData.append("descripcion", producto.value.descripcion);
+    formData.append("disponibilidad", producto.value.disponibilidad);
+    formData.append("id_categoria", producto.value.categoria.id);
+
+    if (file.value) {
+      formData.append("imagen", file.value);
+    }
+
+    const response = await axios.post(
+      'http://127.0.0.1:8080/producto/registrar_producto', 
+      formData, 
+      { headers: { 'Content-Type': 'multipart/form-data' } }
+    );
     
     Swal.fire({
       icon: 'success',
@@ -158,9 +171,9 @@ const editarProducto = (indice) => {
 
   const id_categoria = categorias.value.find(cate => cate.producto.some(prod => prod.id_producto === productos.value[indice].id_producto))?.id;
 
-  const { id_producto, nombre, precio } = productos.value[indice];
+  const { id_producto, nombre, precio, descripcion, imagen, disponibilidad } = productos.value[indice];
 
-  producto.value = { id_producto, nombre, precio, categoria: { id: id_categoria } };
+  producto.value = { id_producto, nombre, precio, categoria: { id: id_categoria }, descripcion, imagen, disponibilidad };
   
   estaEditando.value = true;
   indiceEdicion.value = id_producto; 
@@ -170,13 +183,19 @@ const editarProducto = (indice) => {
 const actualizarProducto = async () => {
   try {
 
-    const response = await axios.put(`http://127.0.0.1:8080/producto/${producto.value.id_producto}`, {
-      nombre: producto.value.nombre,
-      precio: producto.value.precio,
-      categoria: { 
-        id: producto.value.categoria.id
-      },
-    });
+    const formData = new FormData();
+        formData.append('nombre', producto.value.nombre);
+        formData.append('precio', producto.value.precio);
+        formData.append("id_categoria", producto.value.categoria.id);
+        formData.append('descripcion', producto.value.descripcion);
+        formData.append('imagen', file.value); 
+        formData.append('disponibilidad', producto.value.disponibilidad);
+
+        const response = await axios.put(`http://127.0.0.1:8080/producto/${producto.value.id_producto}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
 
     await buscar()
     await buscarcategorias()
@@ -198,23 +217,28 @@ const actualizarProducto = async () => {
 };
 
 const eliminarProducto = async (indice) => {
-  try {
-    const productoAEliminar = productos.value[indice];
-    await axios.delete(`http://127.0.0.1:8080/producto/${productoAEliminar.id_producto}`);
-    productos.value.splice(indice, 1);
+  const result = await Swal.fire({
+    title: '¿Estás seguro?',
+    text: "Esta acción no se puede deshacer",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  });
+  
+  if (result.isConfirmed) {
+    try {
+      const productoAEliminar = productos.value[indice];
+      await axios.delete(`http://127.0.0.1:8080/producto/${productoAEliminar.id_producto}`);
+      productos.value.splice(indice, 1);
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Producto Eliminado',
-      text: 'El producto ha sido eliminado exitosamente.'
-    });
-  } catch (error) {
-    console.error('Error al eliminar el producto:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Hubo un problema al eliminar el producto.'
-    });
+      Swal.fire('Eliminado', 'El producto ha sido eliminado.', 'success');
+    } catch (error) {
+      console.error('Error al eliminar el producto:', error);
+      Swal.fire('Error', 'Hubo un problema al eliminar el producto.', 'error');
+    }
   }
 };
 
@@ -232,24 +256,30 @@ const resetearFormulario = () => {
     imagen: '',      
     disponibilidad: false 
   };
+  file.value = null; 
   estaEditando.value = false;
   indiceEdicion.value = null;
 };
 </script>
 
   
-<style>
+<style scoped>
   .titulobuscar{
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
   }
+
   .titulobuscar h1{
     font-size: 25px;
     color: var(--color_principal);
-  
   }
+
+  .titulobuscar input{
+    width: 30%;
+  }
+
   .encabezado{
     background-color: var(--color_principal);
     color: var(--color_letra_blanca);
@@ -258,10 +288,10 @@ const resetearFormulario = () => {
     display: flex;
     justify-content: center;
     align-items: center;
-    
   }
-  .formulario input{
+  .formulario input,select{
     width: 100%;
+    padding: 5px;
   }
   .formulario {
     width: 100%;
@@ -296,14 +326,14 @@ const resetearFormulario = () => {
     background-color: var(--color_principal);
     color: var(--color_letra_blanca);
     margin-right: 4px;
-    padding: 5px;
+    padding: 5px 10px;
     border-radius: 10px;
   }
   .btnEliminar {
     background-color: red;
     color: var(--color_letra_blanca);
     margin-left: 5px;
-    padding: 5px;
+    padding: 5px 10px;
     border-radius: 10px;
   }
   .btnAggAct{
@@ -311,7 +341,7 @@ const resetearFormulario = () => {
     background-color: var(--color_principal);
     color: var(--color_letra_blanca);
     border-radius: 10px;
-    padding: 4px;
+    padding: 5px 10px;
   }
   
   .btncancelar{
@@ -319,6 +349,6 @@ const resetearFormulario = () => {
     background-color:red;
     color: var(--color_letra_blanca);
     border-radius: 10px;
-    padding: 4px;
+    padding: 5px 10px;
   }
 </style>

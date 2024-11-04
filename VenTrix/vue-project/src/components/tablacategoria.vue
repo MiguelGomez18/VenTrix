@@ -163,7 +163,9 @@ const resetearFormulario = () => {
   .titulobuscar h1{
     font-size: 25px;
     color: var(--color_principal);
-  
+  }
+  .titulobuscar input{
+    width: 30%;
   }
   .encabezado{
     background-color: var(--color_principal);
@@ -174,8 +176,9 @@ const resetearFormulario = () => {
     justify-content: center;
     align-items: center;
   }
-  .formulario input{
+  .formulario input, select{
     width: 100%;
+    padding: 5px;
   }
   .formulario {
     width: 100%;
@@ -210,14 +213,14 @@ const resetearFormulario = () => {
     background-color: var(--color_principal);
     color: var(--color_letra_blanca);
     margin-right: 4px;
-    padding: 5px;
+    padding: 5px 10px;
     border-radius: 10px;
   }
   .btnEliminar {
     background-color: red;
     color: var(--color_letra_blanca);
     margin-left: 5px;
-    padding: 5px;
+    padding: 5px 10px;
     border-radius: 10px;
   }
   .btnAggAct{
@@ -225,7 +228,7 @@ const resetearFormulario = () => {
     background-color: var(--color_principal);
     color: var(--color_letra_blanca);
     border-radius: 10px;
-    padding: 4px;
+    padding: 5px 10px;
   }
   
   .btncancelar{
@@ -233,6 +236,6 @@ const resetearFormulario = () => {
     background-color:red;
     color: var(--color_letra_blanca);
     border-radius: 10px;
-    padding: 4px;
+    padding: 5px 10px;
   }
 </style>
