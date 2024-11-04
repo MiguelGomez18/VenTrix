@@ -1,43 +1,47 @@
 <template>
-    <div class="contenedorCategorias">
-      <div class="titulobuscar">
-        <h1>GESTIÓN DE CATEGORÍAS</h1>
-        <input 
-          type="text" 
-          v-model="consultaBusqueda" 
-          placeholder="Buscar Categoría" 
-        />
-      </div>
-  
-      <div class="contenedorformulario">
-        <form class="formulario" @submit.prevent="estaEditando ? actualizarCategoria() : agregarCategoria()">
-          <input type="text" v-model="categoria.nombre" placeholder="Nombre de la categoría" required />
-          <button class="btnAggAct" type="submit">{{ estaEditando ? 'Actualizar' : 'Agregar' }}</button>
-          <button class="btncancelar" type="button" @click="cancelarEdicion" v-if="estaEditando">Cancelar</button>
-        </form>
-      </div>
-  
-      <table>
-        <thead class="encabezado">
-          <tr>
-            <th class="td1">ID</th>
-            <th>Nombre</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(cate, indice) in categoriasFiltradas" :key="cate.id">
-            <td class="td1">{{ cate.id }}</td>
-            <td>{{ cate.nombre }}</td>
-            <td>
-              <button class="btnEditar" @click="editarCategoria(indice)">Editar</button>
-              <button class="btnEliminar" @click="eliminarCategoria(indice)">Eliminar</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="contenedorCategorias">
+    <div class="titulobuscar">
+      <h1>GESTIÓN DE CATEGORÍAS</h1>
+      <input 
+        type="text" 
+        v-model="consultaBusqueda" 
+        placeholder="Buscar Categoría" 
+      />
     </div>
-  </template>
+
+    <div class="contenedorformulario">
+      <form class="formulario" @submit.prevent="estaEditando ? actualizarCategoria() : agregarCategoria()">
+        <input type="number" v-model="categoria.id" placeholder="numero categoria" required />
+        <input type="text" v-model="categoria.nombre" placeholder="Nombre de la categoría" required />
+        <input type="text" v-model="categoria.descripcion" placeholder="Descripcion" required />
+        <button class="btnAggAct" type="submit">{{ estaEditando ? 'Actualizar' : 'Agregar' }}</button>
+        <button class="btncancelar" type="button" @click="cancelarEdicion" v-if="estaEditando">Cancelar</button>
+      </form>
+    </div>
+
+    <table>
+      <thead class="encabezado">
+        <tr>
+          <th class="td1">ID</th>
+          <th>Nombre</th>
+          <th>Descripcion</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(cate, indice) in categoriasFiltradas" :key="cate.id">
+          <td class="td1">{{ cate.id }}</td>
+          <td>{{ cate.nombre }}</td>
+          <td>{{ cate.descripcion }}</td>
+          <td>
+            <button class="btnEditar" @click="editarCategoria(indice)">Editar</button>
+            <button class="btnEliminar" @click="eliminarCategoria(indice)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
 
 <script setup>
 import Swal from 'sweetalert2';
@@ -46,6 +50,8 @@ import axios from 'axios';
 
 const categorias = ref([]);
 const categoria = ref({
+  id: '',
+  descripcion:'',
   nombre: ''
 });
 
@@ -71,9 +77,12 @@ const categoriasFiltradas = computed(() => {
 });
 
 const agregarCategoria = async () => {
+ 
+  
   try {
     const nuevaCategoria = { ...categoria.value };
-    const response = await axios.post('http://127.0.0.1:8000/registrar_categoria', nuevaCategoria);
+    console.log(nuevaCategoria);
+    const response = await axios.post('http://127.0.0.1:8080/categoria', nuevaCategoria);
 
     categorias.value.push(response.data);
     Swal.fire({
@@ -101,7 +110,7 @@ const editarCategoria = (indice) => {
 const actualizarCategoria = async () => {
   try {
     const categoriaActualizada = { ...categoria.value };
-    const response = await axios.put('http://127.0.0.1:8000/actualizar_categoria', categoriaActualizada);
+    const response = await axios.put(`http://127.0.0.1:8080/categoria/${categoriaActualizada.id}`, categoriaActualizada);
 
     categorias.value[indiceEdicion.value] = response.data;
     Swal.fire({
@@ -123,7 +132,7 @@ const actualizarCategoria = async () => {
 const eliminarCategoria = async (indice) => {
   try {
     const categoriaAEliminar = categorias.value[indice];
-    await axios.delete(`http://127.0.0.1:8000/eliminar_categoria/${categoriaAEliminar.id}`);
+    await axios.delete(`http://127.0.0.1:8080/categoria/${categoriaAEliminar.id}`);
     categorias.value.splice(indice, 1);
 
     Swal.fire({
@@ -152,44 +161,44 @@ const resetearFormulario = () => {
 };
 </script>
 
-
 <style>
-  .titulobuscar{
+  /* Estilos organizados y simplificados */
+  .titulobuscar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
   }
-  .titulobuscar h1{
+  .titulobuscar h1 {
     font-size: 25px;
     color: var(--color_principal);
   }
-  .titulobuscar input{
+  .titulobuscar input {
     width: 30%;
   }
-  .encabezado{
+  .encabezado {
     background-color: var(--color_principal);
     color: var(--color_letra_blanca);
   }
-  .contenedorformulario{
+  .contenedorformulario {
     display: flex;
     justify-content: center;
     align-items: center;
   }
-  .formulario input, select{
+  .formulario input, select {
     width: 100%;
     padding: 5px;
   }
   .formulario {
     width: 100%;
-    display: flex ;
+    display: flex;
     align-items: center;
     border: solid var(--color_principal);
     border-radius: 10px;
     gap: 10px;
     padding: 10px;
   }
-  .contenedorCategorias{
+  .contenedorCategorias {
     width: 80%;
     height: auto;
     border-radius: 10px;
@@ -210,36 +219,26 @@ const resetearFormulario = () => {
     padding: 5px;
     text-align: center;
   }
-  .td1{
+  .td1 {
     width: 4%;
+  }
+  .btnEditar, .btnEliminar, .btnAggAct, .btncancelar {
+    color: var(--color_letra_blanca);
+    padding: 5px 10px;
+    border-radius: 10px;
   }
   .btnEditar {
     background-color: var(--color_principal);
-    color: var(--color_letra_blanca);
     margin-right: 4px;
-    padding: 5px 10px;
-    border-radius: 10px;
   }
   .btnEliminar {
     background-color: red;
-    color: var(--color_letra_blanca);
     margin-left: 5px;
-    padding: 5px 10px;
-    border-radius: 10px;
   }
-  .btnAggAct{
-    width: 30%;
+  .btnAggAct {
     background-color: var(--color_principal);
-    color: var(--color_letra_blanca);
-    border-radius: 10px;
-    padding: 5px 10px;
   }
-  
-  .btncancelar{
-    width: 30%;
-    background-color:red;
-    color: var(--color_letra_blanca);
-    border-radius: 10px;
-    padding: 5px 10px;
+  .btncancelar {
+    background-color: red;
   }
 </style>
