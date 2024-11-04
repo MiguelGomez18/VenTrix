@@ -25,14 +25,14 @@
     <table>
       <thead class="encabezado">
         <tr>
-          <th>ID</th>
+          <th class="td1">ID</th>
           <th>Descripción</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(tp, indice) in tiposPagoFiltrados" :key="tp.id">
-          <td>{{ tp.id }}</td>
+          <td class="td1">{{ tp.id }}</td>
           <td>{{ tp.descripcion }}</td>
           <td>
             <button class="btnEditar" @click="editarTipoPago(indice)">Editar</button>
@@ -241,8 +241,12 @@ const resetearFormulario = () => {
   }
   
   th, td {
+    width: 10%;
     padding: 5px;
     text-align: center;
+  }
+  .td1{
+    width: 4%;
   }
   
   .btnEditar {

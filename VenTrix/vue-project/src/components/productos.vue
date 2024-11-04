@@ -31,21 +31,23 @@
     <table>
       <thead class="encabezado">
         <tr>
-          <th>ID</th>
+          <th class="td1">ID</th>
           <th>Nombre</th>
           <th>Precio</th>
           <th>Categoría</th>
+          <th>Imagen</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(prod, indice) in productosFiltrados" :key="prod.id_producto">
-          <td>{{ prod.id_producto }}</td>
+          <td class="td1">{{ prod.id_producto }}</td>
           <td>{{ prod.nombre }}</td>
           <td>{{ prod.precio }}</td>
           <td>
             {{ categoriasFiltradas.find(cate => cate.producto.some(pro => pro.id_producto === prod.id_producto))?.nombre || 'Sin Categoría' }}
           </td>
+          <td><img :src="`http://127.0.0.1:8080${prod.imagen}`" alt="" style="width: 80px;"></td>
           <td>
             <button class="btnEditar" @click="editarProducto(indice)">Editar</button>
             <button class="btnEliminar" @click="eliminarProducto(indice)">Eliminar</button>
@@ -319,8 +321,12 @@ const resetearFormulario = () => {
     border: 2px solid rgb(215, 226, 215);
   }
   th, td {
+    width: 10%;
     padding: 5px;
     text-align: center;
+  }
+  .td1{
+    width: 4%;
   }
   .btnEditar {
     background-color: var(--color_principal);
