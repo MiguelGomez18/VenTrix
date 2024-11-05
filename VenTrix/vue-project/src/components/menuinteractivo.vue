@@ -40,7 +40,7 @@ const alternarBotones = () => {
 const navegarARuta = (name) => {
   window.dispatchEvent(new Event('ocultarInicio')); 
   if (name == 'Mesas') {
-    router.push({ name: name, params: { nit: nit } });
+    router.push({ name: name, params: { idrestaurante: nit } });
   }
   router.push({ name: name});
 };

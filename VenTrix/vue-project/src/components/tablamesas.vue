@@ -40,14 +40,18 @@
 <script setup>
 import Swal from 'sweetalert2';
 import { ref, computed, onMounted } from 'vue';
+import { useCart } from '../stores/cart';
 import axios from 'axios';
 
-const nit = 1030; // ID de la sucursal
+const cart = useCart();
+const nit = cart.nit; 
 const mesas = ref([]);
 const mesa = ref({
   nombre: '',
-  estado: 'Fisica',
-  id_sucursal: nit
+  estado: 'FISICA',
+  sucursal: {
+    id: nit
+  }
 });
 
 const estaEditando = ref(false);
@@ -57,7 +61,7 @@ const consultaBusqueda = ref('');
 // Cargar mesas al montar el componente
 const buscarMesas = async (nit) => {
   try {
-    const respuesta = await axios.get(`http://localhost:8080/mesa/sucursal/${nit}`);
+    const respuesta = await axios.get(`http://localhost:8080/mesa/id_sucursal/${nit}`);
     mesas.value = respuesta.data;
   } catch (error) {
     console.error("Error al cargar mesas", error);
@@ -79,6 +83,7 @@ const mesasFiltradas = computed(() => {
 const agregarMesa = async () => {
   try {
     const nuevaMesa = { ...mesa.value };
+    console.log(nuevaMesa)
     const response = await axios.post('http://localhost:8080/mesa', nuevaMesa);
     mesas.value.push(response.data);
     Swal.fire({
@@ -154,7 +159,7 @@ const cancelarEdicion = () => {
 
 // Resetear formulario y estado
 const resetearFormulario = () => {
-  mesa.value = { nombre: '', estado: 'Fisica', id_sucursal: nit };
+  mesa.value = { nombre: '', estado: 'FISICA', sucursal: {id: nit} };
   estaEditando.value = false;
   indiceEdicion.value = null;
 };

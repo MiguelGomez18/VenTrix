@@ -19,7 +19,7 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 
 const props = defineProps({
-  nit: {
+  idrestaurante: {
     type: String,
     required: true
   }
@@ -27,16 +27,18 @@ const props = defineProps({
 const router = useRouter();
 const mesa = ref({
   nombre: 'Mesa rapida',
-  estado: 'Rapida',
-  id_sucursal: props.nit
+  estado: 'RAPIDA',
+  sucursal: {
+    id: props.idrestaurante
+  }
 });
 const mesaCompraRapida = ref([]); 
 
-console.log(props.nit)
+console.log(props.idrestaurante)
 
-const buscarMesas = async (nit) => {
+const buscarMesas = async (idrestaurante) => {
   try {
-    const respuesta = await axios.get(`http://127.0.0.1:8000/mesarapida/${nit}`); 
+    const respuesta = await axios.get(`http://127.0.0.1:8080/mesa_rapida/${props.idrestaurante}`); 
     mesaCompraRapida.value = respuesta.data;
     console.log(mesaCompraRapida.value)
   } catch (error) {
@@ -53,15 +55,15 @@ const agregarMesa = async () => {
   if (mesaCompraRapida.value == []) {
     const nuevaMesa = { ...mesa.value };
     console.log(mesa.value)
-    const response = await axios.post('http://127.0.0.1:8000/registrar_mesa', nuevaMesa);
-
+    const response = await axios.post('http://127.0.0.1:8080/mesa_rapida', nuevaMesa);
     mesaCompraRapida.value.push(response.data);
+    console.log(mesaCompraRapida.value)
   }
   
 };
 
 onMounted(() => {
-  buscarMesas(props.nit);
+  buscarMesas(props.idrestaurante);
   agregarMesa();
 });
 </script>
