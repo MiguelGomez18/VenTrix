@@ -1,7 +1,7 @@
 <template>
     <div class="contenedormesas">
-        <tarjetamesas :nit="nitSucursal"></tarjetamesas>
-        <comprarapida :nit="nitSucursal"></comprarapida>
+        <tarjetamesas :idrestaurante="nitSucursal"></tarjetamesas>
+        <comprarapida :idrestaurante="nitSucursal"></comprarapida>
     </div>
 </template>
 
@@ -10,14 +10,14 @@ import { defineProps } from 'vue';
 import tarjetamesas from '@/components/tarjetamesas.vue';
 import comprarapida from '@/components/comprarapida.vue';
 const props = defineProps({
-  nit: {
+  idrestaurante: {
     type: String,
     required: true
   }
 });
-const { nit } = props;
-console.log(nit)
-const nitSucursal = nit;
+const { idrestaurante } = props;
+console.log(idrestaurante)
+const nitSucursal = idrestaurante;
 
 </script>
 

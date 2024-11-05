@@ -20,25 +20,25 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 
 const props = defineProps({
-  nit: {
+  idrestaurante: {
     type: String,
     required: true
   }
 });
 const router = useRouter();
 const mesas = ref([]); 
-const { nit } = props;
-console.log(nit)
+const { idrestaurante } = props;
+console.log(idrestaurante)
 
 const navegarARuta = (mesaId) => {
   window.dispatchEvent(new Event('ocultarInicio'));
-  router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId ,nit} });  // Pasa el id de la mesa como parámetro
+  router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId ,idrestaurante} });  // Pasa el id de la mesa como parámetro
 };
 
 
-const obtenerMesas = async (nit) => {
+const obtenerMesas = async (idrestaurante) => {
   try {
-    const response = await axios.get(`http://localhost:8000/mesas/${nit}`); 
+    const response = await axios.get(`http://127.0.0.1:8080/mesa/id_sucursal/${idrestaurante}`); 
     mesas.value = response.data; 
   } catch (error) {
     console.error('Error al obtener las mesas:', error);
@@ -46,9 +46,9 @@ const obtenerMesas = async (nit) => {
 };
 
 onMounted(() => {
-  if (nit) {
-    console.log('NIT recibido:', nit);
-    obtenerMesas(nit);
+  if (idrestaurante) {
+    console.log('NIT recibido:', idrestaurante);
+    obtenerMesas(idrestaurante);
   }
 });
 </script>

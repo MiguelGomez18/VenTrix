@@ -31,7 +31,7 @@ const routes = [
     component: cuerpo,
     children: [
       {
-        path: '/mesas/:nit', 
+        path: '/mesas/:idrestaurante', 
         name: 'Mesas',
         component: mesas,
         props: true 
@@ -47,7 +47,7 @@ const routes = [
         component: informes,
       },
       {
-        path: '/seleccionarproductos/:id_mesa/:nit',
+        path: '/seleccionarproductos/:id_mesa/:idrestaurante',
         name: 'SeleccionarProductos',
         component: seleccionarproductos,
         props: true
