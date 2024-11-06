@@ -2,10 +2,9 @@
     <div 
       class="tarjetaProducto" 
       v-for="prod in productos" 
-      :key="prod.id" 
+      :key="prod.id_producto" 
       @click="seleccionarProducto(prod)"
-      :class="{ animated: selectedProductId === prod.id }"
-    >
+      :class="{ animated: selectedProductId === prod.id_producto }">
         <div class="imagenProducto">
             <img :src="`http://127.0.0.1:8080${prod.imagen}`" alt="Imagen del producto" class="imagen" />
         </div>
@@ -38,6 +37,7 @@
     try {
         const respuesta = await axios.get('http://127.0.0.1:8080/producto');
         productos.value = respuesta.data;
+        console.log(productos.value.imagen)
         console.log(productos.value)
     } catch (error) {
         console.error("Error al cargar productos", error);
@@ -56,8 +56,8 @@
       const productoConMesaId = { ...producto, mesaId };
   
       cart.addProduct(productoConMesaId); // Enviar el producto con mesaId al carrito
-      selectedProductId.value = producto.id; // Actualiza el producto seleccionado
-      console.log(`Producto seleccionado: ${producto.id} en la mesa: ${mesaId}`); // Agrega este log
+      selectedProductId.value = producto.id_producto; // Actualiza el producto seleccionado
+      console.log(`Producto seleccionado: ${producto.id_producto} en la mesa: ${mesaId}`); // Agrega este log
   
       // Resetea el producto seleccionado después de un tiempo
       setTimeout(() => {

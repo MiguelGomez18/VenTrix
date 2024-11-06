@@ -33,7 +33,7 @@ export const useCart = defineStore('cart', {
       if (!this.products[mesaId]) {
         this.products[mesaId] = []; // Crea una nueva lista de productos si no existe
       }
-      const existingProduct = this.products[mesaId].find(p => p.id === product.id);
+      const existingProduct = this.products[mesaId].find(p => p.id_producto === product.id_producto);
       if (existingProduct) {
         existingProduct.cantidad += 1;
       } else {
@@ -43,14 +43,14 @@ export const useCart = defineStore('cart', {
     
     // Método para aumentar la cantidad de un producto para una mesa específica
     increaseQuantity(mesaId, productId) {
-      const product = this.products[mesaId]?.find(p => p.id === productId);
+      const product = this.products[mesaId]?.find(p => p.id_producto === productId);
       if (product) {
         product.cantidad += 1;
       }
     },
     // Método para disminuir la cantidad de un producto para una mesa específica
     decreaseQuantity(mesaId, productId) {
-      const product = this.products[mesaId]?.find(p => p.id === productId);
+      const product = this.products[mesaId]?.find(p => p.id_producto === productId);
       if (product && product.cantidad > 1) {
         product.cantidad -= 1;
       }
@@ -58,7 +58,7 @@ export const useCart = defineStore('cart', {
     // Método para eliminar un producto del carrito de una mesa específica
     removeProduct(mesaId, productId) {
       if (this.products[mesaId]) {
-        this.products[mesaId] = this.products[mesaId].filter(p => p.id !== productId);
+        this.products[mesaId] = this.products[mesaId].filter(p => p.id_producto !== productId);
       }
     },
     // Método para reiniciar el carrito de una mesa específica

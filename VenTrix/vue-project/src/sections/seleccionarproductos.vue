@@ -62,7 +62,7 @@ const closeModal = () => {
       gap: 10px;
   }
   .section2 {
-      width: 60%;
+      width: 40%;
       display: flex;
       flex-wrap: wrap;
       gap: 10px;

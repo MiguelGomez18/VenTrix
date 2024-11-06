@@ -5,7 +5,7 @@
             <form class="sign-in1" @submit.prevent="loginSucursal">
                 <h2>SUCURSAL</h2>
                 <select v-model="nit2" required>
-                    <option value="">Seleccione su sucursal</option>
+                    <option value="" disabled>Seleccione su sucursal</option>
                     <option v-for="sucu in sucursalesFiltradas" :key="sucu.id" :value="sucu.id">
                         {{ sucu.nombre }}
                     </option>
@@ -37,10 +37,6 @@
                 <div class="container-input1">
                     <img src="../components/icons/icons8-contraseña-50.png" alt="Telefono">
                     <input type="text" placeholder="Telefono" v-model="telefono" required>
-                </div>
-                <div class="container-input1">
-                    <img src="../components/icons/icons8-correo-50.png" alt="Correo">
-                    <input type="Date" placeholder="Fecha apertura" v-model="fecha_apertura" required>
                 </div>
                 <router-link to="/registro">Volver..</router-link>
                 <button class="button1" type="submit">{{ frmlogin1 ? 'INICIAR' : 'REGISTRAR' }}</button>
@@ -87,8 +83,11 @@ const nombre = ref('');
 const direccion = ref('');
 const ciudad = ref('');
 const telefono = ref('');
-const fecha_apertura = ref('');
-const id_restaurante = ref('');
+const date = new Date();
+const dia = (date.getDate() < 10 ? '0':'') + date.getDate();
+const mes = date.getMonth() + 1;
+const año = date.getFullYear();
+const fecha_apertura = ref(`${año}-${mes}-${dia}`);
 const frmlogin1 = ref(true);
 const menError = ref('');
 const isToggled1 = ref(false);
@@ -112,7 +111,6 @@ const limpiarInputs = () => {
   direccion.value = '';
   ciudad.value = '';
   telefono.value = '';
-  fecha_apertura.value = '';
 };
 
 const buscar = async (idrestaurante) => {

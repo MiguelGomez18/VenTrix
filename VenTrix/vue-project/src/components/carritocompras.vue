@@ -11,6 +11,7 @@
             <th>Producto</th>
             <th>Cantidad</th>
             <th>Precio</th>
+            <th>Imagen</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -23,6 +24,7 @@
               <button class="quantity-btn1" @click="aumentarCantidad(producto)">+</button>
             </td>
             <td>{{ producto.precio * producto.cantidad | currency }}</td>
+            <td><img :src="`http://127.0.0.1:8080${producto.imagen}`" alt="" style="width: 80px;"></td>
             <td><button class="remove-btn" @click="eliminarProducto(producto)">Eliminar</button></td>
           </tr>
         </tbody>
@@ -48,6 +50,7 @@ const mesaId = route.params.id_mesa; // Obtener el id_mesa de los parámetros de
 // Computed para obtener los productos específicos de la mesa
 const mesaProducts = computed(() => cartStore.products[mesaId] || []);
 console.log(cartStore.products)
+console.log(mesaProducts.value)
 
 const agregarProducto = (producto) => {
   cartStore.addProduct({ ...producto, mesaId });  // Pasamos mesaId al agregar el producto
@@ -58,15 +61,15 @@ const mesaTotal = computed(() => cartStore.total(mesaId));
 
 // Funciones para manejar la cantidad de productos y eliminar
 const aumentarCantidad = (producto) => {
-  cartStore.increaseQuantity(mesaId, producto.id);
+  cartStore.increaseQuantity(mesaId, producto.id_producto);
 };
 
 const disminuirCantidad = (producto) => {
-  cartStore.decreaseQuantity(mesaId, producto.id);
+  cartStore.decreaseQuantity(mesaId, producto.id_producto);
 };
 
 const eliminarProducto = (producto) => {
-  cartStore.removeProduct(mesaId, producto.id);
+  cartStore.removeProduct(mesaId, producto.id_producto);
 };
 
 // Método para abrir el modal de pago

@@ -49,6 +49,12 @@
             <img src="../components/icons/icons8-contraseña-50.png" alt="Contraseña">
             <input type="password" placeholder="Password" v-model="password" required>
         </div>
+        <select v-model="rol" required>
+            <option value="" disabled>Seleccione su rol...</option>
+            <option v-for="ro in roles" :key="ro" :value="ro">
+                {{ ro }}
+            </option>
+        </select>
         <router-link to="/">Volver..</router-link>
         <button class="button" type="submit">{{ frmlogin ? 'INICIAR SESIÓN' : 'REGISTRARSE' }}</button>
         </form>
@@ -84,18 +90,23 @@ const idrestaurante = ref('');
 const nombre = ref('');
 const correo = ref('');
 const password = ref('');
-const rol = ref('ADMINISTRADOR');
-const fecha_creacion = ref('2024-10-15');
+const roles = ["ADMINISTRADOR","ADMINISTRADOR_SUCURSAL","CAJERO","MESERO","COCINERO"];
+const rol = ref('');
+const date = new Date();
+const dia = (date.getDate() < 10 ? '0':'') + date.getDate();
+const mes = date.getMonth() + 1;
+const año = date.getFullYear();
+const fecha_creacion = ref(`${año}-${mes}-${dia}`);
 const frmlogin = ref(true);
 const menError = ref('');
 const isToggled = ref(false);
-
 
 const limpiarInputs = () => {
   documento.value = '';
   nombre.value = '';
   correo.value = '';
   password.value = '';
+  rol.value = '';
 };
 
 const validarPassword = (password) => {

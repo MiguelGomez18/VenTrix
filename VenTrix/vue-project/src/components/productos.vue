@@ -138,6 +138,7 @@ const agregarProducto = async () => {
     formData.append("descripcion", producto.value.descripcion);
     formData.append("disponibilidad", producto.value.disponibilidad);
     formData.append("id_categoria", producto.value.categoria.id);
+    formData.append("id_sucursal", nit)
 
     if (file.value) {
       formData.append("imagen", file.value);
