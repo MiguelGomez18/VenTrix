@@ -59,7 +59,7 @@ const consultaBusqueda = ref(''); // Campo de búsqueda
 // Función para cargar los tipos de pago
 const buscarTiposPago = async () => {
   try {
-    const respuesta = await axios.get('http://127.0.0.1:8000/tipo_pago');
+    const respuesta = await axios.get('http://127.0.0.1:8080/tipo_pago');
     tiposPago.value = respuesta.data; // Asignar la respuesta a la lista de tipos de pago
   } catch (error) {
     console.error("Error al cargar tipos de pago", error);

@@ -37,8 +37,6 @@
     try {
         const respuesta = await axios.get('http://127.0.0.1:8080/producto');
         productos.value = respuesta.data;
-        console.log(productos.value.imagen)
-        console.log(productos.value)
     } catch (error) {
         console.error("Error al cargar productos", error);
     }

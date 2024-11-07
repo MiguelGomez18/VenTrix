@@ -16,31 +16,27 @@
 <script setup>
 import { ref, onMounted, defineProps } from 'vue';
 import axios from 'axios';
+import { useCart } from '../stores/cart';
 import { useRouter } from 'vue-router';
 
-const props = defineProps({
-  idrestaurante: {
-    type: String,
-    required: true
-  }
-});
 const router = useRouter();
+const cart = useCart();
+const nit = cart.nit; 
 const mesa = ref({
-  nombre: 'Mesa rapida',
+  nombre: 'Mesa Rapida',
   estado: 'RAPIDA',
   sucursal: {
-    id: props.idrestaurante
+    id: nit
   }
 });
 const mesaCompraRapida = ref([]); 
 
-console.log(props.idrestaurante)
+console.log(nit)
 
-const buscarMesas = async (idrestaurante) => {
+const buscarMesas = async (nit) => {
   try {
-    const respuesta = await axios.get(`http://127.0.0.1:8080/mesa_rapida/${props.idrestaurante}`); 
+    const respuesta = await axios.get(`http://127.0.0.1:8080/mesa/mesa_rapida/id_sucursal/${nit}`); 
     mesaCompraRapida.value = respuesta.data;
-    console.log(mesaCompraRapida.value)
   } catch (error) {
     console.error("Error al cargar mesas", error);
   }
@@ -48,22 +44,21 @@ const buscarMesas = async (idrestaurante) => {
 
 const navegarARuta = (mesaId) => {
   window.dispatchEvent(new Event('ocultarInicio'));
-  router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId } });
+  router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId, nit } });
 };
 
 const agregarMesa = async () => {
   if (mesaCompraRapida.value == []) {
     const nuevaMesa = { ...mesa.value };
     console.log(mesa.value)
-    const response = await axios.post('http://127.0.0.1:8080/mesa_rapida', nuevaMesa);
+    const response = await axios.post('http://127.0.0.1:8080/mesa', nuevaMesa);
     mesaCompraRapida.value.push(response.data);
     console.log(mesaCompraRapida.value)
   }
-  
 };
 
 onMounted(() => {
-  buscarMesas(props.idrestaurante);
+  buscarMesas(nit);
   agregarMesa();
 });
 </script>

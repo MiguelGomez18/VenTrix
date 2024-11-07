@@ -63,7 +63,7 @@ const consultaBusqueda = ref(''); // Campo de búsqueda
 // Función para cargar los tipos de pago
 const buscarTiposPago = async () => {
   try {
-    const respuesta = await axios.get('http://127.0.0.1:8000/tipo_pago');
+    const respuesta = await axios.get('http://127.0.0.1:8080/tipo_pago');
     tiposPago.value = respuesta.data; // Asignar la respuesta a la lista de tipos de pago
   } catch (error) {
     console.error("Error al cargar tipos de pago", error);
@@ -91,7 +91,7 @@ const tiposPagoFiltrados = computed(() => {
 const agregarTipoPago = async () => {
   try {
     const nuevoTipoPago = { ...tipoPago.value };
-    const response = await axios.post('http://127.0.0.1:8000/tipo_pago/registrar', nuevoTipoPago); // Cambiar URL aquí
+    const response = await axios.post('http://127.0.0.1:8080/tipo_pago/registrar', nuevoTipoPago); // Cambiar URL aquí
     tiposPago.value.push(response.data); // Agregar nuevo tipo de pago a la lista
 
     Swal.fire({
