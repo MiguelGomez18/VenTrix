@@ -87,14 +87,11 @@ const tiposPagoFiltrados = computed(() => {
   );
 });
 
-
-
-
 // Función para agregar un nuevo tipo de pago
 const agregarTipoPago = async () => {
   try {
     const nuevoTipoPago = { ...tipoPago.value };
-    const response = await axios.post('http://127.0.0.1:8000/registrar_tipo_pago', nuevoTipoPago);
+    const response = await axios.post('http://127.0.0.1:8000/tipo_pago/registrar', nuevoTipoPago); // Cambiar URL aquí
     tiposPago.value.push(response.data); // Agregar nuevo tipo de pago a la lista
 
     Swal.fire({
@@ -125,7 +122,7 @@ const editarTipoPago = (indice) => {
 const actualizarTipoPago = async () => {
   try {
     const tipoPagoActualizado = { ...tipoPago.value };
-    await axios.put(`http://127.0.0.1:8000/tipo_pago/${tipoPagoActualizado.id}`, tipoPagoActualizado);
+    await axios.put(`http://127.0.0.1:8000/tipo_pago/${tipoPagoActualizado.id}`, tipoPagoActualizado); // Cambiar URL aquí
 
     await buscarTiposPago(); // Volver a cargar toda la lista de tipos de pago
 
@@ -145,13 +142,12 @@ const actualizarTipoPago = async () => {
   }
 };
 
-
 // Función para eliminar un tipo de pago
 const eliminarTipoPago = async (indice) => {
   try {
     const tipoPagoAEliminar = tiposPago.value[indice];
     // Enviar la solicitud DELETE con el ID del tipo de pago
-    await axios.delete(`http://127.0.0.1:8000/tipo_pago/${tipoPagoAEliminar.id}`);
+    await axios.delete(`http://127.0.0.1:8000/tipo_pago/${tipoPagoAEliminar.id}`); // Cambiar URL aquí
     tiposPago.value.splice(indice, 1); // Eliminar el tipo de pago de la lista
 
     Swal.fire({
@@ -180,7 +176,6 @@ const resetearFormulario = () => {
   estaEditando.value = false;
   indiceEdicion.value = null;
 };
-
 </script>
 
 <style>
@@ -281,5 +276,3 @@ const resetearFormulario = () => {
     padding: 4px;
   }
 </style>
-
-  
