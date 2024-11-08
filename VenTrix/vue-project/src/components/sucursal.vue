@@ -117,6 +117,7 @@ const buscar = async (idrestaurante) => {
   try {
     const respuesta = await axios.get(`http://127.0.0.1:8080/sucursal/id_sucursal/${idrestaurante}`); 
     sucursales.value = respuesta.data;
+    console.log(sucursales.value)
   } catch (error) {
     console.error("Error al cargar sucursales", error);
   }

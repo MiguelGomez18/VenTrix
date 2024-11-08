@@ -31,7 +31,7 @@
   
   const buscarCategorias = async () => {
     try {
-      const respuesta = await axios.get('http://127.0.0.1:8000/categoria'); 
+      const respuesta = await axios.get('http://127.0.0.1:8080/categoria'); 
       categorias.value = respuesta.data;
     } catch (error) {
       console.error("Error al cargar categorías", error);

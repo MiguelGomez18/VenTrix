@@ -21,7 +21,7 @@
           </option>
         </select>
         <input type="text" v-model="producto.descripcion" placeholder="Descripcion"/>
-        <input type="file" @change="onFileChange" id="file" required/>
+        <input type="file" @change="onFileChange" ref="fileInput" />
         <label for="">Disponible<input type="checkbox" v-model="producto.disponibilidad"/></label>
         <button class="btnAggAct" type="submit">{{ estaEditando ? 'Actualizar' : 'Agregar' }}</button>
         <button class="btncancelar" type="button" @click="cancelarEdicion" v-if="estaEditando">Cancelar</button>
@@ -67,6 +67,7 @@ import { useCart } from '@/stores/cart';
 const cart = useCart();
 const nit = cart.getNit;
 const file = ref(null);
+const fileInput = ref(null);
 const productos = ref([]);
 const categorias = ref([]);
 const onFileChange = (event) => {
@@ -94,6 +95,7 @@ const buscar = async () => {
   try {
     const respuesta = await axios.get('http://127.0.0.1:8080/producto');
     productos.value = respuesta.data;
+    console.log(productos.value)
   } catch (error) {
     console.error("Error al cargar productos", error);
   }
@@ -139,10 +141,8 @@ const agregarProducto = async () => {
     formData.append("disponibilidad", producto.value.disponibilidad);
     formData.append("id_categoria", producto.value.categoria.id);
     formData.append("id_sucursal", nit)
-
-    if (file.value) {
-      formData.append("imagen", file.value);
-    }
+    formData.append("imagen", file.value);
+    
 
     const response = await axios.post(
       'http://127.0.0.1:8080/producto/registrar_producto', 
@@ -191,8 +191,36 @@ const actualizarProducto = async () => {
         formData.append('precio', producto.value.precio);
         formData.append("id_categoria", producto.value.categoria.id);
         formData.append('descripcion', producto.value.descripcion);
-        formData.append('imagen', file.value); 
         formData.append('disponibilidad', producto.value.disponibilidad);
+
+        
+
+        if (file.value != null) {
+          // Si el usuario seleccionó una nueva imagen
+          console.log("entra");
+          formData.append('imagen', file.value);
+        } else {
+          // Si no hay nueva imagen, usar la imagen existente
+          const productoEncontrado = productos.value.find(p => p.id_producto === producto.value.id_producto);
+          console.log(productoEncontrado.imagen);
+          try {
+            const imagenUrl = `http://127.0.0.1:8080${productoEncontrado.imagen}`;
+            const respuesta = await fetch(imagenUrl);
+            
+            if (!respuesta.ok) {
+              throw new Error('No se pudo obtener la imagen');
+            }
+
+            // Convertir la respuesta a un Blob
+            const imagenBlob = await respuesta.blob();
+            const imagenFile = new File([imagenBlob], productoEncontrado.imagen.split('/imagenes/'+productoEncontrado.id_producto+'-').pop(), { type: imagenBlob.type });
+
+            console.log(imagenFile);
+            formData.append('imagen', imagenFile);
+          } catch (error) {
+            console.error('Error al obtener la imagen existente:', error);
+          }
+        }
 
         const response = await axios.put(`http://127.0.0.1:8080/producto/${producto.value.id_producto}`, formData, {
             headers: {
@@ -209,6 +237,7 @@ const actualizarProducto = async () => {
     });
     
     resetearFormulario();
+    console.log(file.value)
   } catch (error) {
     console.error('Error al actualizar el producto:', error);
     Swal.fire({
@@ -259,7 +288,8 @@ const resetearFormulario = () => {
     imagen: '',      
     disponibilidad: false 
   };
-  file.value = null; 
+  file.value = null;
+  fileInput.value.value = null;
   estaEditando.value = false;
   indiceEdicion.value = null;
 };
