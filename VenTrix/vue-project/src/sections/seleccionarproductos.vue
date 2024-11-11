@@ -1,8 +1,8 @@
 <template>
     <div class="cuadro1">
       <div class="section1">
-        <menucategorias></menucategorias>
-        <tarjetaproductos :nit="nitSucursal"></tarjetaproductos>
+        <menucategorias :idrestaurante="idrestaurante"></menucategorias>
+        <tarjetaproductos :idrestaurante="idrestaurante"></tarjetaproductos>
       </div>
       <div class="section2">
         <carritocompras @open-payment-modal="openModal"></carritocompras>
@@ -17,28 +17,23 @@
   import carritocompras from '@/components/carritocompras.vue';
   import tarjetaproductos from '@/components/tarjetaproductos.vue';
   import pago from '@/components/pago.vue';
+  import { useCart } from '@/stores/cart';
 
-  const props = defineProps({
-    nit: {
-      type: String,
-      required: true
-    }
-  })
-
-  const {nit} = props;
-  const nitSucursal = nit;
+  const cart = useCart();
+  const idrestaurante = cart.restaurante;
+  console.log(idrestaurante)
   
   const showModal = ref(false);
   
   const openModal = () => {
-  showModal.value = true; // Abre el modal
-  console.log("Modal abierto:", showModal.value);
-};
+    showModal.value = true; 
+    console.log("Modal abierto:", showModal.value);
+  };
 
-const closeModal = () => {
-  showModal.value = false; // Cierra el modal
-  console.log("Modal cerrado desde el padre:", showModal.value);
-};
+  const closeModal = () => {
+    showModal.value = false;
+    console.log("Modal cerrado desde el padre:", showModal.value);
+  };
 
   </script>
   
@@ -55,6 +50,7 @@ const closeModal = () => {
       gap: 15px;
   }
   .section1 {
+      width: 60%;
       display: flex;
       justify-content: start;
       align-items: center;

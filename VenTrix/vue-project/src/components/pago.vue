@@ -46,21 +46,33 @@ import Swal from 'sweetalert2';
 
 // Store del carrito
 const cart = useCart();
-const showModal = ref(true); // Controlado desde el padre
+const restaurante = cart.restaurante;
+const showModal = ref(true);
 const route = useRoute();
-const mesaId = route.params.id_mesa; // Obtener el id_mesa de los parámetros de la ruta
-const tiposPago = ref([]); // Lista de tipos de pago
+const mesaId = route.params.id_mesa; 
+const tiposPago = ref([]); 
 const tipoPago = ref({
-  id: '',         // ID del tipo de pago
-  descripcion: '' // Descripción del tipo de pago
+  id: '',        
+  descripcion: '' 
 });
 const consultaBusqueda = ref(''); // Campo de búsqueda
 
 // Función para cargar los tipos de pago
 const buscarTiposPago = async () => {
   try {
-    const respuesta = await axios.get('http://127.0.0.1:8080/tipo_pago');
-    tiposPago.value = respuesta.data; // Asignar la respuesta a la lista de tipos de pago
+    const respuesta1 = await axios.get(`http://127.0.0.1:8080/sucursal/id_sucursal/${restaurante}`);
+    const sucursales = respuesta1.data;
+
+    const tiposPagosPromises = sucursales.map(async (sucursal) => {
+      const respuesta = await axios.get(`http://127.0.0.1:8080/tipo_pago/id_sucursal/${sucursal.id}`);
+      return respuesta.data;
+    });
+
+    tiposPago.value = (await Promise.all(tiposPagosPromises))
+      .flat()
+      .sort((a, b) => a.id - b.id); 
+
+    console.log("Tipos pagos cargados:", tiposPago.value);
   } catch (error) {
     console.error("Error al cargar tipos de pago", error);
     Swal.fire({
@@ -122,7 +134,7 @@ const allPaymentMethodsValid = computed(() => {
   return paymentMethods.value.every(method => method.type !== "");
 });
 
-// Cerrar el modal
+
 const closeModal = () => {
   if (remainingAmount.value === 0 && allPaymentMethodsValid.value) {
     Swal.fire({
@@ -130,9 +142,9 @@ const closeModal = () => {
       title: 'Pago exitoso',
       text: 'Gracias por comprar con nosotros',
     });
-
+    console.log(cart.products[mesaId])
     paymentMethods.value = [{ type: "", amount: 0 }];
-    cart.resetCart(mesaId); // Asegúrate de pasar el 'mesaId' al método
+    cart.resetCart(mesaId); 
     showModal.value = false;
     emit('close-modal');
   } else {
@@ -144,7 +156,7 @@ const closeModal = () => {
   }
 };
 
-// Llamar a buscarTiposPago cuando el componente se monte
+
 onMounted(() => {
   buscarTiposPago();
 });

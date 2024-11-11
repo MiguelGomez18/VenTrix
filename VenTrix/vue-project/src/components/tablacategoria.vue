@@ -11,7 +11,6 @@
 
     <div class="contenedorformulario">
       <form class="formulario" @submit.prevent="estaEditando ? actualizarCategoria() : agregarCategoria()">
-        <input type="number" v-model="categoria.id" placeholder="numero categoria" required />
         <input type="text" v-model="categoria.nombre" placeholder="Nombre de la categoría" required />
         <input type="text" v-model="categoria.descripcion" placeholder="Descripcion" required />
         <button class="btnAggAct" type="submit">{{ estaEditando ? 'Actualizar' : 'Agregar' }}</button>
@@ -22,7 +21,6 @@
     <table>
       <thead class="encabezado">
         <tr>
-          <th class="td1">ID</th>
           <th>Nombre</th>
           <th>Descripcion</th>
           <th>Acciones</th>
@@ -30,7 +28,6 @@
       </thead>
       <tbody>
         <tr v-for="(cate, indice) in categoriasFiltradas" :key="cate.id">
-          <td class="td1">{{ cate.id }}</td>
           <td>{{ cate.nombre }}</td>
           <td>{{ cate.descripcion }}</td>
           <td>
@@ -47,12 +44,17 @@
 import Swal from 'sweetalert2';
 import { ref, computed } from 'vue';
 import axios from 'axios';
+import { useCart } from '@/stores/cart';
 
+const cart = useCart();
+const restaurante = cart.restaurante;
+const nit = cart.nit;
 const categorias = ref([]);
 const categoria = ref({
   id: '',
   descripcion:'',
-  nombre: ''
+  nombre: '',
+  sucursal: nit
 });
 
 const estaEditando = ref(false);
@@ -61,10 +63,19 @@ const consultaBusqueda = ref('');
 
 const buscarCategorias = async () => {
   try {
-    const respuesta = await axios.get('http://127.0.0.1:8080/categoria'); 
-    categorias.value = respuesta.data;
-    console.log(categorias.value);
-    
+    const respuesta1 = await axios.get(`http://127.0.0.1:8080/sucursal/id_sucursal/${restaurante}`);
+    const sucursales = respuesta1.data;
+
+    const categoriasPromises = sucursales.map(async (sucursal) => {
+      const respuesta = await axios.get(`http://127.0.0.1:8080/categoria/id_sucursal/${sucursal.id}`);
+      return respuesta.data;
+    });
+
+    categorias.value = (await Promise.all(categoriasPromises))
+      .flat()
+      .sort((a, b) => a.id_producto - b.id_producto); 
+
+    console.log("Categorias cargadas:", categorias.value);
   } catch (error) {
     console.error("Error al cargar categorias", error);
   }
@@ -79,8 +90,6 @@ const categoriasFiltradas = computed(() => {
 });
 
 const agregarCategoria = async () => {
- 
-  
   try {
     const nuevaCategoria = { ...categoria.value };
     console.log(nuevaCategoria);

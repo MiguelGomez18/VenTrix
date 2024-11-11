@@ -7,6 +7,7 @@ import mesas from "@/sections/mesas.vue";
 import informes from "@/sections/informes.vue";
 import seleccionarproductos from "@/sections/seleccionarproductos.vue";
 import sucursal from "@/components/sucursal.vue";
+import tarjetaproductos from "@/components/tarjetaproductos.vue";
 
 const routes = [
   {
@@ -31,7 +32,7 @@ const routes = [
     component: cuerpo,
     children: [
       {
-        path: '/mesas/:idrestaurante', 
+        path: '/mesas/:nit', 
         name: 'Mesas',
         component: mesas,
         props: true 
@@ -47,10 +48,18 @@ const routes = [
         component: informes,
       },
       {
-        path: '/seleccionarproductos/:id_mesa/:idrestaurante',
+        path: '/seleccionarproductos/:id_mesa/:nit',
         name: 'SeleccionarProductos',
         component: seleccionarproductos,
-        props: true
+        props: true,
+        children: [
+          {
+            path: '/tarjetaproductos/:categoria', 
+            name: 'TarjetaProductos',
+            component: tarjetaproductos,
+            props: true,
+          },
+        ]
       },
     ],
   },

@@ -4,6 +4,8 @@ import { defineStore } from 'pinia';
 const initialState = () => ({
   products: {}, // Cambiamos a un objeto (diccionario) donde la clave será id_mesa
   nit: '', 
+  restaurante: '',
+  categoria: null,
 });
 
 export const useCart = defineStore('cart', {
@@ -22,10 +24,22 @@ export const useCart = defineStore('cart', {
     getNit: (state) => {
       return state.nit;
     },
+    getRestaurante: (state) => {
+      return state.restaurante;
+    },
+    getCategoria: (state) => {
+      return state.categoria;
+    },
   },
   actions: {
     setNit(nitValue) {
       this.nit = nitValue;
+    },
+    setRestaurante(restauranteValue) {
+      this.restaurante = restauranteValue;
+    },
+    setCategoria(categoriaValue) {
+      this.categoria = categoriaValue;
     },
     // Método para agregar un producto al carrito de una mesa específica
     addProduct(product) {

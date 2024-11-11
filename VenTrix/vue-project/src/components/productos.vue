@@ -11,7 +11,6 @@
 
     <div class="contenedorformulario">
       <form class="formulario" @submit.prevent="estaEditando ? actualizarProducto() : agregarProducto()">
-        <input type="number" v-model="producto.id_producto" placeholder="ID del producto" required />
         <input type="text" v-model="producto.nombre" placeholder="Nombre del producto" required />
         <input type="number" v-model="producto.precio" placeholder="Precio" required />
         <select v-model="producto.categoria.id" required>
@@ -31,7 +30,6 @@
     <table>
       <thead class="encabezado">
         <tr>
-          <th class="td1">ID</th>
           <th>Nombre</th>
           <th>Precio</th>
           <th>Categoría</th>
@@ -41,7 +39,6 @@
       </thead>
       <tbody>
         <tr v-for="(prod, indice) in productosFiltrados" :key="prod.id_producto">
-          <td class="td1">{{ prod.id_producto }}</td>
           <td>{{ prod.nombre }}</td>
           <td>{{ prod.precio }}</td>
           <td>
@@ -66,6 +63,7 @@ import { useCart } from '@/stores/cart';
 
 const cart = useCart();
 const nit = cart.getNit;
+const restaurante = cart.restaurante;
 const file = ref(null);
 const fileInput = ref(null);
 const productos = ref([]);
@@ -93,9 +91,19 @@ const consultaBusqueda1 = ref('');
 
 const buscar = async () => {
   try {
-    const respuesta = await axios.get('http://127.0.0.1:8080/producto');
-    productos.value = respuesta.data;
-    console.log(productos.value)
+    const respuesta1 = await axios.get(`http://127.0.0.1:8080/sucursal/id_sucursal/${restaurante}`);
+    const sucursales = respuesta1.data;
+
+    const productosPromises = sucursales.map(async (sucursal) => {
+      const respuesta = await axios.get(`http://127.0.0.1:8080/producto/id_sucursal/${sucursal.id}`);
+      return respuesta.data;
+    });
+
+    productos.value = (await Promise.all(productosPromises))
+      .flat()
+      .sort((a, b) => a.id_producto - b.id_producto); 
+
+    console.log("Productos cargados:", productos.value);
   } catch (error) {
     console.error("Error al cargar productos", error);
   }
@@ -103,8 +111,19 @@ const buscar = async () => {
 
 const buscarcategorias = async () => {
   try {
-    const respuesta = await axios.get('http://127.0.0.1:8080/categoria'); 
-    categorias.value = respuesta.data;
+    const respuesta1 = await axios.get(`http://127.0.0.1:8080/sucursal/id_sucursal/${restaurante}`);
+    const sucursales = respuesta1.data;
+
+    const categoriasPromises = sucursales.map(async (sucursal) => {
+      const respuesta = await axios.get(`http://127.0.0.1:8080/categoria/id_sucursal/${sucursal.id}`);
+      return respuesta.data;
+    });
+
+    categorias.value = (await Promise.all(categoriasPromises))
+      .flat()
+      .sort((a, b) => a.id - b.id); 
+
+    console.log("Categorias cargadas:", categorias.value);
   } catch (error) {
     console.error("Error al cargar categorias", error);
   }
@@ -134,7 +153,6 @@ const categoriasFiltradas = computed(() => {
 const agregarProducto = async () => {
   try {
     const formData = new FormData();
-    formData.append("id_producto", producto.value.id_producto);
     formData.append("nombre", producto.value.nombre);
     formData.append("precio", producto.value.precio);
     formData.append("descripcion", producto.value.descripcion);
@@ -193,14 +211,13 @@ const actualizarProducto = async () => {
         formData.append('descripcion', producto.value.descripcion);
         formData.append('disponibilidad', producto.value.disponibilidad);
 
-        
 
         if (file.value != null) {
-          // Si el usuario seleccionó una nueva imagen
-          console.log("entra");
+
           formData.append('imagen', file.value);
+
         } else {
-          // Si no hay nueva imagen, usar la imagen existente
+
           const productoEncontrado = productos.value.find(p => p.id_producto === producto.value.id_producto);
           console.log(productoEncontrado.imagen);
           try {
@@ -211,7 +228,6 @@ const actualizarProducto = async () => {
               throw new Error('No se pudo obtener la imagen');
             }
 
-            // Convertir la respuesta a un Blob
             const imagenBlob = await respuesta.blob();
             const imagenFile = new File([imagenBlob], productoEncontrado.imagen.split('/imagenes/'+productoEncontrado.id_producto+'-').pop(), { type: imagenBlob.type });
 
@@ -355,9 +371,6 @@ const resetearFormulario = () => {
     width: 10%;
     padding: 5px;
     text-align: center;
-  }
-  .td1{
-    width: 4%;
   }
   .btnEditar {
     background-color: var(--color_principal);

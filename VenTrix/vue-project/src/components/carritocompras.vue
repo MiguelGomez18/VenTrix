@@ -30,7 +30,6 @@
         </tbody>
       </table>
       <p class="cart-total">Total: {{ mesaTotal | currency }}</p>
-      <!-- Botón para abrir el modal -->
       <button class="pay-btn" @click="openPaymentModal">Pagar</button>
       <button class="pay-btn" @click="comandar">Comandar</button>
     </div>
@@ -40,8 +39,10 @@
 <script setup>
 import { useRoute } from 'vue-router'; // Para obtener el id de la mesa
 import { useCart } from '../stores/cart';
-import { computed, defineEmits } from 'vue';
+import { ref,computed, defineEmits } from 'vue';
+import Swal from 'sweetalert2';
 
+const detalle = ref({})
 const emit = defineEmits();
 const cartStore = useCart();
 const route = useRoute(); // Obtener la ruta actual
@@ -78,10 +79,26 @@ const openPaymentModal = () => {
 };
 
 const comandar = () => {
-  emit('open-comienda'); // Emitir evento al padre
+  const element = [];
+  element.value = cartStore.products[mesaId];
+  element.value.forEach(element1 => {
+    detalle.value = {
+      cantidad: element1.cantidad,
+      precio_unitario: element1.precio,
+      precio_total: element1.precio * element1.cantidad,
+      producto: {
+        id_producto: element1.id_producto
+      }
+    }
+    console.log(detalle.value);
+  });
+  Swal.fire({
+    icon: 'success',
+    title: 'Ticket exitoso',
+    text: 'Ha sido enviado a cocina',
+  });
 };
 </script>
-  
   
   <style scoped>
   .cart-container {

@@ -14,56 +14,71 @@
   </template>
   
   <script setup>
-  import { onMounted, ref } from 'vue';
+  import { onMounted, ref, watch} from 'vue';
+  import { defineProps } from 'vue';
   import { useCart } from '../stores/cart';
   import axios from 'axios';
-  import { useRoute } from 'vue-router'; // Para obtener el mesaId de la ruta
-  
+  import { useRoute } from 'vue-router'; 
+
   const props = defineProps({
-    nit: {
+    idrestaurante: {
         type: String,
         required: true
     }
-  })
+  });
 
   const productos = ref([]);
   const cart = useCart();
-  const selectedProductId = ref(null); // Estado para el producto seleccionado
+  const selectedProductId = ref(null);
   const route = useRoute();
-  const {nit} = props
-  const mesaId = route.params.id_mesa; // Obtener el id_mesa de los parámetros de la ruta
-  
+  const mesaId = route.params.id_mesa; 
+  const categoria = ref(route.params.categoria);
+
   const buscar = async () => {
     try {
-        const respuesta = await axios.get('http://127.0.0.1:8080/producto');
-        productos.value = respuesta.data;
+        const idrestaurante = props.idrestaurante;
+        const sucursales = await axios.get(`http://127.0.0.1:8080/sucursal/id_sucursal/${idrestaurante}`);
+        const productosPromises = sucursales.data.map(async (sucursal) => {
+        const url = categoria.value
+            ? `http://127.0.0.1:8080/producto/categoria/${sucursal.id}/${categoria.value}`
+            : `http://127.0.0.1:8080/producto/disponibilidad/${sucursal.id}`;
+        
+        const respuesta = await axios.get(url);
+        return respuesta.data;
+        });
+
+        productos.value = (await Promise.all(productosPromises)).flat().sort((a, b) => a.id_producto - b.id_producto);
+        console.log("Productos cargados: ",productos.value)
     } catch (error) {
         console.error("Error al cargar productos", error);
     }
   };
 
-  onMounted(() =>{
-    if(nit) {
-        console.log("NIT RECIBIDO", nit)
-        buscar(nit)
-    }
-  })
+  onMounted(() => {
+    buscar();
+  });
+
+  watch(() => route.params.categoria, (newCategoria) => {
+    categoria.value = newCategoria;
+    buscar();
+    setTimeout(() => {
+        categoria.value = null;  
+        buscar(false); 
+    }, 10000); 
+  });
   
   const seleccionarProducto = (producto) => {
-      // Agregar mesaId al producto antes de enviarlo al carrito
       const productoConMesaId = { ...producto, mesaId };
   
-      cart.addProduct(productoConMesaId); // Enviar el producto con mesaId al carrito
-      selectedProductId.value = producto.id_producto; // Actualiza el producto seleccionado
-      console.log(`Producto seleccionado: ${producto.id_producto} en la mesa: ${mesaId}`); // Agrega este log
+      cart.addProduct(productoConMesaId); 
+      selectedProductId.value = producto.id_producto; 
+      console.log(`Producto seleccionado: ${producto.id_producto} en la mesa: ${mesaId}`); 
   
-      // Resetea el producto seleccionado después de un tiempo
       setTimeout(() => {
           selectedProductId.value = null;
-      }, 300); // Debe coincidir con la duración de la animación
+      }, 300);
   };
   
-  buscar();
   </script>
 
 

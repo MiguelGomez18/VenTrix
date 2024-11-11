@@ -11,12 +11,7 @@
 
     <div class="contenedorformulario">
       <form class="formulario" @submit.prevent="estaEditando ? actualizarTipoPago() : agregarTipoPago()">
-        <!-- Campo para el ID del tipo de pago -->
-        <input type="number" v-model="tipoPago.id" placeholder="ID del tipo de pago" required />
-
-        <!-- Campo para la descripción del tipo de pago -->
         <input type="text" v-model="tipoPago.descripcion" placeholder="Descripción del tipo de pago" required />
-
         <button class="btnAggAct" type="submit">{{ estaEditando ? 'Actualizar' : 'Agregar' }}</button>
         <button class="btncancelar" type="button" @click="cancelarEdicion" v-if="estaEditando">Cancelar</button>
       </form>
@@ -25,14 +20,12 @@
     <table>
       <thead class="encabezado">
         <tr>
-          <th class="td1">ID</th>
           <th>Descripción</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(tp, indice) in tiposPagoFiltrados" :key="tp.id">
-          <td class="td1">{{ tp.id }}</td>
           <td>{{ tp.descripcion }}</td>
           <td>
             <button class="btnEditar" @click="editarTipoPago(indice)">Editar</button>
@@ -48,12 +41,17 @@
 import Swal from 'sweetalert2';
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
+import { useCart } from '@/stores/cart';
 
+const cart = useCart();
+const restaurante = cart.restaurante;
+const nit = cart.nit;
 // Variables reactivas
 const tiposPago = ref([]); // Lista de tipos de pago
 const tipoPago = ref({
   id: '',         // ID del tipo de pago
-  descripcion: '' // Descripción del tipo de pago
+  descripcion: '', // Descripción del tipo de pago
+  sucursal: nit
 });
 
 const estaEditando = ref(false); // Estado de edición
@@ -63,8 +61,19 @@ const consultaBusqueda = ref(''); // Campo de búsqueda
 // Función para cargar los tipos de pago
 const buscarTiposPago = async () => {
   try {
-    const respuesta = await axios.get('http://127.0.0.1:8080/tipo_pago');
-    tiposPago.value = respuesta.data; // Asignar la respuesta a la lista de tipos de pago
+    const respuesta1 = await axios.get(`http://127.0.0.1:8080/sucursal/id_sucursal/${restaurante}`);
+    const sucursales = respuesta1.data;
+
+    const tiposPagosPromises = sucursales.map(async (sucursal) => {
+      const respuesta = await axios.get(`http://127.0.0.1:8080/tipo_pago/id_sucursal/${sucursal.id}`);
+      return respuesta.data;
+    });
+
+    tiposPago.value = (await Promise.all(tiposPagosPromises))
+      .flat()
+      .sort((a, b) => a.id - b.id); 
+
+    console.log("Tipos pagos cargados:", tiposPago.value);
   } catch (error) {
     console.error("Error al cargar tipos de pago", error);
     Swal.fire({

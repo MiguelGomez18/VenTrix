@@ -141,8 +141,9 @@ const loginSucursal = async () => {
             text: 'Bienvenido a su sucursal'
         });
 
+        cart.restaurante = idrestaurante;
         cart.nit = nit2.value; // Asigna el nit seleccionado
-        router.push({ name: 'Mesas', params: { idrestaurante: nit2.value } });
+        router.push({ name: 'Mesas', params: { nit: nit2.value } });
 
         } else {
             console.log(idrestaurante)

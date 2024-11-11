@@ -15,30 +15,24 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineProps } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
-const props = defineProps({
-  idrestaurante: {
-    type: String,
-    required: true
-  }
-});
+const route = useRoute();
 const router = useRouter();
 const mesas = ref([]); 
-const { idrestaurante } = props;
-console.log(idrestaurante)
+const nit = ref(route.params.nit)
 
 const navegarARuta = (mesaId) => {
   window.dispatchEvent(new Event('ocultarInicio'));
-  router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId ,idrestaurante} });  // Pasa el id de la mesa como parámetro
+  router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId , nit: nit.value} }); 
 };
 
 
-const obtenerMesas = async (idrestaurante) => {
+const obtenerMesas = async (nit) => {
   try {
-    const response = await axios.get(`http://127.0.0.1:8080/mesa/id_sucursal/${idrestaurante}`); 
+    const response = await axios.get(`http://127.0.0.1:8080/mesa/id_sucursal/${nit.value}`); 
     mesas.value = response.data; 
   } catch (error) {
     console.error('Error al obtener las mesas:', error);
@@ -46,9 +40,9 @@ const obtenerMesas = async (idrestaurante) => {
 };
 
 onMounted(() => {
-  if (idrestaurante) {
-    console.log('NIT recibido:', idrestaurante);
-    obtenerMesas(idrestaurante);
+  if (nit.value) {
+    console.log('NIT recibido:', nit.value);
+    obtenerMesas(nit);
   }
 });
 </script>
