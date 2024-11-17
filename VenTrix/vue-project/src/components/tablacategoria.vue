@@ -27,7 +27,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(cate, indice) in categoriasFiltradas" :key="cate.id">
+        <tr v-for="(cate, indice) in categoriasPaginadas" :key="cate.id">
           <td>{{ cate.nombre }}</td>
           <td>{{ cate.descripcion }}</td>
           <td>
@@ -37,6 +37,11 @@
         </tr>
       </tbody>
     </table>
+    <div class="paginacion">
+      <button :disabled="paginaActual === 1" @click="paginaActual--">Anterior</button>
+      <span>Página {{ paginaActual }} de {{ totalPaginas }}</span>
+      <button :disabled="paginaActual === totalPaginas" @click="paginaActual++">Siguiente</button>
+    </div>
   </div>
 </template>
 
@@ -46,6 +51,8 @@ import { ref, computed } from 'vue';
 import axios from 'axios';
 import { useCart } from '@/stores/cart';
 
+const paginaActual = ref(1);
+const filasPorPagina = 6;
 const cart = useCart();
 const nit = cart.nit;
 const categorias = ref([]);
@@ -72,6 +79,16 @@ const buscarCategorias = async () => {
 };
 
 buscarCategorias();
+
+const totalPaginas = computed(() => {
+  return Math.ceil(categoriasFiltradas.value.length / filasPorPagina);
+});
+
+const categoriasPaginadas = computed(() => {
+  const inicio = (paginaActual.value - 1) * filasPorPagina;
+  const fin = inicio + filasPorPagina;
+  return categoriasFiltradas.value.slice(inicio, fin);
+});
 
 const categoriasFiltradas = computed(() => {
   return categorias.value.filter(cate =>
@@ -242,4 +259,30 @@ const resetearFormulario = () => {
   .btncancelar {
     background-color: red;
   }
+  .paginacion {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.paginacion button {
+  background-color: var(--color_principal);
+  color: var(--color_letra_blanca);
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.paginacion button:disabled {
+  background-color: grey;
+  cursor: not-allowed;
+}
+
+.paginacion span {
+  font-size: 14px;
+  font-weight: bold;
+}
 </style>

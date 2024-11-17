@@ -53,7 +53,6 @@ const idrestaurante = ref('');
 const cart = useCart(); 
 const router = useRouter();
 const id = ref('');
-const nit2 = ref('');
 const nombre = ref('');
 const direccion = ref('');
 const ciudad = ref('');
@@ -86,7 +85,7 @@ const limpiarInputs = () => {
 
 const loginSucursal = async () => {
     try {
-        console.log(idrestaurante)
+        console.log(idrestaurante.value)
         
         const response = await axios.post('http://127.0.0.1:8080/sucursal', {
             id: id.value,
@@ -98,7 +97,7 @@ const loginSucursal = async () => {
             estado: 'ACTIVO',
             administrador: usuario,
             restaurante: {
-                "id": idrestaurante
+                "id": idrestaurante.value
             }
         });
 
@@ -109,8 +108,8 @@ const loginSucursal = async () => {
             title: 'Sucursal Registradoa',
             text: 'Se registró de manera exitosa'
         });
-        cart.restaurante = idrestaurante;
-        cart.nit = nit2.value; // Asigna el nit seleccionado
+        cart.restaurante = idrestaurante.value;
+        cart.nit = id.value; // Asigna el nit seleccionado
 
         router.push({ name: 'Mesas', params: { nit: id.value } });
 

@@ -129,13 +129,19 @@ const loginPropietario = async () => {
         await buscardocumento(correo.value);
         if (rol1.value == roles[0]) {
             await buscarid_restaurante(documento1.value);
-            Swal.fire({
-                icon: 'success',
-                title: 'Inicio de sesión exitoso',
-                text: 'Bienvenido a tu cuenta'
-            });
 
-            router.push({ name: 'Admin', params: { idrestaurante: idrestaurante.value } });
+            if (idrestaurante.value == '') {
+                router.push({ name: 'Restaurante', params: { usuario: documento1.value } });
+
+            } else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Inicio de sesión exitoso',
+                    text: 'Bienvenido a tu cuenta'
+                });
+                cart.restaurante = idrestaurante.value;
+                router.push({ name: 'Admin', params: { idrestaurante: idrestaurante.value } });
+            }
 
         } else if (rol1.value == roles[1]) {
             await buscarSucursal(documento1);

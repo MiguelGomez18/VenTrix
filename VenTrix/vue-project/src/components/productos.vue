@@ -52,6 +52,11 @@
         </tr>
       </tbody>
     </table>
+    <div class="paginacion">
+      <button :disabled="paginaActual === 1" @click="paginaActual--">Anterior</button>
+      <span>Página {{ paginaActual }} de {{ totalPaginas }}</span>
+      <button :disabled="paginaActual === totalPaginas" @click="paginaActual++">Siguiente</button>
+    </div>
   </div>
 </template>
 
@@ -61,6 +66,8 @@ import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import { useCart } from '@/stores/cart';
 
+const paginaActual = ref(1);
+const filasPorPagina = 6;
 const cart = useCart();
 const nit = cart.nit;
 const file = ref(null);
@@ -110,6 +117,15 @@ const buscarcategorias = async () => {
   }
 };
 
+const totalPaginas = computed(() => {
+  return Math.ceil(productosFiltrados.value.length / filasPorPagina);
+});
+
+const productosPaginados = computed(() => {
+  const inicio = (paginaActual.value - 1) * filasPorPagina;
+  const fin = inicio + filasPorPagina;
+  return productosFiltrados.value.slice(inicio, fin);
+});
 
 onMounted(() => {
   buscar();
@@ -382,4 +398,30 @@ const resetearFormulario = () => {
     border-radius: 10px;
     padding: 5px 10px;
   }
+  .paginacion {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.paginacion button {
+  background-color: var(--color_principal);
+  color: var(--color_letra_blanca);
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.paginacion button:disabled {
+  background-color: grey;
+  cursor: not-allowed;
+}
+
+.paginacion span {
+  font-size: 14px;
+  font-weight: bold;
+}
 </style>

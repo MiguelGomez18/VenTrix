@@ -25,7 +25,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(mesaItem, indice) in mesasFiltradas" :key="mesaItem.id">
+        <tr v-for="(mesaItem, indice) in mesasPaginadas" :key="mesaItem.id">
           <td>{{ mesaItem.nombre }}</td>
           <td>
             <button class="btnEditar" @click="editarMesa(indice)">Editar</button>
@@ -34,6 +34,11 @@
         </tr>
       </tbody>
     </table>
+    <div class="paginacion">
+      <button :disabled="paginaActual === 1" @click="paginaActual--">Anterior</button>
+      <span>Página {{ paginaActual }} de {{ totalPaginas }}</span>
+      <button :disabled="paginaActual === totalPaginas" @click="paginaActual++">Siguiente</button>
+    </div>
   </div>
 </template>
 
@@ -43,6 +48,8 @@ import { ref, computed, onMounted } from 'vue';
 import { useCart } from '../stores/cart';
 import axios from 'axios';
 
+const paginaActual = ref(1);
+const filasPorPagina = 6;
 const cart = useCart();
 const nit = cart.nit; 
 const mesas = ref([]);
@@ -67,6 +74,16 @@ const buscarMesas = async (nit) => {
     console.error("Error al cargar mesas", error);
   }
 };
+
+const totalPaginas = computed(() => {
+  return Math.ceil(mesasFiltradas.value.length / filasPorPagina);
+});
+
+const mesasPaginadas = computed(() => {
+  const inicio = (paginaActual.value - 1) * filasPorPagina;
+  const fin = inicio + filasPorPagina;
+  return mesasFiltradas.value.slice(inicio, fin);
+});
 
 onMounted(() => {
   buscarMesas(nit);
@@ -244,5 +261,31 @@ th, td {
   color: var(--color_letra_blanca);
   border-radius: 10px;
   padding: 4px;
+}
+.paginacion {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.paginacion button {
+  background-color: var(--color_principal);
+  color: var(--color_letra_blanca);
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.paginacion button:disabled {
+  background-color: grey;
+  cursor: not-allowed;
+}
+
+.paginacion span {
+  font-size: 14px;
+  font-weight: bold;
 }
 </style>

@@ -12,16 +12,24 @@
                     <input type="text" placeholder="Nombre" v-model="nombre" required>
                 </div>
                 <div class="container-input1">
-                    <img src="../components/icons/icons8-contraseña-50.png" alt="Direccion">
-                    <input type="text" placeholder="Dirección" v-model="direccion" required>
-                </div>
-                <div class="container-input1">
-                    <img src="../components/icons/icons8-contraseña-50.png" alt="Ciudad">
-                    <input type="text" placeholder="Ciudad" v-model="ciudad" required>
+                    <img src="../components/icons/icons8-contraseña-50.png" alt="Descripcion">
+                    <input type="text" placeholder="Descripcion" v-model="descripcion" required>
                 </div>
                 <div class="container-input1">
                     <img src="../components/icons/icons8-contraseña-50.png" alt="Telefono">
                     <input type="text" placeholder="Teléfono" v-model="telefono" required>
+                </div>
+                <div class="container-input1">
+                    <img src="../components/icons/icons8-contraseña-50.png" alt="Direccion">
+                    <input type="text" placeholder="Dirección" v-model="direccion" required>
+                </div>
+                <div class="container-input1">
+                    <img src="../components/icons/icons8-contraseña-50.png" alt="Correo">
+                    <input type="email" placeholder="Correo" v-model="correo" required>
+                </div>
+                <div class="container-input1">
+                    <img src="../components/icons/icons8-contraseña-50.png" alt="Fecha_finalizacion">
+                    <input type="date" placeholder="Fecha finalizacion" v-model="fecha_finalizacion" required>
                 </div>
                 <router-link to="/registro">Volver..</router-link>
                 <button class="button1" type="submit">REGISTRAR</button>
@@ -32,23 +40,42 @@
     
     <script setup>
     import Swal from 'sweetalert2';
-    import { ref } from 'vue';
+    import { ref, defineProps } from 'vue';
     import axios from 'axios';
     import { useRouter } from 'vue-router';
+    import { useCart } from '@/stores/cart';
     
+    const props = defineProps({
+        usuario: {
+            type: String,
+            required: true
+        }
+    });
+
+    const cart = useCart();
     const id = ref('');
     const nombre = ref('');
-    const direccion = ref('');
-    const ciudad = ref('');
+    const descripcion = ref('');
     const telefono = ref('');
+    const direccion = ref('');
+    const date = new Date();
+    const dia = (date.getDate() < 10 ? '0':'') + date.getDate();
+    const mes = date.getMonth() + 1;
+    const año = date.getFullYear();
+    const fecha_creacion = ref(`${año}-${mes}-${dia}`);
+    const fecha_finalizacion = ref('');
+    const usuario = props.usuario;
     const router = useRouter();
     
     const limpiarInputs = () => {
       id.value = '';
       nombre.value = '';
-      direccion.value = '';
-      ciudad.value = '';
+      descripcion.value = '';
       telefono.value = '';
+      direccion.value = '';
+      correo.value = '';
+      fecha_creacion.value = '';
+      fecha_finalizacion.value = '';
     };
     
     const registerRestaurant = async () => {
@@ -56,10 +83,17 @@
             const response = await axios.post('http://127.0.0.1:8080/restaurante', {
                 id: id.value,
                 nombre: nombre.value,
-                direccion: direccion.value,
-                ciudad: ciudad.value,
+                descripcion: descripcion.value,
                 telefono: telefono.value,
+                direccion: direccion.value,
+                correo: correo.value,
+                imagen: 'hh',
+                fecha_creacion: fecha_creacion.value,
+                fecha_finalizacion: fecha_finalizacion.value,
                 estado: 'ACTIVO',
+                usuario: {
+                    id: usuario
+                }
             });
     
             console.log('Restaurante registrado exitosamente', response.data);
@@ -69,9 +103,10 @@
                 title: 'Restaurante Registrado',
                 text: 'Se registró de manera exitosa'
             });
+            cart.restaurante = id.value;
     
             limpiarInputs();
-            router.push({ name: 'Home' });
+            router.push({ name: 'Admin', params: { idrestaurante: id.value } });
     
         } catch (error) {
             console.error("Error al registrar el restaurante", error);
