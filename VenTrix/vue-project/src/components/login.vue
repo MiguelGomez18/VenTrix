@@ -160,17 +160,14 @@ const loginPropietario = async () => {
                 router.push({ name: 'Mesas', params: { nit: sucursal1.value } });
             }
             
-        } else if (rol1.value == roles[3]) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Inicio de sesión exitoso',
-                text: 'Bienvenido a tu cuenta'
-            });
-            cart.restaurante = 1414;
-            cart.nit = 1111;
+        } else if (rol1.value == roles[2]) {
             cart.rol = rol1.value;
-            router.push({ name: 'MesasMesero', params: { nit: 1111, rol: rol1.value } });
+            router.push({ name: 'LoginDatos' })
             
+        } else if (rol1.value == roles[3]) {
+            cart.rol = rol1.value;
+            router.push({ name: 'LoginDatos' })
+
         } else if (rol1.value == roles[4]) {
             Swal.fire({
                 icon: 'success',

@@ -22,8 +22,16 @@
   <script setup>
   import { ref, onMounted } from 'vue';
   import axios from 'axios';
+  import { defineProps } from 'vue';
+
+  const props = defineProps({
+    idrestaurante: {
+      type: String,
+      required: true
+    }
+  });
   
-  const restauranteId = ref('1'); // ID del restaurante, puedes modificarlo o hacerlo dinámico
+  const restauranteId = ref(props.idrestaurante); // ID del restaurante, puedes modificarlo o hacerlo dinámico
   const sucursales = ref([]);
   const loading = ref(true);
   const error = ref('');
@@ -34,9 +42,11 @@
     try {
       const response = await axios.get(`http://localhost:8080/sucursal/restaurante/${restauranteId.value}`);
       sucursales.value = response.data;
-      restauranteNombre.value = sucursales.value[0]?.restaurante?.nombre || 'Restaurante no encontrado';
+      const respuesta1 = await axios.get(`http://localhost:8080/restaurante/${restauranteId.value}`)
+      restauranteNombre.value = respuesta1.data || 'Restaurante no encontrado';
+      console.log(respuesta1.data)
       loading.value = false;
-    } catch (err) {
+    } catch (error) {
       error.value = 'No se pudieron cargar las sucursales. Intenta nuevamente.';
       loading.value = false;
     }

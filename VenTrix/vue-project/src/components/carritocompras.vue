@@ -66,10 +66,11 @@ console.log(mesaProducts.value)
 const agregarProducto = (producto) => {
   cartStore.addProduct({ ...producto, mesaId });  // Pasamos mesaId al agregar el producto
 };
+console.log(Rol)
 
 if (Rol == "MESERO") {
   comanda.value = ref(true);
-} else if (Rol == "COCINERO") {
+} else if (Rol == "CAJERO") {
   pago.value = ref(true);
 } else {
   pago.value = ref(true);

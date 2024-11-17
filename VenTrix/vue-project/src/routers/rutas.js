@@ -4,6 +4,7 @@ import cuerpo from "@/pages/cuerpo.vue";
 import inicio from "@/pages/inicio.vue";
 import admin from "@/pages/admin.vue";
 import restaurante from "@/components/restaurante.vue";
+import loginDatos from "@/components/loginDatos.vue";
 import cocinero from "@/pages/cocinero.vue";
 import mesero from "@/pages/mesero.vue";
 import edicion from "@/sections/edicion.vue";
@@ -43,7 +44,13 @@ const routes = [
     props: true // Esto permite pasar el parámetro como prop al componente
   },
   {
-    path: '/cocinero',
+    path: '/loginDato',
+    name: 'LoginDatos',
+    component: loginDatos,
+    props: true // Esto permite pasar el parámetro como prop al componente
+  },
+  {
+    path: '/cocinero/:nit',
     name: 'Cocinero',
     component: cocinero,
     props: true // Esto permite pasar el parámetro como prop al componente

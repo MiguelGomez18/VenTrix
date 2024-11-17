@@ -19,7 +19,6 @@
             <p class="nombreProducto">{{ prod.nombre }}</p>
             <p class="valorProducto">{{ prod.precio }}</p>
         </div>
-        <div class="uu"></div>
     </div>
   </template>
   
@@ -95,18 +94,16 @@
 <style scoped>
 .contenedor-categorias {
     width: 100%;
-    padding: 20px;
+    padding: 30px;
     border-radius: 10px;
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 15px;
   }
 
 .titulobuscar {
     width: 100%;
-    margin-bottom: 10px;
-    padding-left: 10px;
-    padding-right: 20px;
+    margin-bottom: 20px;
   }
   
   .titulobuscar input {

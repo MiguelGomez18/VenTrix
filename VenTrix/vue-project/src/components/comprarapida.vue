@@ -43,7 +43,7 @@ const buscarMesas = async (nit) => {
 
 const navegarARuta = (mesaId) => {
   window.dispatchEvent(new Event('ocultarInicio'));
-  if (rol.value == "MESERO") {
+  if (rol.value == "MESERO" || "CAJERO") {
     router.push({ name: 'SeleccionarProductosMesero', params: { id_mesa: mesaId, nit: nit.value } });
   } else {
     router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId, nit: nit.value } });

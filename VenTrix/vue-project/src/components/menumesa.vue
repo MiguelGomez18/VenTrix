@@ -15,10 +15,11 @@ import { useCart } from '@/stores/cart';
 const router = useRouter(); 
 const cart = useCart();
 const nit = cart.nit;
+const rol = cart.rol;
 
 const navegarARuta = (name) => {
   window.dispatchEvent(new Event('ocultarInicio')); 
-  router.push({ name: name, params: { nit: nit, rol: "MESERO" } });
+  router.push({ name: name, params: { nit: nit, rol: rol } });
 };
 </script>
   
