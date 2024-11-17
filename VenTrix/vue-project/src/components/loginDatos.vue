@@ -39,8 +39,12 @@
             console.log('Registro OK');
     
             cart.nit = nit.value; 
-    
-            router.push({ name: 'MesasMesero', params: { nit: nit.value, rol: cart.rol } });
+
+            if (cart.rol == "MESERO" || cart.rol == "CAJERO") {
+                router.push({ name: 'MesasMesero', params: { nit: nit.value, rol: cart.rol } });
+            } else if (cart.rol == "COCINERO") {
+                router.push({ name: 'Cocinero', params: { nit: nit.value } })
+            }
     
             limpiarInputs();
     

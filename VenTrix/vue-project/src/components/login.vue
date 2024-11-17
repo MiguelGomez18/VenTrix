@@ -131,6 +131,7 @@ const loginPropietario = async () => {
             await buscarid_restaurante(documento1.value);
 
             if (idrestaurante.value == '') {
+                cart.rol = '';
                 router.push({ name: 'Restaurante', params: { usuario: documento1.value } });
 
             } else {
@@ -140,6 +141,7 @@ const loginPropietario = async () => {
                     text: 'Bienvenido a tu cuenta'
                 });
                 cart.restaurante = idrestaurante.value;
+                cart.rol = '';
                 router.push({ name: 'Admin', params: { idrestaurante: idrestaurante.value } });
             }
 
@@ -147,6 +149,7 @@ const loginPropietario = async () => {
             await buscarSucursal(documento1);
             
             if (sucursal1.value == '') {
+                cart.rol = '';
                 router.push({ name: 'Sucursal', params: { usuario: documento1.value } });
 
             } else {
@@ -157,6 +160,7 @@ const loginPropietario = async () => {
                 });
                 cart.restaurante = idrestaurante.value;
                 cart.nit = sucursal1.value;
+                cart.rol = '';
                 router.push({ name: 'Mesas', params: { nit: sucursal1.value } });
             }
             
@@ -169,14 +173,8 @@ const loginPropietario = async () => {
             router.push({ name: 'LoginDatos' })
 
         } else if (rol1.value == roles[4]) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Inicio de sesión exitoso',
-                text: 'Bienvenido a tu cuenta'
-            });
-            cart.restaurante = idrestaurante.value;
-            cart.nit = sucursal1.value;
-            router.push({ name: 'Cocinero' });
+            cart.rol = rol1.value;
+            router.push({ name: 'LoginDatos' });
         }
 
         limpiarInputs();
