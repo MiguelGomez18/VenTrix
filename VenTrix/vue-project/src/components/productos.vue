@@ -62,7 +62,7 @@ import axios from 'axios';
 import { useCart } from '@/stores/cart';
 
 const cart = useCart();
-const nit = cart.getNit;
+const nit = cart.nit;
 const file = ref(null);
 const fileInput = ref(null);
 const productos = ref([]);

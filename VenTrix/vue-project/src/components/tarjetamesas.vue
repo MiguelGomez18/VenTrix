@@ -24,6 +24,7 @@ const router = useRouter();
 const mesas = ref([]); 
 const nit = ref(route.params.nit);
 const rol = ref(route.params.rol);
+console.log(rol.value);
 
 const navegarARuta = (mesaId) => {
   window.dispatchEvent(new Event('ocultarInicio'));

@@ -53,7 +53,7 @@ const routes = [
         props: true 
       },
       {
-        path: '/seleccionarproductos/:id_mesa/:nit',
+        path: '/seleccionarproductosMesero/:id_mesa/:nit',
         name: 'SeleccionarProductosMesero',
         component: seleccionarproductos,
         props: true,

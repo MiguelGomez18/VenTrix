@@ -162,6 +162,7 @@ const loginPropietario = async () => {
             });
             cart.restaurante = 1414;
             cart.nit = 1111;
+            cart.rol = rol1.value;
             router.push({ name: 'MesasMesero', params: { nit: 1111, rol: rol1.value } });
             
         } else if (rol1.value == roles[4]) {

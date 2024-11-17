@@ -19,6 +19,7 @@
             <p class="nombreProducto">{{ prod.nombre }}</p>
             <p class="valorProducto">{{ prod.precio }}</p>
         </div>
+        <div class="uu"></div>
     </div>
   </template>
   
@@ -103,7 +104,7 @@
 
 .titulobuscar {
     width: 100%;
-    margin-bottom: 0;
+    margin-bottom: 10px;
     padding-left: 10px;
     padding-right: 20px;
   }
@@ -123,6 +124,7 @@
     border: 2px solid var(--color_principal);
     border-radius: 8px;
     max-width: 150px; 
+    gap: 10px;
     cursor: pointer;
 }
 .imagenProducto{

@@ -46,7 +46,7 @@ import Swal from 'sweetalert2';
 
 // Store del carrito
 const cart = useCart();
-const restaurante = cart.restaurante;
+const nit = cart.nit;
 const showModal = ref(true);
 const route = useRoute();
 const mesaId = route.params.id_mesa; 
@@ -60,17 +60,8 @@ const consultaBusqueda = ref(''); // Campo de búsqueda
 // Función para cargar los tipos de pago
 const buscarTiposPago = async () => {
   try {
-    const respuesta1 = await axios.get(`http://127.0.0.1:8080/sucursal/id_sucursal/${restaurante}`);
-    const sucursales = respuesta1.data;
-
-    const tiposPagosPromises = sucursales.map(async (sucursal) => {
-      const respuesta = await axios.get(`http://127.0.0.1:8080/tipo_pago/id_sucursal/${sucursal.id}`);
-      return respuesta.data;
-    });
-
-    tiposPago.value = (await Promise.all(tiposPagosPromises))
-      .flat()
-      .sort((a, b) => a.id - b.id); 
+    const respuesta = await axios.get(`http://127.0.0.1:8080/tipo_pago/id_sucursal/${nit}`);
+    tiposPago.value = respuesta.data;
 
     console.log("Tipos pagos cargados:", tiposPago.value);
   } catch (error) {

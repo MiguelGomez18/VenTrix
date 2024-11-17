@@ -40,28 +40,33 @@
   
   <style>
   .cuadro1 {
-      margin-left: auto;
-      margin-right: auto;
-      width: 88%;
-      display: flex;
-      justify-content: space-evenly;
-      align-items: start;
-      flex-wrap: nowrap;
-      gap: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 88%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: start;
+    flex-wrap: nowrap;
+    gap: 15px;
   }
   .section1 {
-      width: 60%;
-      display: flex;
-      justify-content: start;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
+    position: relative;
+    width: 60%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
   }
   .section2 {
-      width: 40%;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+    position: sticky; 
+    top: 75px;
+    width: 40%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-self: start; 
   }
   </style>
+  
   
