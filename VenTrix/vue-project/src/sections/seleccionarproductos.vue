@@ -1,11 +1,11 @@
 <template>
     <div class="cuadro1">
       <div class="section1">
-        <menucategorias :idrestaurante="idrestaurante"></menucategorias>
-        <tarjetaproductos :idrestaurante="idrestaurante"></tarjetaproductos>
+        <menucategorias :nit="nit"></menucategorias>
+        <tarjetaproductos :nit="nit"></tarjetaproductos>
       </div>
       <div class="section2">
-        <carritocompras @open-payment-modal="openModal"></carritocompras>
+        <carritocompras :rol="rol" @open-payment-modal="openModal"></carritocompras>
         <pago v-if="showModal" @close-modal="closeModal"></pago>
       </div>
     </div>
@@ -20,8 +20,8 @@
   import { useCart } from '@/stores/cart';
 
   const cart = useCart();
-  const idrestaurante = cart.restaurante;
-  console.log(idrestaurante)
+  const nit = cart.nit;
+  const rol = cart.rol;
   
   const showModal = ref(false);
   

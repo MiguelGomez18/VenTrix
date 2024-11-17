@@ -63,7 +63,6 @@ import { useCart } from '@/stores/cart';
 
 const cart = useCart();
 const nit = cart.getNit;
-const restaurante = cart.restaurante;
 const file = ref(null);
 const fileInput = ref(null);
 const productos = ref([]);
@@ -91,17 +90,8 @@ const consultaBusqueda1 = ref('');
 
 const buscar = async () => {
   try {
-    const respuesta1 = await axios.get(`http://127.0.0.1:8080/sucursal/id_sucursal/${restaurante}`);
-    const sucursales = respuesta1.data;
-
-    const productosPromises = sucursales.map(async (sucursal) => {
-      const respuesta = await axios.get(`http://127.0.0.1:8080/producto/id_sucursal/${sucursal.id}`);
-      return respuesta.data;
-    });
-
-    productos.value = (await Promise.all(productosPromises))
-      .flat()
-      .sort((a, b) => a.id_producto - b.id_producto); 
+    const respuesta = await axios.get(`http://127.0.0.1:8080/producto/id_sucursal/${nit}`);
+    productos.value = respuesta.data
 
     console.log("Productos cargados:", productos.value);
   } catch (error) {
@@ -111,17 +101,8 @@ const buscar = async () => {
 
 const buscarcategorias = async () => {
   try {
-    const respuesta1 = await axios.get(`http://127.0.0.1:8080/sucursal/id_sucursal/${restaurante}`);
-    const sucursales = respuesta1.data;
-
-    const categoriasPromises = sucursales.map(async (sucursal) => {
-      const respuesta = await axios.get(`http://127.0.0.1:8080/categoria/id_sucursal/${sucursal.id}`);
-      return respuesta.data;
-    });
-
-    categorias.value = (await Promise.all(categoriasPromises))
-      .flat()
-      .sort((a, b) => a.id - b.id); 
+    const respuesta = await axios.get(`http://127.0.0.1:8080/categoria/id_sucursal/${nit}`);
+    categorias.value = respuesta.data;
 
     console.log("Categorias cargadas:", categorias.value);
   } catch (error) {

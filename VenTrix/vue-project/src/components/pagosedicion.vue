@@ -44,7 +44,6 @@ import axios from 'axios';
 import { useCart } from '@/stores/cart';
 
 const cart = useCart();
-const restaurante = cart.restaurante;
 const nit = cart.nit;
 // Variables reactivas
 const tiposPago = ref([]); // Lista de tipos de pago
@@ -61,26 +60,12 @@ const consultaBusqueda = ref(''); // Campo de búsqueda
 // Función para cargar los tipos de pago
 const buscarTiposPago = async () => {
   try {
-    const respuesta1 = await axios.get(`http://127.0.0.1:8080/sucursal/id_sucursal/${restaurante}`);
-    const sucursales = respuesta1.data;
-
-    const tiposPagosPromises = sucursales.map(async (sucursal) => {
-      const respuesta = await axios.get(`http://127.0.0.1:8080/tipo_pago/id_sucursal/${sucursal.id}`);
-      return respuesta.data;
-    });
-
-    tiposPago.value = (await Promise.all(tiposPagosPromises))
-      .flat()
-      .sort((a, b) => a.id - b.id); 
+    const respuesta = await axios.get(`http://127.0.0.1:8080/tipo_pago/id_sucursal/${nit}`);
+    tiposPago.value = respuesta.data;
 
     console.log("Tipos pagos cargados:", tiposPago.value);
   } catch (error) {
     console.error("Error al cargar tipos de pago", error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'No se pudieron cargar los tipos de pago.'
-    });
   }
 };
 

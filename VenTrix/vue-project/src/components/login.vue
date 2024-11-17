@@ -81,12 +81,15 @@ import Swal from 'sweetalert2';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { useCart } from '@/stores/cart';
 
-
+const cart = useCart();
 const router = useRouter();
 const documento = ref('');
 const documento1 = ref('');
+const rol1 = ref('');
 const idrestaurante = ref('');
+const sucursal1 = ref('');
 const nombre = ref('');
 const correo = ref('');
 const password = ref('');
@@ -122,16 +125,55 @@ const loginPropietario = async () => {
             password: password.value
         });
 
+        await buscarRol(correo.value);
         await buscardocumento(correo.value);
-        await buscarid_restaurante(documento1.value);
+        if (rol1.value == roles[0]) {
+            await buscarid_restaurante(documento1.value);
+            Swal.fire({
+                icon: 'success',
+                title: 'Inicio de sesión exitoso',
+                text: 'Bienvenido a tu cuenta'
+            });
 
-        Swal.fire({
-            icon: 'success',
-            title: 'Inicio de sesión exitoso',
-            text: 'Bienvenido a tu cuenta'
-        });
+            router.push({ name: 'Admin', params: { idrestaurante: idrestaurante.value } });
 
-        router.push({ name: 'Sucursal', params: { idrestaurante: idrestaurante.value } });
+        } else if (rol1.value == roles[1]) {
+            await buscarSucursal(documento1);
+            
+            if (sucursal1.value == '') {
+                router.push({ name: 'Sucursal', params: { usuario: documento1.value } });
+
+            } else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Inicio de sesión exitoso',
+                    text: 'Bienvenido a tu cuenta'
+                });
+                cart.restaurante = idrestaurante.value;
+                cart.nit = sucursal1.value;
+                router.push({ name: 'Mesas', params: { nit: sucursal1.value } });
+            }
+            
+        } else if (rol1.value == roles[3]) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Inicio de sesión exitoso',
+                text: 'Bienvenido a tu cuenta'
+            });
+            cart.restaurante = 1414;
+            cart.nit = 1111;
+            router.push({ name: 'MesasMesero', params: { nit: 1111, rol: rol1.value } });
+            
+        } else if (rol1.value == roles[4]) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Inicio de sesión exitoso',
+                text: 'Bienvenido a tu cuenta'
+            });
+            cart.restaurante = idrestaurante.value;
+            cart.nit = sucursal1.value;
+            router.push({ name: 'Cocinero' });
+        }
 
         limpiarInputs();
 
@@ -198,6 +240,15 @@ const buscardocumento = async (correo) => {
   }
 };
 
+const buscarRol = async (correo) => {
+  try {
+    const respuesta = await axios.get(`http://127.0.0.1:8080/usuario/documento/${correo}`); 
+    rol1.value = respuesta.data;
+  } catch (error) {
+    console.error("Error en el rol", error);
+  }
+};
+
 const buscarid_restaurante = async (documento1) => {
   try {
     const respuesta = await axios.get(`http://127.0.0.1:8080/restaurante/id_usuario/${documento1}`); 
@@ -205,6 +256,15 @@ const buscarid_restaurante = async (documento1) => {
   } catch (error) {
     console.error("Error al el id de restaurante", error);
   }
+};
+
+const buscarSucursal = async (documento1) => {
+    try {
+        const respuesta = await axios.get(`http://127.0.0.1:8080/sucursal/id_usuario/${documento1.value}`); 
+        sucursal1.value = respuesta.data;
+    } catch (error) {
+        console.error("Error al el id de restaurante", error);
+    }
 };
 
 function toggleSignIn() {

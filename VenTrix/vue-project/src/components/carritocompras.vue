@@ -30,8 +30,8 @@
         </tbody>
       </table>
       <p class="cart-total">Total: {{ mesaTotal | currency }}</p>
-      <button class="pay-btn" @click="openPaymentModal">Pagar</button>
-      <button class="pay-btn" @click="comandar">Comandar</button>
+      <button v-if="pago" class="pay-btn" @click="openPaymentModal">Pagar</button>
+      <button v-if="comanda" class="pay-btn" @click="comandar">Comandar</button>
     </div>
   </div>
 </template>
@@ -39,14 +39,24 @@
 <script setup>
 import { useRoute } from 'vue-router'; // Para obtener el id de la mesa
 import { useCart } from '../stores/cart';
-import { ref,computed, defineEmits } from 'vue';
+import { ref, computed, defineEmits, defineProps } from 'vue';
 import Swal from 'sweetalert2';
+
+const props = defineProps({
+    rol: {
+    type: String,
+    required: true
+  }
+});
 
 const detalle = ref({})
 const emit = defineEmits();
 const cartStore = useCart();
 const route = useRoute(); // Obtener la ruta actual
 const mesaId = route.params.id_mesa; // Obtener el id_mesa de los parámetros de la ruta
+const Rol = props.rol;
+const pago = ref(false);
+const comanda = ref(false);
 
 // Computed para obtener los productos específicos de la mesa
 const mesaProducts = computed(() => cartStore.products[mesaId] || []);
@@ -56,6 +66,15 @@ console.log(mesaProducts.value)
 const agregarProducto = (producto) => {
   cartStore.addProduct({ ...producto, mesaId });  // Pasamos mesaId al agregar el producto
 };
+
+if (Rol == "MESERO") {
+  comanda.value = ref(true);
+} else if (Rol == "COCINERO") {
+  pago.value = ref(true);
+} else {
+  pago.value = ref(true);
+  comanda.value = ref(true);
+}
 
 // Computed para obtener el total de la mesa
 const mesaTotal = computed(() => cartStore.total(mesaId));

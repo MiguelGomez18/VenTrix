@@ -22,6 +22,7 @@ import { useRouter, useRoute } from 'vue-router';
 const route = useRoute();
 const router = useRouter();
 const nit = ref(route.params.nit);
+const rol = ref(route.params.rol);
 const mesaCompraRapida = ref([]);
 const mesa = ref({
   nombre: 'Mesa Rapida',
@@ -42,7 +43,12 @@ const buscarMesas = async (nit) => {
 
 const navegarARuta = (mesaId) => {
   window.dispatchEvent(new Event('ocultarInicio'));
-  router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId, nit: nit.value } });
+  if (rol.value == "MESERO") {
+    router.push({ name: 'SeleccionarProductosMesero', params: { id_mesa: mesaId, nit: nit.value } });
+  } else {
+    router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId, nit: nit.value } });
+  }
+  
 };
 
 const agregarMesa = async () => {

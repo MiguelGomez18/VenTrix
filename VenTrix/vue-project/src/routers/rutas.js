@@ -2,6 +2,9 @@ import { createRouter, createWebHistory } from "vue-router";
 import login from "@/components/login.vue";
 import cuerpo from "@/pages/cuerpo.vue";
 import inicio from "@/pages/inicio.vue";
+import admin from "@/pages/admin.vue";
+import cocinero from "@/pages/cocinero.vue";
+import mesero from "@/pages/mesero.vue";
 import edicion from "@/sections/edicion.vue";
 import mesas from "@/sections/mesas.vue";
 import informes from "@/sections/informes.vue";
@@ -21,10 +24,49 @@ const routes = [
     component: inicio,
   },
   {
-    path: '/sucursal/:idrestaurante',
+    path: '/sucursal/:usuario',
     name: 'Sucursal',
     component: sucursal,
     props: true // Esto permite pasar el parámetro como prop al componente
+  },
+  {
+    path: '/admin/:idrestaurante',
+    name: 'Admin',
+    component: admin,
+    props: true // Esto permite pasar el parámetro como prop al componente
+  },
+  {
+    path: '/cocinero',
+    name: 'Cocinero',
+    component: cocinero,
+    props: true // Esto permite pasar el parámetro como prop al componente
+  },
+  {
+    path: '/mesero',
+    name: 'Mesero',
+    component: mesero,
+    children: [
+      {
+        path: '/mesas/:nit/:rol', 
+        name: 'MesasMesero',
+        component: mesas,
+        props: true 
+      },
+      {
+        path: '/seleccionarproductos/:id_mesa/:nit',
+        name: 'SeleccionarProductosMesero',
+        component: seleccionarproductos,
+        props: true,
+        children: [
+          {
+            path: '/tarjetaproductos/:categoria', 
+            name: 'TarjetaProductos',
+            component: tarjetaproductos,
+            props: true,
+          },
+        ]
+      },
+    ],
   },
   {
     path: '/cuerpo',

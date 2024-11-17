@@ -10,6 +10,9 @@
       </div>
   
       <div class="categorias-lista">
+        <div class="categoria-item" @click="filtrocategoria('TarjetaProductos',0)">
+          <p class="categoria-nombre">Todas</p>
+        </div>
         <div
           v-for="cate in categoriasFiltradas" 
           :key="cate.id" 
@@ -24,34 +27,25 @@
   
   <script setup>
   import { ref, computed, onMounted, defineProps } from 'vue';
-  import { useRouter, useRoute } from 'vue-router'; 
+  import { useRouter } from 'vue-router'; 
   import axios from 'axios';
 
   const props = defineProps({
-    idrestaurante: {
+    nit: {
     type: String,
     required: true
   }
 });
 
   const router = useRouter(); 
-  const restaurante = props.idrestaurante;
+  const nit = props.nit;
   const categorias = ref([]);
   const consultaBusqueda = ref('');
   
   const buscarCategorias = async () => {
     try {
-      const respuesta1 = await axios.get(`http://127.0.0.1:8080/sucursal/id_sucursal/${restaurante}`);
-      const sucursales = respuesta1.data;
-
-      const categoriasPromises = sucursales.map(async (sucursal) => {
-        const respuesta = await axios.get(`http://127.0.0.1:8080/categoria/id_sucursal/${sucursal.id}`);
-        return respuesta.data;
-      });
-
-      categorias.value = (await Promise.all(categoriasPromises))
-        .flat()
-        .sort((a, b) => a.id - b.id); 
+      const respuesta = await axios.get(`http://127.0.0.1:8080/categoria/id_sucursal/${nit}`);
+      categorias.value = respuesta.data;
 
       console.log("Categorias cargadas:", categorias.value);
     } catch (error) {

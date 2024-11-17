@@ -1,7 +1,7 @@
 <template>
     <div class="contenedormesas">
-        <tarjetamesas :nit="nit"></tarjetamesas>
-        <comprarapida :nit="nit"></comprarapida>
+        <tarjetamesas :nit="nit" :rol="rol"></tarjetamesas>
+        <comprarapida :nit="nit" :rol="rol"></comprarapida>
     </div>
 </template>
 
@@ -13,9 +13,14 @@ const props = defineProps({
   nit: {
     type: String,
     required: true
+  },
+  rol: {
+    type: String,
+    required: true
   }
 });
 const { nit } = props;
+const { rol } = props;
 
 </script>
 

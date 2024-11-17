@@ -5,7 +5,7 @@ const initialState = () => ({
   products: {}, // Cambiamos a un objeto (diccionario) donde la clave será id_mesa
   nit: '', 
   restaurante: '',
-  categoria: null,
+  rol: '',
 });
 
 export const useCart = defineStore('cart', {
@@ -27,8 +27,8 @@ export const useCart = defineStore('cart', {
     getRestaurante: (state) => {
       return state.restaurante;
     },
-    getCategoria: (state) => {
-      return state.categoria;
+    getRol: (state) => {
+      return state.rol;
     },
   },
   actions: {
@@ -38,8 +38,8 @@ export const useCart = defineStore('cart', {
     setRestaurante(restauranteValue) {
       this.restaurante = restauranteValue;
     },
-    setCategoria(categoriaValue) {
-      this.categoria = categoriaValue;
+    setRol(rolValue) {
+      this.rol = rolValue;
     },
     // Método para agregar un producto al carrito de una mesa específica
     addProduct(product) {

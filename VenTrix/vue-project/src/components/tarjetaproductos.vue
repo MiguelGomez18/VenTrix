@@ -1,33 +1,43 @@
 <template>
-    <div 
-      class="tarjetaProducto" 
-      v-for="prod in productos" 
-      :key="prod.id_producto" 
-      @click="seleccionarProducto(prod)"
-      :class="{ animated: selectedProductId === prod.id_producto }">
-        <div class="imagenProducto">
-            <img :src="`http://127.0.0.1:8080${prod.imagen}`" alt="Imagen del producto" class="imagen" />
+    <div class="contenedor-categorias">
+        <div class="titulobuscar">
+        <input 
+            type="text" 
+            v-model="consultaBusqueda" 
+            placeholder="Buscar Producto" 
+        />
         </div>
-        <p class="nombreProducto">{{ prod.nombre }}</p>
-        <p class="valorProducto">{{ prod.precio }}</p>
+        <div 
+        class="tarjetaProducto" 
+        v-for="prod in productosFiltrados" 
+        :key="prod.id_producto" 
+        @click="seleccionarProducto(prod)"
+        :class="{ animated: selectedProductId === prod.id_producto }">
+            <div class="imagenProducto">
+                <img :src="`http://127.0.0.1:8080${prod.imagen}`" alt="Imagen del producto" class="imagen" />
+            </div>
+            <p class="nombreProducto">{{ prod.nombre }}</p>
+            <p class="valorProducto">{{ prod.precio }}</p>
+        </div>
     </div>
   </template>
   
   <script setup>
-  import { onMounted, ref, watch} from 'vue';
+  import { onMounted, ref, watch, computed} from 'vue';
   import { defineProps } from 'vue';
   import { useCart } from '../stores/cart';
   import axios from 'axios';
   import { useRoute } from 'vue-router'; 
 
   const props = defineProps({
-    idrestaurante: {
+    nit: {
         type: String,
         required: true
     }
   });
 
   const productos = ref([]);
+  const consultaBusqueda = ref('');
   const cart = useCart();
   const selectedProductId = ref(null);
   const route = useRoute();
@@ -36,23 +46,26 @@
 
   const buscar = async () => {
     try {
-        const idrestaurante = props.idrestaurante;
-        const sucursales = await axios.get(`http://127.0.0.1:8080/sucursal/id_sucursal/${idrestaurante}`);
-        const productosPromises = sucursales.data.map(async (sucursal) => {
-        const url = categoria.value
-            ? `http://127.0.0.1:8080/producto/categoria/${sucursal.id}/${categoria.value}`
-            : `http://127.0.0.1:8080/producto/disponibilidad/${sucursal.id}`;
+        const nit = props.nit;
+        const url = categoria.value > 0
+            ? `http://127.0.0.1:8080/producto/categoria/${nit}/${categoria.value}`
+            : `http://127.0.0.1:8080/producto/disponibilidad/${nit}`;
         
         const respuesta = await axios.get(url);
-        return respuesta.data;
-        });
 
-        productos.value = (await Promise.all(productosPromises)).flat().sort((a, b) => a.id_producto - b.id_producto);
+        productos.value = respuesta.data;
         console.log("Productos cargados: ",productos.value)
     } catch (error) {
         console.error("Error al cargar productos", error);
     }
   };
+
+  const productosFiltrados = computed(() => {
+    const searchTerm = consultaBusqueda.value.toLowerCase();
+    return productos.value.filter(prod => 
+        prod.nombre.toLowerCase().includes(searchTerm)
+    );
+  });
 
   onMounted(() => {
     buscar();
@@ -61,10 +74,6 @@
   watch(() => route.params.categoria, (newCategoria) => {
     categoria.value = newCategoria;
     buscar();
-    setTimeout(() => {
-        categoria.value = null;  
-        buscar(false); 
-    }, 10000); 
   });
   
   const seleccionarProducto = (producto) => {
@@ -82,17 +91,38 @@
   </script>
 
 
-<style>
+<style scoped>
+.contenedor-categorias {
+    width: 100%;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+.titulobuscar {
+    width: 100%;
+    margin-bottom: 0;
+    padding-left: 10px;
+    padding-right: 20px;
+  }
+  
+  .titulobuscar input {
+    padding: 8px;
+    border: 1px solid var(--color_principal);
+    border-radius: 5px;
+    width: 100%;
+  }
+
 .tarjetaProducto {
     display: flex;
     flex-direction: column;
     padding: 20px 30px;
-    gap: 1rem;
     align-items: center; 
     border: 2px solid var(--color_principal);
     border-radius: 8px;
     max-width: 150px; 
-    margin: 10px;
     cursor: pointer;
 }
 .imagenProducto{
