@@ -25,7 +25,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(mesaItem, indice) in mesasPaginadas" :key="mesaItem.id">
+        <tr class="tr" v-for="(mesaItem, indice) in mesasPaginadas" :key="mesaItem.id">
           <td>{{ mesaItem.nombre }}</td>
           <td>
             <button class="btnEditar" @click="editarMesa(indice)">Editar</button>

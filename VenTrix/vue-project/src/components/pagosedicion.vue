@@ -25,7 +25,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(tp, indice) in tiposPagoPaginados" :key="tp.id">
+        <tr class="tr" v-for="(tp, indice) in tiposPagoPaginados" :key="tp.id">
           <td>{{ tp.descripcion }}</td>
           <td>
             <button class="btnEditar" @click="editarTipoPago(indice)">Editar</button>

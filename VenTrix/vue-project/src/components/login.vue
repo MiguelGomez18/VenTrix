@@ -49,12 +49,6 @@
             <img src="../components/icons/icons8-contraseña-50.png" alt="Contraseña">
             <input type="password" placeholder="Password" v-model="password" required>
         </div>
-        <select v-model="rol" required>
-            <option value="" disabled>Seleccione su rol...</option>
-            <option v-for="ro in roles" :key="ro" :value="ro">
-                {{ ro }}
-            </option>
-        </select>
         <router-link to="/">Volver..</router-link>
         <button class="button" type="submit">{{ frmlogin ? 'INICIAR SESIÓN' : 'REGISTRARSE' }}</button>
         </form>
@@ -94,7 +88,6 @@ const nombre = ref('');
 const correo = ref('');
 const password = ref('');
 const roles = ["ADMINISTRADOR","ADMINISTRADOR_SUCURSAL","CAJERO","MESERO","COCINERO"];
-const rol = ref('');
 const date = new Date();
 const dia = (date.getDate() < 10 ? '0':'') + date.getDate();
 const mes = date.getMonth() + 1;
@@ -109,7 +102,6 @@ const limpiarInputs = () => {
   nombre.value = '';
   correo.value = '';
   password.value = '';
-  rol.value = '';
 };
 
 const validarPassword = (password) => {
@@ -142,7 +134,7 @@ const loginPropietario = async () => {
                 });
                 cart.restaurante = idrestaurante.value;
                 cart.rol = '';
-                router.push({ name: 'Admin', params: { idrestaurante: idrestaurante.value } });
+                router.push({ name: 'TarjetasSucursales', params: { idrestaurante: idrestaurante.value } });
             }
 
         } else if (rol1.value == roles[1]) {
@@ -161,20 +153,28 @@ const loginPropietario = async () => {
                 cart.restaurante = idrestaurante.value;
                 cart.nit = sucursal1.value;
                 cart.rol = '';
-                router.push({ name: 'Mesas', params: { nit: sucursal1.value } });
+                router.push({ name: 'Edicion' });
             }
             
         } else if (rol1.value == roles[2]) {
+            await buscardocumentoSucursal(documento1);
+            cart.nit = sucursal1.value;
             cart.rol = rol1.value;
-            router.push({ name: 'LoginDatos' })
+            console.log(sucursal1.value);
+            
+            router.push({ name: 'MesasMesero', params: { nit: sucursal1.value, rol: rol1.value } });
             
         } else if (rol1.value == roles[3]) {
+            await buscardocumentoSucursal(documento1);
+            cart.nit = sucursal1.value;
             cart.rol = rol1.value;
-            router.push({ name: 'LoginDatos' })
+            router.push({ name: 'MesasMesero', params: { nit: sucursal1.value, rol: rol1.value } });
 
         } else if (rol1.value == roles[4]) {
+            await buscardocumentoSucursal(documento1);
+            cart.nit = sucursal1.value;
             cart.rol = rol1.value;
-            router.push({ name: 'LoginDatos' });
+            router.push({ name: 'Cocinero', params: { nit: sucursal1.value } });
         }
 
         limpiarInputs();
@@ -194,7 +194,7 @@ const loginPropietario = async () => {
                 nombre: nombre.value,
                 correo: correo.value,
                 password: password.value,
-                rol: rol.value,
+                rol: "ADMINISTRADOR",
                 fecha_creacion: fecha_creacion.value
             });
             console.log('Registro OK');
@@ -221,17 +221,6 @@ const loginPropietario = async () => {
     }
 };
 
-onMounted(async () => {
-if (!frmlogin.value) {
-    try {
-    const response = await axios.get('http://127.0.0.1:8000/propietario/documento/');
-    console.log("Documentos de los propietarios ", response.data);
-    } catch (error) {
-    console.error("Error en la consulta de documentos", error);
-    menError.value = "Error al consultar documentos";
-    }
-}
-});
 
 const buscardocumento = async (correo) => {
   try {
@@ -239,6 +228,15 @@ const buscardocumento = async (correo) => {
     documento1.value = respuesta.data;
   } catch (error) {
     console.error("Error al el documento", error);
+  }
+};
+
+const buscardocumentoSucursal = async (documento1) => {
+  try {
+    const respuesta = await axios.get(`http://127.0.0.1:8080/usuario/sucursal/${documento1.value}`); 
+    sucursal1.value = respuesta.data;
+  } catch (error) {
+    console.error("Error al buscar la sucursal", error);
   }
 };
 
@@ -265,7 +263,7 @@ const buscarSucursal = async (documento1) => {
         const respuesta = await axios.get(`http://127.0.0.1:8080/sucursal/id_usuario/${documento1.value}`); 
         sucursal1.value = respuesta.data;
     } catch (error) {
-        console.error("Error al el id de restaurante", error);
+        console.error("Error al buscar la sucursal", error);
     }
 };
 

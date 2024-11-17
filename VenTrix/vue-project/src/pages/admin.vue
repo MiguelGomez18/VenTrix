@@ -1,16 +1,14 @@
 <template>
     <headercuerpo></headercuerpo>
     <div class="contenido"></div>
-    <tarjetassucursales :idrestaurante="idrestaurante"></tarjetassucursales>
-    <menuinteractivo></menuinteractivo>
     <router-view></router-view>
+    <menuAdmin></menuAdmin>
     <div class="contenido"></div>
 </template>
 
 <script setup>
 import headercuerpo from '@/components/headercuerpo.vue';
-import menuinteractivo from '@/components/menuinteractivo.vue';
-import tarjetassucursales from '@/components/tarjetassucursales.vue';
+import menuAdmin from '@/components/menuAdmin.vue';
 import { defineProps } from 'vue';
 
 const props = defineProps({

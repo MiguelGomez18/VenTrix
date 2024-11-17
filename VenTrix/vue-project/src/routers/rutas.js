@@ -3,8 +3,10 @@ import login from "@/components/login.vue";
 import cuerpo from "@/pages/cuerpo.vue";
 import inicio from "@/pages/inicio.vue";
 import admin from "@/pages/admin.vue";
+import registroAdmin from "@/components/registroAdmin.vue";
+import registroSucursal from "@/components/registroSucursal.vue";
+import tarjetassucursales from "@/components/tarjetassucursales.vue";
 import restaurante from "@/components/restaurante.vue";
-import loginDatos from "@/components/loginDatos.vue";
 import cocinero from "@/pages/cocinero.vue";
 import mesero from "@/pages/mesero.vue";
 import edicion from "@/sections/edicion.vue";
@@ -32,21 +34,37 @@ const routes = [
     props: true // Esto permite pasar el parámetro como prop al componente
   },
   {
-    path: '/admin/:idrestaurante',
+    path: '/admin',
     name: 'Admin',
     component: admin,
-    props: true // Esto permite pasar el parámetro como prop al componente
+    props: true,
+    children: [
+      {
+        path: '/tarjetasAdmin/:idrestaurante', 
+        name: 'TarjetasSucursales',
+        component: tarjetassucursales,
+      },
+      {
+        path: 'edicionAdmin', 
+        name: 'EdicionAdmin',
+        component: edicion,
+      },
+      {
+        path: 'informesAdmin', 
+        name: 'InformesAdmin',
+        component: informes,
+      },
+      {
+        path: 'registroAdmin', 
+        name: 'RegistroAdmin',
+        component: registroAdmin,
+      }
+    ]
   },
   {
     path: '/restaurante/:usuario',
     name: 'Restaurante',
     component: restaurante,
-    props: true // Esto permite pasar el parámetro como prop al componente
-  },
-  {
-    path: '/loginDato',
-    name: 'LoginDatos',
-    component: loginDatos,
     props: true // Esto permite pasar el parámetro como prop al componente
   },
   {
@@ -88,9 +106,9 @@ const routes = [
     component: cuerpo,
     children: [
       {
-        path: '/mesas/:nit', 
-        name: 'Mesas',
-        component: mesas,
+        path: '/registrosucursal/:nit', 
+        name: 'RegistroSucursal',
+        component: registroSucursal,
         props: true 
       },
       {

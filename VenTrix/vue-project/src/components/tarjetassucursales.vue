@@ -9,10 +9,13 @@
       <div class="cards-container">
         <div v-for="sucursal in sucursales" :key="sucursal.id" class="card">
           <h3>{{ sucursal.nombre }}</h3>
+          <p><strong>Nit:</strong> {{ sucursal.id }}</p>
           <p><strong>Dirección:</strong> {{ sucursal.direccion }}</p>
           <p><strong>Ciudad:</strong> {{ sucursal.ciudad }}</p>
           <p><strong>Teléfono:</strong> {{ sucursal.telefono }}</p>
-          <p><strong>Fecha de Apertura:</strong> {{ sucursal.fechaApertura }}</p>
+          <p><strong>Fecha de Apertura:</strong> {{ sucursal.fecha_apertura }}</p>
+          <p><strong>Estado:</strong> {{ sucursal.estado }}</p>
+          <p><strong>Administrador:</strong> {{ sucursal.administradorNombre }}</p>
           <button @click="verDetalles(sucursal.id)">Ver detalles</button>
         </div>
       </div>
@@ -23,6 +26,8 @@
   import { ref, onMounted } from 'vue';
   import axios from 'axios';
   import { defineProps } from 'vue';
+  import { useRouter, useRoute } from 'vue-router';
+  import { useCart } from '@/stores/cart';
 
   const props = defineProps({
     idrestaurante: {
@@ -31,7 +36,10 @@
     }
   });
   
-  const restauranteId = ref(props.idrestaurante); // ID del restaurante, puedes modificarlo o hacerlo dinámico
+  const cart = useCart();
+  const router = useRouter();
+  const route = useRoute();
+  const restauranteId = ref(route.params.idrestaurante); 
   const sucursales = ref([]);
   const loading = ref(true);
   const error = ref('');
@@ -41,10 +49,19 @@
   const obtenerSucursales = async () => {
     try {
       const response = await axios.get(`http://localhost:8080/sucursal/restaurante/${restauranteId.value}`);
-      sucursales.value = response.data;
-      const respuesta1 = await axios.get(`http://localhost:8080/restaurante/${restauranteId.value}`)
+      const sucursalesConAdministradores = await Promise.all(
+        response.data.map(async (sucursal) => {
+          const administradorResponse = await axios.get(`http://localhost:8080/usuario/nombre/${sucursal.administrador}`);
+          return {
+            ...sucursal,
+            administradorNombre: administradorResponse.data
+          };
+        })
+      );
+      sucursales.value = sucursalesConAdministradores;
+
+      const respuesta1 = await axios.get(`http://localhost:8080/restaurante/${restauranteId.value}`);
       restauranteNombre.value = respuesta1.data || 'Restaurante no encontrado';
-      console.log(respuesta1.data)
       loading.value = false;
     } catch (error) {
       error.value = 'No se pudieron cargar las sucursales. Intenta nuevamente.';
@@ -55,9 +72,10 @@
   // Función para manejar el clic en "Ver detalles"
   const verDetalles = (id) => {
     console.log(`Ver detalles de la sucursal con ID: ${id}`);
-    // Aquí puedes redirigir a una página con más detalles si lo deseas
+    cart.nit = id;
+    router.push({ name: 'EdicionAdmin' });
   };
-  
+
   // Ejecutar la obtención de sucursales al montar el componente
   onMounted(() => {
     obtenerSucursales();

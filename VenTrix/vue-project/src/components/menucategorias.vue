@@ -104,18 +104,17 @@
     border-radius: 10px;
     padding: 10px;
     cursor: pointer;
+    color: var(--color_letra_negra);
   }
-  
-  .categoria-imagen {
-    width: 50px; /* Tamaño de la imagen */
-    height: 50px; /* Tamaño de la imagen */
-    border-radius: 50%; /* Imagen redonda */
-    margin-right: 10px;
+
+  .categoria-item:hover {
+    background-color: var(--color_principal);
+    color: var(--color_letra_blanca);
   }
   
   .categoria-nombre {
     font-size: 16px;
-    color: var(--color_letra_negra);
   }
+
   </style>
   

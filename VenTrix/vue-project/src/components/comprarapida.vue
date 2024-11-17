@@ -1,5 +1,5 @@
 <template>
-  <div class="compra-rapida-container">
+  <div v-if="!Rol" class="compra-rapida-container">
     <v-btn
       v-for="mesa in mesaCompraRapida"
       :key="mesa.id" 
@@ -22,6 +22,7 @@ import { useRouter, useRoute } from 'vue-router';
 const route = useRoute();
 const router = useRouter();
 const nit = ref(route.params.nit);
+const Rol = ref(false);
 const rol = ref(route.params.rol);
 const mesaCompraRapida = ref([]);
 const mesa = ref({
@@ -62,6 +63,10 @@ const agregarMesa = async () => {
     }
   }
 };
+
+if (rol.value == "MESERO") {
+  Rol.value = ref(true);
+}
 
 onMounted(async () => {
   await buscarMesas(nit);

@@ -6,7 +6,7 @@
     </div>
     <div v-else>
       <table class="cart-table">
-        <thead>
+        <thead class="encabezado">
           <tr>
             <th>Producto</th>
             <th>Cantidad</th>
@@ -66,7 +66,6 @@ console.log(mesaProducts.value)
 const agregarProducto = (producto) => {
   cartStore.addProduct({ ...producto, mesaId });  // Pasamos mesaId al agregar el producto
 };
-console.log(Rol)
 
 if (Rol == "MESERO") {
   comanda.value = ref(true);
@@ -143,17 +142,13 @@ const comandar = () => {
   }
   
   .cart-table {
-    width: 100%;
-    border-collapse: collapse;
     margin-bottom: 15px;
   }
   
   .cart-table th,
   .cart-table td {
     padding: 10px;
-    border: 1px solid #ddd;
     text-align: center;
-    border: 2px solid var(--color_principal);
   }
   
   .quantity-btn,.quantity-btn1,

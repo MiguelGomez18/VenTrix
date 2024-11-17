@@ -20,8 +20,33 @@
           </option>
         </select>
         <input type="text" v-model="producto.descripcion" placeholder="Descripcion"/>
-        <input type="file" @change="onFileChange" ref="fileInput" />
-        <label for="">Disponible<input type="checkbox" v-model="producto.disponibilidad"/></label>
+        <div class="custom-file-input">
+          <label for="file-upload" class="custom-label">
+            <span v-if="!file">Imagen</span>
+            <span v-else>Imagen ✅</span>
+          </label>
+          <input
+            id="file-upload"
+            class="hidden-file-input"
+            type="file"
+            @change="onFileChange"
+            ref="fileInput"
+          />
+        </div>
+        <div class="custom-checkbox">
+          <input
+            id="checkbox-disponibilidad"
+            type="checkbox"
+            v-model="producto.disponibilidad"
+            class="hidden-checkbox"
+          />
+          <label for="checkbox-disponibilidad" class="custom-checkbox-label">
+            Disponible
+            <span class="checkbox-indicator">
+              <span v-if="producto.disponibilidad" class="checkbox-checkmark">✔</span>
+            </span>
+          </label>
+        </div>
         <button class="btnAggAct" type="submit">{{ estaEditando ? 'Actualizar' : 'Agregar' }}</button>
         <button class="btncancelar" type="button" @click="cancelarEdicion" v-if="estaEditando">Cancelar</button>
       </form>
@@ -38,13 +63,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(prod, indice) in productosFiltrados" :key="prod.id_producto">
+        <tr class="tr" v-for="(prod, indice) in productosPaginados" :key="prod.id_producto">
           <td>{{ prod.nombre }}</td>
           <td>{{ prod.precio }}</td>
           <td>
             {{ categoriasFiltradas.find(cate => cate.producto.some(pro => pro.id_producto === prod.id_producto))?.nombre || 'Sin Categoría' }}
           </td>
-          <td><img :src="`http://127.0.0.1:8080${prod.imagen}`" alt="" style="width: 80px;"></td>
+          <td><img :src="`http://127.0.0.1:8080${prod.imagen}`" alt=""></td>
           <td>
             <button class="btnEditar" @click="editarProducto(indice)">Editar</button>
             <button class="btnEliminar" @click="eliminarProducto(indice)">Eliminar</button>
@@ -369,6 +394,63 @@ const resetearFormulario = () => {
     padding: 5px;
     text-align: center;
   }
+  .tr:hover {
+    background-color: rgba(128, 128, 128, 0.399);
+  }
+  td img{
+    width: 80px;
+  }
+  .hidden-file-input {
+    display: none;
+  }
+  .custom-file-input {
+    position: relative;
+  }
+  .custom-label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 5px;
+    background-color: var(--color_principal);
+    color: var(--color_letra_blanca);
+    padding: 6px;
+    border-radius: 5px;
+    border: 1px solid;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .hidden-checkbox {
+    display: none;
+  }
+  .custom-checkbox-label {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 16px;
+    color: var(--color_letra_negra);
+  }
+  .checkbox-indicator {
+    width: 15px;
+    height: 15px;
+    border: 2px solid var(--color_principal);
+    border-radius: 4px;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  .hidden-checkbox:checked + .custom-checkbox-label .checkbox-indicator {
+    background-color: var(--color_principal);
+    border-color: var(--color_letra_negra);
+  }
+  .checkbox-checkmark {
+    color: var(--color_letra_blanca);
+    font-size: 10px;
+    font-weight: bold;
+  }
   .btnEditar {
     background-color: var(--color_principal);
     color: var(--color_letra_blanca);
@@ -390,7 +472,6 @@ const resetearFormulario = () => {
     border-radius: 10px;
     padding: 5px 10px;
   }
-  
   .btncancelar{
     width: 30%;
     background-color:red;

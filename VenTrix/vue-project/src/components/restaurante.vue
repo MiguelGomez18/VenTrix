@@ -106,7 +106,7 @@
             cart.restaurante = id.value;
     
             limpiarInputs();
-            router.push({ name: 'Admin', params: { idrestaurante: id.value } });
+            router.push({ name: 'TarjetasSucursales', params: { idrestaurante: id.value } });
     
         } catch (error) {
             console.error("Error al registrar el restaurante", error);

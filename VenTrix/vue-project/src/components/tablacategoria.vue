@@ -27,7 +27,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(cate, indice) in categoriasPaginadas" :key="cate.id">
+        <tr class="tr" v-for="(cate, indice) in categoriasPaginadas" :key="cate.id">
           <td>{{ cate.nombre }}</td>
           <td>{{ cate.descripcion }}</td>
           <td>
@@ -236,6 +236,9 @@ const resetearFormulario = () => {
     width: 10%;
     padding: 5px;
     text-align: center;
+  }
+  .tr:hover {
+    background-color: rgba(128, 128, 128, 0.399);
   }
   .td1 {
     width: 4%;

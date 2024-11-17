@@ -6,17 +6,17 @@
         </v-btn>
   
         <div v-if="mostrarBotones" class="contenedor-botones">
-          <v-btn class="boton-secundario" color="green darken-3" large @click="navegarARuta('RegistroSucursal')">
+        <v-btn class="boton-secundario" color="green darken-2" large @click="navegarARuta('RegistroAdmin')">
             <img src="./icons/edit-svgrepo-com.svg" class="imagen-icono" />
             <span>Registro</span>
           </v-btn>
-          <v-btn class="boton-secundario" color="green darken-2" large @click="navegarARuta('Informes')">
+          <v-btn class="boton-secundario" color="green darken-2" large @click="navegarARuta('TarjetasSucursales')">
+            <img src="./icons/table-svgrepo-com.svg" class="imagen-icono" />
+            <span>Sucursales</span>
+          </v-btn>
+          <v-btn class="boton-secundario" color="green darken-2" large @click="navegarARuta('InformesAdmin')">
             <img src="./icons/data-svgrepo-com.svg" class="imagen-icono" />
             <span>Informes</span>
-          </v-btn>
-          <v-btn class="boton-secundario" color="green darken-3" large @click="navegarARuta('Edicion')">
-            <img src="./icons/edit-svgrepo-com.svg" class="imagen-icono" />
-            <span>Edicion</span>
           </v-btn>
         </div>
       </div>
@@ -31,7 +31,7 @@ import { useCart } from '@/stores/cart';
 const mostrarBotones = ref(false);
 const router = useRouter(); 
 const cart = useCart();
-const nit = cart.nit;
+const restaurante = cart.restaurante;
 
 const alternarBotones = () => {
   mostrarBotones.value = !mostrarBotones.value;
@@ -39,8 +39,8 @@ const alternarBotones = () => {
 
 const navegarARuta = (name) => {
   window.dispatchEvent(new Event('ocultarInicio')); 
-  if (name == 'RegistroSucursal') {
-    router.push({ name: name, params: { nit: nit } });
+  if (name == 'TarjetasSucursales') {
+    router.push({ name: name, params: { idrestaurante: restaurante } });
   }
   router.push({ name: name});
 };
