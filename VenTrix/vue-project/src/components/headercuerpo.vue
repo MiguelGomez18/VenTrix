@@ -1,6 +1,6 @@
 <template>
-    <header class="header1">
-        <nav class="nav1">
+  <header class="header1">
+    <nav class="nav1">
       <div class="logo1">
         <img src="" alt="" />
         <a href="">VENTRIX</a>
@@ -17,10 +17,63 @@
         <a href=""><img src="../components/icons/icons8-facebook-48 (1).png" alt="Facebook"></a>
         <li><a class="a1" href=""><router-link class="link" to="">SOPORTE</router-link></a></li>
       </ul>
-      <a href=""><router-link class="link1" to="/"><img class="user1" src="./icons/icons8-user-48.png" alt=""/></router-link></a>
+      <div class="user-container">
+        <img 
+          class="user1" 
+          src="./icons/icons8-user-48.png" 
+          alt="User" 
+          @click="toggleUserMenu"
+        />
+        <div v-if="showUserMenu" class="user-menu">
+          <p><strong>Nombre:</strong> {{ userData.nombre }}</p>
+          <p><strong>Email:</strong> {{ userData.correo }}</p>
+          <p><strong>Rol:</strong> {{ userData.rol }}</p>
+          <button @click="logout">Cerrar sesión</button>
+        </div>
+      </div>
     </nav>
-    </header>
+  </header>
 </template>
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+import { useCart } from '@/stores/cart';
+import router from '@/routers/rutas';
+
+const showUserMenu = ref(false);
+const userData = ref([]);
+const cart = useCart();
+
+const toggleUserMenu = () => {
+  showUserMenu.value = !showUserMenu.value;
+};
+
+const fetchUserData = async () => {
+  try {
+    console.log(cart.documento);
+    
+    const response = await axios.get(`http://127.0.0.1:8080/usuario/${cart.documento}`);
+    userData.value = response.data;
+    if (userData.value.rol == "ADMINISTRADOR_SUCURSAL") {
+      userData.value.rol = "ADMINISTRADOR SUCURSAL"
+    }
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+  }
+};
+
+const logout = () => {
+  console.log('Cerrando sesión...');
+  cart.resetCart();
+  router.push({ name: "Registro" })
+  showUserMenu.value = false;
+};
+
+onMounted(() => {
+  fetchUserData();
+});
+</script>
 
 <style>
 .header1 {
@@ -84,6 +137,61 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+.user-container {
+  position: relative;
+}
+
+.user1 {
+  width: 60%;
+  cursor: pointer;
+}
+
+.user-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  padding: 10px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-evenly;
+}
+
+.user-menu p {
+  margin: 5px 0;
+  color: black;
+  font-size: 14px;
+  display: flex; 
+  flex-direction: column;
+  align-items: start;
+}
+
+.user-menu strong {
+  margin-bottom: 5px;
+}
+
+.user-menu button {
+  width: 110px;
+  background-color: #e60000;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-top: 5px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.user-menu button:hover {
+  background-color: #ff4d4d;
 }
 
 .ul a{

@@ -6,6 +6,7 @@ export const useCart = defineStore('cart', {
     nit: '', 
     restaurante: '',
     rol: '',
+    documento: '',
   }),
   getters: {
     // Calcula el total del carrito para una mesa específica
@@ -23,6 +24,9 @@ export const useCart = defineStore('cart', {
     },
     setRol(rolValue) {
       this.rol = rolValue;
+    },
+    setDocumento(documentoValue) {
+      this.documento = documentoValue;
     },
     addProduct(product) {
       const { mesaId } = product;
@@ -49,6 +53,7 @@ export const useCart = defineStore('cart', {
         this.nit = '';
         this.restaurante = '';
         this.rol = '';
+        this.documento = '';
       }
     },
   },

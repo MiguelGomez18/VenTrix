@@ -72,7 +72,7 @@
 
 <script setup>
 import Swal from 'sweetalert2';
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { useCart } from '@/stores/cart';
@@ -119,6 +119,7 @@ const loginPropietario = async () => {
 
         await buscarRol(correo.value);
         await buscardocumento(correo.value);
+        cart.documento = documento1.value;
         if (rol1.value == roles[0]) {
             await buscarid_restaurante(documento1.value);
 
@@ -134,12 +135,13 @@ const loginPropietario = async () => {
                 });
                 cart.restaurante = idrestaurante.value;
                 cart.rol = '';
+                
                 router.push({ name: 'TarjetasSucursales', params: { idrestaurante: idrestaurante.value } });
             }
 
         } else if (rol1.value == roles[1]) {
             await buscarSucursal(documento1);
-            
+
             if (sucursal1.value == '') {
                 cart.rol = '';
                 router.push({ name: 'Sucursal', params: { usuario: documento1.value } });
