@@ -72,7 +72,6 @@ const buscarCategorias = async () => {
     const respuesta = await axios.get(`http://127.0.0.1:8080/categoria/id_sucursal/${nit}`);
     categorias.value = respuesta.data;
 
-    console.log("Categorias cargadas:", categorias.value);
   } catch (error) {
     console.error("Error al cargar categorias", error);
   }
@@ -99,10 +98,9 @@ const categoriasFiltradas = computed(() => {
 const agregarCategoria = async () => {
   try {
     const nuevaCategoria = { ...categoria.value };
-    console.log(nuevaCategoria);
     const response = await axios.post('http://127.0.0.1:8080/categoria', nuevaCategoria);
 
-    categorias.value.push(response.data);
+    await buscarCategorias()
     Swal.fire({
       icon: 'success',
       title: 'Categoría Agregada',
@@ -130,7 +128,7 @@ const actualizarCategoria = async () => {
     const categoriaActualizada = { ...categoria.value };
     const response = await axios.put(`http://127.0.0.1:8080/categoria/${categoriaActualizada.id}`, categoriaActualizada);
 
-    categorias.value[indiceEdicion.value] = response.data;
+    await buscarCategorias();
     Swal.fire({
       icon: 'success',
       title: 'Categoría Actualizada',
@@ -151,7 +149,7 @@ const eliminarCategoria = async (indice) => {
   try {
     const categoriaAEliminar = categorias.value[indice];
     await axios.delete(`http://127.0.0.1:8080/categoria/${categoriaAEliminar.id}`);
-    categorias.value.splice(indice, 1);
+    await buscarCategorias();
 
     Swal.fire({
       icon: 'success',
@@ -173,7 +171,7 @@ const cancelarEdicion = () => {
 };
 
 const resetearFormulario = () => {
-  categoria.value = { nombre: '' };
+  categoria.value = { id: '', nombre: '', descripcion: '', sucursal: nit };
   estaEditando.value = false;
   indiceEdicion.value = null;
 };

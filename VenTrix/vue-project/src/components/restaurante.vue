@@ -58,6 +58,7 @@
     const descripcion = ref('');
     const telefono = ref('');
     const direccion = ref('');
+    const correo = ref('')
     const date = new Date();
     const dia = (date.getDate() < 10 ? '0':'') + date.getDate();
     const mes = date.getMonth() + 1;
@@ -79,7 +80,7 @@
     };
     
     const registerRestaurant = async () => {
-        try {
+        try { 
             const response = await axios.post('http://127.0.0.1:8080/restaurante', {
                 id: id.value,
                 nombre: nombre.value,
@@ -92,7 +93,7 @@
                 fecha_finalizacion: fecha_finalizacion.value,
                 estado: 'ACTIVO',
                 usuario: {
-                    id: usuario
+                    documento: usuario
                 }
             });
     
@@ -105,8 +106,8 @@
             });
             cart.restaurante = id.value;
     
-            limpiarInputs();
             router.push({ name: 'TarjetasSucursales', params: { idrestaurante: id.value } });
+            limpiarInputs();
     
         } catch (error) {
             console.error("Error al registrar el restaurante", error);

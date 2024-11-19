@@ -55,6 +55,8 @@ const limpiarInputs = () => {
   nombre.value = '';
   correo.value = '';
   password.value = '';
+  rol.value = '';
+  fecha_creacion.value = '';
   sucursal.value = '';
 };
 

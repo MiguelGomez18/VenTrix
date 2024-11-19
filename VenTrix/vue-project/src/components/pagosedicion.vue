@@ -70,7 +70,6 @@ const buscarTiposPago = async () => {
     const respuesta = await axios.get(`http://127.0.0.1:8080/tipo_pago/id_sucursal/${nit}`);
     tiposPago.value = respuesta.data;
 
-    console.log("Tipos pagos cargados:", tiposPago.value);
   } catch (error) {
     console.error("Error al cargar tipos de pago", error);
   }
@@ -103,7 +102,7 @@ const agregarTipoPago = async () => {
   try {
     const nuevoTipoPago = { ...tipoPago.value };
     const response = await axios.post('http://127.0.0.1:8080/tipo_pago/registrar', nuevoTipoPago); // Cambiar URL aquí
-    tiposPago.value.push(response.data); // Agregar nuevo tipo de pago a la lista
+    await buscarTiposPago()
 
     Swal.fire({
       icon: 'success',
@@ -159,7 +158,7 @@ const eliminarTipoPago = async (indice) => {
     const tipoPagoAEliminar = tiposPago.value[indice];
     // Enviar la solicitud DELETE con el ID del tipo de pago
     await axios.delete(`http://127.0.0.1:8000/tipo_pago/${tipoPagoAEliminar.id}`); // Cambiar URL aquí
-    tiposPago.value.splice(indice, 1); // Eliminar el tipo de pago de la lista
+    await buscarTiposPago() // Eliminar el tipo de pago de la lista
 
     Swal.fire({
       icon: 'success',
@@ -183,7 +182,7 @@ const cancelarEdicion = () => {
 
 // Función para resetear el formulario
 const resetearFormulario = () => {
-  tipoPago.value = { id: '', descripcion: '' };
+  tipoPago.value = { id: '', descripcion: '', sucursal: nit };
   estaEditando.value = false;
   indiceEdicion.value = null;
 };

@@ -61,7 +61,6 @@ documento.value = '';
 nombre.value = '';
 correo.value = '';
 password.value = '';
-sucursal.value = '';
 rol.value = '';
 };
 

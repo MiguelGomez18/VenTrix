@@ -124,7 +124,7 @@ const loginPropietario = async () => {
             await buscarid_restaurante(documento1.value);
 
             if (idrestaurante.value == '') {
-                cart.rol = '';
+                cart.rol = rol1.value;
                 router.push({ name: 'Restaurante', params: { usuario: documento1.value } });
 
             } else {
@@ -134,7 +134,7 @@ const loginPropietario = async () => {
                     text: 'Bienvenido a tu cuenta'
                 });
                 cart.restaurante = idrestaurante.value;
-                cart.rol = '';
+                cart.rol = rol1.value;
                 
                 router.push({ name: 'TarjetasSucursales', params: { idrestaurante: idrestaurante.value } });
             }
@@ -143,7 +143,7 @@ const loginPropietario = async () => {
             await buscarSucursal(documento1);
 
             if (sucursal1.value == '') {
-                cart.rol = '';
+                cart.rol = rol1.value;
                 router.push({ name: 'Sucursal', params: { usuario: documento1.value } });
 
             } else {
@@ -154,7 +154,7 @@ const loginPropietario = async () => {
                 });
                 cart.restaurante = idrestaurante.value;
                 cart.nit = sucursal1.value;
-                cart.rol = '';
+                cart.rol = rol1.value;
                 router.push({ name: 'Edicion' });
             }
             
