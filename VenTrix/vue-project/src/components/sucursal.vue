@@ -1,15 +1,10 @@
 <template>
-<div class="body1">
     <div class="container1">
         <form class="sign-up1" @submit.prevent="loginSucursal">
             <h2>REGISTRAR SUCURSAL</h2>
             <div class="container-input1">
                 <img src="../components/icons/icons8-contraseña-50.png" alt="Id">
-                <input type="text" placeholder="Nit" v-model="id" required>
-            </div>
-            <div class="container-input1">
-                <img src="../components/icons/icons8-contraseña-50.png" alt="Id_restaurante">
-                <input type="text" placeholder="Restaurante nit" v-model="idrestaurante" required>
+                <input type="text" placeholder="Nit" v-model="id" required :disabled="editMode">
             </div>
             <div class="container-input1">
                 <img src="../components/icons/icons8-usuario-50.png" alt="Nombre">
@@ -27,30 +22,31 @@
                 <img src="../components/icons/icons8-contraseña-50.png" alt="Telefono">
                 <input type="text" placeholder="Telefono" v-model="telefono" required>
             </div>
-            <router-link to="/registro">Volver..</router-link>
-            <button class="button1" type="submit">REGISTRAR</button>
+            <div class="container-input1">
+                <img src="../components/icons/icons8-contraseña-50.png" alt="Telefono">
+                <input type="text" placeholder="Administrador (opcional)" v-model="usuario">
+            </div>
+            <div class="butons">
+                <button class="button3" type="submit">{{ editMode ? 'ACTUALIZAR' : 'REGISTRAR' }}</button>
+                <button class="edit" type="button" @click="editar">
+                    <img src="../components/icons/icons8-edit-48.png" alt="Editar">
+                </button>
+            </div>
         </form>
     </div>
-</div>
 </template>
 
 <script setup>
 import Swal from 'sweetalert2';
-import { ref, defineProps } from 'vue';
+import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { useCart } from '../stores/cart'
 
-const props = defineProps({
-  usuario: {
-    type: String,
-    required: true
-  }
-});
-
-const usuario = props.usuario;
-const idrestaurante = ref('');
+const usuario = ref('');
 const cart = useCart(); 
+const data = ref([]);
+const editMode = ref(false);
 const router = useRouter();
 const id = ref('');
 const nombre = ref('');
@@ -80,12 +76,23 @@ const limpiarInputs = () => {
   direccion.value = '';
   ciudad.value = '';
   telefono.value = '';
-  idrestaurante.value = '';
+  usuario.value = '';
 };
 
 const loginSucursal = async () => {
     try {
-        console.log(idrestaurante.value)
+        if (usuario.value) {
+            const response1 = await axios.get(`http://127.0.0.1:8080/usuario/${usuario.value}`);
+        
+            if (!response1.data || response1.data.value === '' || response1.data.rol !== "ADMINISTRADOR_SUCURSAL") {
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Error en el administrador',
+                    text: 'La Usuario no existe o No es Administrador Sucursal.'
+                });
+                return; 
+            }
+        }
         
         const response = await axios.post('http://127.0.0.1:8080/sucursal', {
             id: id.value,
@@ -95,9 +102,9 @@ const loginSucursal = async () => {
             telefono: telefono.value,
             fecha_apertura: fecha_apertura.value,
             estado: 'ACTIVO',
-            administrador: usuario,
+            administrador: usuario.value,
             restaurante: {
-                "id": idrestaurante.value
+                "id": cart.restaurante
             }
         });
 
@@ -108,55 +115,65 @@ const loginSucursal = async () => {
             title: 'Sucursal Registradoa',
             text: 'Se registró de manera exitosa'
         });
-        cart.restaurante = idrestaurante.value;
-        cart.nit = id.value; // Asigna el nit seleccionado
-
-        router.push({ name: 'Edicion' });
-
+        cart.nit = id.value;
+        editMode.value = false;
         limpiarInputs();
 
     } catch (error) {
 
-        console.error("Error al iniciar sesión", error);
-        menError.value = "Error al iniciar sesión. Por favor, revisa el nombre de usuario y la contraseña.";
+        console.error("Error al registrar", error);
+        menError.value = "Error al registrar sucursal.";
         Swal.fire({
         icon: 'error',
-        title: 'Error al iniciar sesión',
-        text: 'No se pudo iniciar sesión. Por favor, revisa el nombre y contraseña.'
+        title: 'Error al registrar',
+        text: 'No se pudo registrar la sucursal. Por favor, revisa la informacion.'
         });
         limpiarInputs();
     }
 };
 
+const editar = async () => {
+    if (editMode.value) {
+        editMode.value = false;
+        limpiarInputs();
+    } else {
+        editMode.value = true;
+        const response = await axios.get(`http://127.0.0.1:8080/sucursal/${id.value}`);
+        data.value = response.data;
+        id.value = data.value.id;
+        nombre.value = data.value.nombre;
+        direccion.value = data.value.direccion;
+        ciudad.value = data.value.ciudad;
+        telefono.value = data.value.telefono;
+        usuario.value = data.value.administrador;
+    }
+}
+
 
 </script>
 
-<style>
-.body1{
-    width: 100%;
-    height: 100vh;
+<style scoped>
+.container1{
+    margin-bottom: 80px;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #F0F4F3;
-    box-shadow: 0 0 10px rgb(0,0,0,0.3);
-}
-
-.container1{
-    padding: 20px 40px;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    background-color: white;
-    border-radius: 15px;
+    flex-direction: column;
 }
 
 .container1 .sign-up1{
+    padding: 20px 40px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
     transition: transform 0.8s ease-in;
+    background-color: #F0F4F3;
+    box-shadow: 0 0 10px rgb(0,0,0,0.3);
+    border-radius: 15px;
 }
 
 .container1 h2{
@@ -208,14 +225,35 @@ const loginSucursal = async () => {
     margin-top: 5px;
 }
 
-.button1{
-    width: 170px;
-    height: 60px;
+.butons {
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 35px;
+  margin-top: 7px;
+}
+
+.edit {
+    padding: 5px;
+    background-color: #989898;
+    border: none;
+    border-radius: 5px;
+}
+
+.edit:hover {
+    background-color: #cdcdcd;
+}
+.edit img {
+    width: 30px;
+}
+
+.button3{
+    padding: 18px 25px;
     font-size: 16px;
     border: none;
     border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
     background-color: #0def5c;
     color: black;
 }

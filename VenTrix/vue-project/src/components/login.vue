@@ -142,21 +142,15 @@ const loginPropietario = async () => {
         } else if (rol1.value == roles[1]) {
             await buscarSucursal(documento1);
 
-            if (sucursal1.value == '') {
-                cart.rol = rol1.value;
-                router.push({ name: 'Sucursal', params: { usuario: documento1.value } });
-
-            } else {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Inicio de sesión exitoso',
-                    text: 'Bienvenido a tu cuenta'
-                });
-                cart.restaurante = idrestaurante.value;
-                cart.nit = sucursal1.value;
-                cart.rol = rol1.value;
-                router.push({ name: 'Edicion' });
-            }
+            Swal.fire({
+                icon: 'success',
+                title: 'Inicio de sesión exitoso',
+                text: 'Bienvenido a tu cuenta'
+            });
+            cart.restaurante = idrestaurante.value;
+            cart.nit = sucursal1.value;
+            cart.rol = rol1.value;
+            router.push({ name: 'Edicion' });
             
         } else if (rol1.value == roles[2]) {
             await buscardocumentoSucursal(documento1);

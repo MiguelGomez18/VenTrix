@@ -40,6 +40,18 @@ export const useCart = defineStore('cart', {
         this.products[mesaId].push({ ...product, cantidad: 1 });
       }
     },
+    increaseQuantity(mesaId, productId) {
+      const product = this.products[mesaId]?.find(p => p.id_producto === productId);
+      if (product) {
+        product.cantidad += 1;
+      }
+    },
+    decreaseQuantity(mesaId, productId) {
+      const product = this.products[mesaId]?.find(p => p.id_producto === productId);
+      if (product && product.cantidad > 1) {
+        product.cantidad -= 1;
+      }
+    },
     removeProduct(mesaId, productId) {
       if (this.products[mesaId]) {
         this.products[mesaId] = this.products[mesaId].filter(p => p.id_producto !== productId);

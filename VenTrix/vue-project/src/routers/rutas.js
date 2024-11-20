@@ -34,12 +34,6 @@ const routes = [
     component: inicio,
   },
   {
-    path: '/sucursal/:usuario',
-    name: 'Sucursal',
-    component: sucursal,
-    props: true // Esto permite pasar el parámetro como prop al componente
-  },
-  {
     path: '/admin',
     name: 'Admin',
     component: admin,
@@ -92,7 +86,12 @@ const routes = [
         path: 'registroAdmin', 
         name: 'RegistroAdmin',
         component: registroAdmin,
-      }
+      },
+      {
+        path: '/sucursal',
+        name: 'Sucursal',
+        component: sucursal,
+      },
     ]
   },
   {

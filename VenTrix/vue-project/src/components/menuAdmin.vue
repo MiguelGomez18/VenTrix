@@ -6,7 +6,11 @@
         </v-btn>
   
         <div v-if="mostrarBotones" class="contenedor-botones">
-        <v-btn class="boton-secundario" color="green darken-2" large @click="navegarARuta('RegistroAdmin')">
+          <v-btn class="boton-secundario" color="green darken-2" large @click="navegarARuta('Sucursal')">
+            <img src="./icons/edit-svgrepo-com.svg" class="imagen-icono" />
+            <span>Sucursal</span>
+          </v-btn>
+          <v-btn class="boton-secundario" color="green darken-2" large @click="navegarARuta('RegistroAdmin')">
             <img src="./icons/edit-svgrepo-com.svg" class="imagen-icono" />
             <span>Registro</span>
           </v-btn>
@@ -41,7 +45,7 @@ const navegarARuta = (name) => {
   window.dispatchEvent(new Event('ocultarInicio')); 
   if (name == 'TarjetasSucursales') {
     router.push({ name: name, params: { idrestaurante: restaurante } });
-  }
+  } 
   router.push({ name: name});
 };
 </script>

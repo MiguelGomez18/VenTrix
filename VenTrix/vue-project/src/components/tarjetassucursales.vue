@@ -47,27 +47,38 @@
   
   // Obtener las sucursales desde la API
   const obtenerSucursales = async () => {
-    try {
-      const response = await axios.get(`http://localhost:8080/sucursal/restaurante/${restauranteId.value}`);
-      const sucursalesConAdministradores = await Promise.all(
-        response.data.map(async (sucursal) => {
-          const administradorResponse = await axios.get(`http://localhost:8080/usuario/nombre/${sucursal.administrador}`);
-          return {
-            ...sucursal,
-            administradorNombre: administradorResponse.data
-          };
-        })
-      );
-      sucursales.value = sucursalesConAdministradores;
+  try {
+    const response = await axios.get(`http://localhost:8080/sucursal/restaurante/${restauranteId.value}`);
+    const sucursalesConAdministradores = await Promise.all(
+      response.data.map(async (sucursal) => {
+        let administradorNombre = "No tiene";
+        if (sucursal.administrador) {
+          try {
+            const administradorResponse = await axios.get(`http://localhost:8080/usuario/nombre/${sucursal.administrador}`);
+            administradorNombre = administradorResponse.data || "No tiene";
+          } catch (error) {
+            console.error(`Error al obtener el administrador para la sucursal ${sucursal.id}:`, error);
+          }
+        }
+        return {
+          ...sucursal,
+          administradorNombre
+        };
+      })
+    );
 
-      const respuesta1 = await axios.get(`http://localhost:8080/restaurante/nombre/${restauranteId.value}`);
-      restauranteNombre.value = respuesta1.data || 'Restaurante no encontrado';
-      loading.value = false;
-    } catch (error) {
-      error.value = 'No se pudieron cargar las sucursales. Intenta nuevamente.';
-      loading.value = false;
-    }
-  };
+    sucursales.value = sucursalesConAdministradores;
+
+    const respuesta1 = await axios.get(`http://localhost:8080/restaurante/nombre/${restauranteId.value}`);
+    restauranteNombre.value = respuesta1.data || 'Restaurante no encontrado';
+    loading.value = false;
+  } catch (error) {
+    console.error("Error al cargar las sucursales:", error);
+    error.value = 'No se pudieron cargar las sucursales. Intenta nuevamente.';
+    loading.value = false;
+  }
+};
+
   
   // Función para manejar el clic en "Ver detalles"
   const verDetalles = (id) => {

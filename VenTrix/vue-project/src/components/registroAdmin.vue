@@ -2,12 +2,6 @@
         <div class="container2">
             <form class="sign-up2" @submit.prevent="loginPropietario">
             <h2>REGISTRAR ADMINISTRADOR</h2>
-            <div class="redes-sociales">
-                <img src="../components/icons/icons8-whatsapp-50.png" alt="WhatsApp">
-                <img src="../components/icons/icons8-instagram-50.png" alt="Instagram">
-                <img src="../components/icons/icons8-facebook-nuevo-50 (1).png" alt="Facebook">
-            </div>
-            <span>Use su correo electrónico para registrarse</span>
             <div class="container-input2">
                 <img src="../components/icons/icons8-tarjeta-de-identificación-50.png" alt="Documento">
                 <input type="text" placeholder="Documento" v-model="documento" required>
@@ -55,7 +49,6 @@ const limpiarInputs = () => {
   nombre.value = '';
   correo.value = '';
   password.value = '';
-  rol.value = '';
   fecha_creacion.value = '';
   sucursal.value = '';
 };
@@ -67,14 +60,24 @@ const validarPassword = (password) => {
 
 const loginPropietario = async () => {
     try {
+        const response1 = await axios.get(`http://127.0.0.1:8080/sucursal/${sucursal.value}`);
+        if (!response1.data || response1.data.value === '') {
+            await Swal.fire({
+                icon: 'error',
+                title: 'Error en la Sucursal',
+                text: 'La Sucursal no existe.'
+            });
+            return; 
+        }
+
         if (!validarPassword(password.value)) {
-            Swal.fire({
+            await Swal.fire({
                 icon: 'error',
                 title: 'Error de contraseña',
                 text: 'La contraseña debe tener al menos 8 caracteres, incluyendo letras, números y caracteres especiales.'
             });
-            return; 
-        };
+            return;
+        }
 
         const response = await axios.post('http://127.0.0.1:8080/usuario', {
             documento: documento.value,
@@ -85,8 +88,9 @@ const loginPropietario = async () => {
             fecha_creacion: fecha_creacion.value,
             sucursal: sucursal.value
         });
+
         console.log('Registro OK');
-        Swal.fire({
+        await Swal.fire({
             icon: 'success',
             title: 'Administrador de Sucursal Registrado',
             text: 'Se registró de manera exitosa'
@@ -95,22 +99,25 @@ const loginPropietario = async () => {
         limpiarInputs();
 
     } catch (error) {
-        console.error("Error al registrase", error);
-        menError.value = "Error al iniciar sesión. Por favor, revisa el nombre de usuario y la contraseña.";
-        Swal.fire({
+        console.error("Error al registrarse", error);
+
+        await Swal.fire({
             icon: 'error',
             title: 'Error al registrar al administrador de la sucursal',
             text: 'No se pudo registrar. Por favor, revisa la sucursal y contraseña.'
         });
+
         limpiarInputs();
     }
 };
+
 
 </script>
   
   
 <style scoped>
 .container2{
+    padding-top: 40px;
     margin-bottom: 80px;
     width: 70%;
     margin-left: auto;

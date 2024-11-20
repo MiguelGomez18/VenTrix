@@ -41,6 +41,7 @@ import { useRoute } from 'vue-router'; // Para obtener el id de la mesa
 import { useCart } from '../stores/cart';
 import { ref, computed, defineEmits, defineProps } from 'vue';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
 const props = defineProps({
     rol: {
@@ -97,26 +98,44 @@ const openPaymentModal = () => {
   emit('open-payment-modal'); // Emitir evento al padre
 };
 
-const comandar = () => {
-  const element = [];
-  element.value = cartStore.products[mesaId];
-  element.value.forEach(element1 => {
-    detalle.value = {
-      cantidad: element1.cantidad,
-      precio_unitario: element1.precio,
-      precio_total: element1.precio * element1.cantidad,
-      producto: {
-        id_producto: element1.id_producto
-      }
+const comandar = async () => {
+  const productos = cartStore.products[mesaId];
+  if (!productos || productos.length === 0) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No hay productos en la mesa seleccionada.',
+    });
+    return;
+  }
+
+  try {
+    for (const producto of productos) {
+      const detalle = {
+        cantidad: producto.cantidad,
+        precio_unitario: producto.precio,
+        precio_total: producto.precio * producto.cantidad,
+        producto: {
+          id_producto: producto.id_producto,
+        },
+      };
+      await axios.post('http://127.0.0.1:8080/detalles-pedido', detalle);
     }
-    console.log(detalle.value);
-  });
-  Swal.fire({
-    icon: 'success',
-    title: 'Ticket exitoso',
-    text: 'Ha sido enviado a cocina',
-  });
+    Swal.fire({
+      icon: 'success',
+      title: 'Ticket exitoso',
+      text: 'Ha sido enviado a cocina',
+    });
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Hubo un problema al enviar los detalles del pedido.',
+    });
+    console.error(error);
+  }
 };
+
 </script>
   
   <style scoped>

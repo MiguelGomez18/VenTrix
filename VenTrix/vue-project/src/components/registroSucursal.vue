@@ -2,12 +2,6 @@
     <div class="container2">
         <form class="sign-up2" @submit.prevent="loginPropietario">
         <h2>REGISTRAR PERSONAL</h2>
-        <div class="redes-sociales">
-            <img src="../components/icons/icons8-whatsapp-50.png" alt="WhatsApp">
-            <img src="../components/icons/icons8-instagram-50.png" alt="Instagram">
-            <img src="../components/icons/icons8-facebook-nuevo-50 (1).png" alt="Facebook">
-        </div>
-        <span>Use su correo electrónico para registrarse</span>
         <div class="container-input2">
             <img src="../components/icons/icons8-tarjeta-de-identificación-50.png" alt="Documento">
             <input type="text" placeholder="Documento" v-model="documento" required>
