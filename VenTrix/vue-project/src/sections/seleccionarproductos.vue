@@ -42,6 +42,7 @@
   .cuadro1 {
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 80px;
     width: 88%;
     display: flex;
     justify-content: space-evenly;

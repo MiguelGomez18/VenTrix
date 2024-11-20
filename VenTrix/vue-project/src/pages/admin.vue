@@ -3,7 +3,6 @@
     <div class="contenido"></div>
     <router-view></router-view>
     <menuAdmin></menuAdmin>
-    <div class="contenido"></div>
 </template>
 
 <script setup>

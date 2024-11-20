@@ -124,8 +124,6 @@ const buscar = async () => {
   try {
     const respuesta = await axios.get(`http://127.0.0.1:8080/producto/id_sucursal/${nit}`);
     productos.value = respuesta.data
-
-    console.log("Productos cargados:", productos.value);
   } catch (error) {
     console.error("Error al cargar productos", error);
   }
@@ -135,8 +133,6 @@ const buscarcategorias = async () => {
   try {
     const respuesta = await axios.get(`http://127.0.0.1:8080/categoria/id_sucursal/${nit}`);
     categorias.value = respuesta.data;
-
-    console.log("Categorias cargadas:", categorias.value);
   } catch (error) {
     console.error("Error al cargar categorias", error);
   }

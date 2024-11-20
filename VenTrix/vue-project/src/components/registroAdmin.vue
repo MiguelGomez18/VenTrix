@@ -111,6 +111,7 @@ const loginPropietario = async () => {
   
 <style scoped>
 .container2{
+    margin-bottom: 80px;
     width: 70%;
     margin-left: auto;
     margin-right: auto;

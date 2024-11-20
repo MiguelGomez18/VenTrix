@@ -58,7 +58,6 @@
   });
   
   const filtrocategoria = (name,categoria) => {
-    console.log(categoria);
     router.push({ name: name, params: { categoria: categoria }});
   };
 

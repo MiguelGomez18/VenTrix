@@ -60,7 +60,7 @@
       );
       sucursales.value = sucursalesConAdministradores;
 
-      const respuesta1 = await axios.get(`http://localhost:8080/restaurante/${restauranteId.value}`);
+      const respuesta1 = await axios.get(`http://localhost:8080/restaurante/nombre/${restauranteId.value}`);
       restauranteNombre.value = respuesta1.data || 'Restaurante no encontrado';
       loading.value = false;
     } catch (error) {
@@ -86,6 +86,7 @@
   .sucursales-container {
     text-align: center;
     padding: 20px;
+    margin-bottom: 80px;
   }
   
   .loading {

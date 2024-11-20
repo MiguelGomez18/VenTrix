@@ -12,9 +12,15 @@ import mesero from "@/pages/mesero.vue";
 import edicion from "@/sections/edicion.vue";
 import mesas from "@/sections/mesas.vue";
 import informes from "@/sections/informes.vue";
+import pedidos from "@/components/pedidos.vue";
 import seleccionarproductos from "@/sections/seleccionarproductos.vue";
 import sucursal from "@/components/sucursal.vue";
 import tarjetaproductos from "@/components/tarjetaproductos.vue";
+import settings from "@/sections/settings.vue";
+import editUsuario from "@/components/editUsuario.vue";
+import editSucursal from "@/components/editSucursal.vue";
+import editRestaurante from "@/components/editRestaurante.vue";
+import empleados from "@/components/empleados.vue";
 
 const routes = [
   {
@@ -39,6 +45,34 @@ const routes = [
     component: admin,
     props: true,
     children: [
+      {
+        path: '/setting', 
+        name: 'Ajuste',
+        component: settings,
+        props: true,
+        children: [
+          {
+            path: '/editar', 
+            name: 'EditUser',
+            component: editUsuario
+          },
+          {
+            path: '/editar-sucu', 
+            name: 'EditSucu',
+            component: editSucursal
+          },
+          {
+            path: '/editar-resta', 
+            name: 'EditResta',
+            component: editRestaurante
+          },
+          {
+            path: '/empleadoss', 
+            name: 'Empleadoss',
+            component: empleados
+          },
+        ] 
+      },
       {
         path: '/tarjetasAdmin/:idrestaurante', 
         name: 'TarjetasSucursales',
@@ -71,7 +105,28 @@ const routes = [
     path: '/cocinero/:nit',
     name: 'Cocinero',
     component: cocinero,
-    props: true // Esto permite pasar el parámetro como prop al componente
+    props: true,
+    children: [
+      {
+        path: '/pedidos/:nit',
+        name: 'Pedidos',
+        component: pedidos,
+        props: true,
+      },
+      {
+        path: '/settingsss', 
+        name: 'AjustesCocinero',
+        component: settings,
+        props: true,
+        children: [
+          {
+            path: '/editar-usuariooo', 
+            name: 'EditUsuarioCocinero',
+            component: editUsuario
+          },
+        ] 
+      },
+    ]
   },
   {
     path: '/mesero',
@@ -79,14 +134,27 @@ const routes = [
     component: mesero,
     children: [
       {
+        path: '/settingss', 
+        name: 'AjustesMesero',
+        component: settings,
+        props: true,
+        children: [
+          {
+            path: '/editar-usuarioo', 
+            name: 'EditUsuarioMesero',
+            component: editUsuario
+          },
+        ] 
+      },
+      {
         path: '/mesas/:nit/:rol', 
         name: 'MesasMesero',
         component: mesas,
         props: true 
       },
       {
-        path: '/seleccionarproductosMesero/:id_mesa/:nit',
-        name: 'SeleccionarProductosMesero',
+        path: '/seleccionarproductos/:id_mesa/:nit',
+        name: 'SeleccionarProductos',
         component: seleccionarproductos,
         props: true,
         children: [
@@ -106,6 +174,29 @@ const routes = [
     component: cuerpo,
     children: [
       {
+        path: '/settings', 
+        name: 'Ajustes',
+        component: settings,
+        props: true,
+        children: [
+          {
+            path: '/editar-usuario', 
+            name: 'EditUsuario',
+            component: editUsuario
+          },
+          {
+            path: '/editar-sucursal', 
+            name: 'EditSucursal',
+            component: editSucursal
+          },
+          {
+            path: '/empleados', 
+            name: 'Empleados',
+            component: empleados
+          },
+        ] 
+      },
+      {
         path: '/registrosucursal/:nit', 
         name: 'RegistroSucursal',
         component: registroSucursal,
@@ -120,20 +211,6 @@ const routes = [
         path: 'informes', 
         name: 'Informes',
         component: informes,
-      },
-      {
-        path: '/seleccionarproductos/:id_mesa/:nit',
-        name: 'SeleccionarProductos',
-        component: seleccionarproductos,
-        props: true,
-        children: [
-          {
-            path: '/tarjetaproductos/:categoria', 
-            name: 'TarjetaProductos',
-            component: tarjetaproductos,
-            props: true,
-          },
-        ]
       },
     ],
   },

@@ -176,7 +176,7 @@ const loginPropietario = async () => {
             await buscardocumentoSucursal(documento1);
             cart.nit = sucursal1.value;
             cart.rol = rol1.value;
-            router.push({ name: 'Cocinero', params: { nit: sucursal1.value } });
+            router.push({ name: 'Pedidos', params: { nit: sucursal1.value } });
         }
 
         limpiarInputs();

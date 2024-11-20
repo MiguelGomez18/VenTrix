@@ -42,7 +42,7 @@ const navegarARuta = (name) => {
   if (name == 'RegistroSucursal') {
     router.push({ name: name, params: { nit: nit } });
   }
-  router.push({ name: name});
+  router.push({ name: name });
 };
 </script>
   

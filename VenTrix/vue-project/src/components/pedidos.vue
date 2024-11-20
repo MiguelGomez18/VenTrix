@@ -23,6 +23,7 @@
     flex-wrap: wrap;
     justify-content: space-evenly;
     align-items: center;
+    margin-bottom: 80px;
 }
 
 .pedidos {

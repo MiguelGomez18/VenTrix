@@ -24,5 +24,6 @@ import pagosedicion from '@/components/pagosedicion.vue';
     justify-content: center;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 80px;
 }
 </style>

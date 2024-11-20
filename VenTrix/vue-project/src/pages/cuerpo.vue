@@ -3,7 +3,6 @@
     <div class="contenido"></div>
     <menuinteractivo></menuinteractivo>
     <router-view></router-view>
-    <div class="contenido"></div>
 </template>
 
 <script setup>

@@ -31,5 +31,6 @@ import informecategoria from '@/components/informecategoria.vue';
 .padredos{
   display: flex;
   width: 100%;
+  margin-bottom: 80px;
 }
 </style>

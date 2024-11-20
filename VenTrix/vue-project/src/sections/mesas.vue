@@ -32,5 +32,6 @@ console.log(rol);
     justify-content: space-evenly;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 80px;
 }
 </style>

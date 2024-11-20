@@ -28,7 +28,10 @@
           <p><strong>Nombre:</strong> {{ userData.nombre }}</p>
           <p><strong>Email:</strong> {{ userData.correo }}</p>
           <p><strong>Rol:</strong> {{ userData.rol }}</p>
-          <button @click="logout">Cerrar sesión</button>
+          <div class="butons">
+            <button class="up" @click="logout">Cerrar sesión</button>
+            <button class="set" @click="settings"><img src="../components/icons/icons8-settings-48.png" alt=""></button>
+          </div>
         </div>
       </div>
     </nav>
@@ -50,9 +53,7 @@ const toggleUserMenu = () => {
 };
 
 const fetchUserData = async () => {
-  try {
-    console.log(cart.documento);
-    
+  try {    
     const response = await axios.get(`http://127.0.0.1:8080/usuario/${cart.documento}`);
     userData.value = response.data;
     if (userData.value.rol == "ADMINISTRADOR_SUCURSAL") {
@@ -70,12 +71,27 @@ const logout = () => {
   showUserMenu.value = false;
 };
 
+const settings = () => {
+  console.log('Ajustes abiertos...');
+  if (cart.rol == "MESERO" || cart.rol == "CAJERO") {
+    router.push({ name: "EditUsuarioMesero" })
+  } else if (cart.rol == "ADMINISTRADOR_SUCURSAL") {
+    router.push({ name: "EditUsuario" })
+  } else if (cart.rol == "COCINERO") {
+    router.push({ name: "EditUsuarioCocinero" })
+  } else {
+    router.push({ name: 'EditUser' })
+  }
+  
+  showUserMenu.value = false;
+};
+
 onMounted(() => {
   fetchUserData();
 });
 </script>
 
-<style>
+<style scoped>
 .header1 {
   background-color: var(--color_principal);
   position: fixed;
@@ -177,21 +193,42 @@ onMounted(() => {
   margin-bottom: 5px;
 }
 
-.user-menu button {
+.user-menu .butons {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 5px;
+  margin-top: 7px;
+}
+
+.user-menu .up {
   width: 110px;
   background-color: #e60000;
   color: white;
   border: none;
   border-radius: 5px;
   padding: 5px 10px;
-  cursor: pointer;
-  margin-top: 5px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
-.user-menu button:hover {
+.user-menu .set {
+  background-color: #7f7f7f;
+  border: none;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+}
+
+.set img{
+  width: 20px;
+}
+
+.user-menu .up:hover {
   background-color: #ff4d4d;
+}
+
+.user-menu .set:hover {
+  background-color: #bababa;
 }
 
 .ul a{
