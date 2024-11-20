@@ -1,20 +1,35 @@
 <template>
-    <h1>pedidos</h1>
-    <div class="pedidos-container">
-        <v-btn class="pedidos" v-for="detalle in detalles" :key="detalle.id_detalle_pedido" color="green darken-1" large>
-            <p><strong>Pedido: </strong>{{ detalle.id_detalle_pedido }}</p>
-            <p><strong>Nombre: </strong>{{ detalle.cantidad }}</p>
-            <p><strong>Precio unitario: </strong>{{ detalle.precio_unitario }}</p>
-            <p><strong>Precio total: </strong>{{ detalle.precio_total }}</p>
-        </v-btn>
+  <div class="detalle-pedidos">
+    <h1 class="titulo-cocina">📋 Detalles de Pedido</h1>
+    <div class="cards-container">
+      <div
+        v-for="detalle in detalles"
+        :key="detalle.id_detalle_pedido"
+        class="card"
+      >
+        <h3>Pedido ID: {{ detalle.id_detalle_pedido }}</h3>
+        <p><strong>Cantidad:</strong> {{ detalle.cantidad }}</p>
+        <p><strong>Precio Unitario:</strong> {{ detalle.precio_unitario }}</p>
+        <p><strong>Precio Total:</strong> {{ detalle.precio_total }}</p>
+        <button @click="eliminarDetalle(detalle.id_detalle_pedido)" class="btn-eliminar">
+          Eliminar
+        </button>
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import { useRouter, useRoute } from 'vue-router';
 
-const detalles = ref([]);
+const route = useRoute();
+const router = useRouter();
+
+
+const detalles = ref([]); 
+
 
 const buscar = async () => {
   try {
@@ -25,32 +40,91 @@ const buscar = async () => {
   }
 };
 
+
+const eliminarDetalle = async (detalleId) => {
+  try {
+    await axios.delete(`http://localhost:8080/detalles-pedido/${detalleId}`);
+    
+    detalles.value = detalles.value.filter(
+      (detalle) => detalle.id_detalle_pedido !== detalleId
+    );
+  } catch (error) {
+    console.error('Error al eliminar el detalle de pedido:', error);
+  }
+};
+
+
+
 onMounted(() => {
   buscar();
 });
 </script>
 
 <style scoped>
-.pedidos-container {
-    width: 80%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    align-items: center;
-    margin-bottom: 80px;
+.detalle-pedidos {
+  width: 90%;
+  margin: 20px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
-.pedidos {
-    padding: 10px;
-    width: 10%;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    flex-direction: column;
-    border: 3px solid var(--color_principal);
-    border-radius: 15px;
+.titulo-cocina {
+  text-align: center;
+  font-size: 1.8rem;
+  color: green;
+  margin-bottom: 20px;
+  font-weight: bold;
+  border-bottom: 2px solid green;
+  padding-bottom: 10px;
 }
-.pedidos img {
-    width: 100%;
+
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  width: 280px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card h3 {
+  margin: 0 0 10px;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.card p {
+  margin: 5px 0;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.btn-eliminar {
+  background-color: red;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.btn-eliminar:hover {
+  background-color: #c62828;
 }
 </style>
