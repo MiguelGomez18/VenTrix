@@ -4,7 +4,7 @@
             <form class="sign-up1" @submit.prevent="registerRestaurant">
                 <h2>REGISTRAR RESTAURANTE</h2>
                 <div class="container-input1">
-                    <img src="../components/icons/icons8-contraseña-50.png" alt="Id">
+                    <img src="../components/icons/face_id_icon_148536.png" alt="Id">
                     <input type="text" placeholder="ID Restaurante" v-model="id" required>
                 </div>
                 <div class="container-input1">
@@ -12,23 +12,23 @@
                     <input type="text" placeholder="Nombre" v-model="nombre" required>
                 </div>
                 <div class="container-input1">
-                    <img src="../components/icons/icons8-contraseña-50.png" alt="Descripcion">
+                    <img src="../components/icons/description_icon_144381.png" alt="Descripcion">
                     <input type="text" placeholder="Descripcion" v-model="descripcion" required>
                 </div>
                 <div class="container-input1">
-                    <img src="../components/icons/icons8-contraseña-50.png" alt="Telefono">
+                    <img src="../components/icons/phone-handset_icon-icons.com_48252.png" alt="Telefono">
                     <input type="text" placeholder="Teléfono" v-model="telefono" required>
                 </div>
                 <div class="container-input1">
-                    <img src="../components/icons/icons8-contraseña-50.png" alt="Direccion">
+                    <img src="../components/icons/direction_gps_location_map_maps_navigation_pin_icon_123198.png" alt="Direccion">
                     <input type="text" placeholder="Dirección" v-model="direccion" required>
                 </div>
                 <div class="container-input1">
-                    <img src="../components/icons/icons8-contraseña-50.png" alt="Correo">
+                    <img src="../components/icons/icons8-correo-50.png" alt="Correo">
                     <input type="email" placeholder="Correo" v-model="correo" required>
                 </div>
                 <div class="container-input1">
-                    <img src="../components/icons/icons8-contraseña-50.png" alt="Fecha_finalizacion">
+                    <img src="../components/icons/3586371-calendar-date-event-schedule_107943.png" alt="Fecha_finalizacion">
                     <input type="date" placeholder="Fecha finalizacion" v-model="fecha_finalizacion" required>
                 </div>
                 <router-link to="/registro">Volver..</router-link>

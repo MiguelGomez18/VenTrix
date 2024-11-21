@@ -3,7 +3,7 @@
         <form class="sign-up1" @submit.prevent="loginSucursal">
             <h2>REGISTRAR SUCURSAL</h2>
             <div class="container-input1">
-                <img src="../components/icons/icons8-contraseña-50.png" alt="Id">
+                <img src="../components/icons/barcodescan_120400.png" alt="Id">
                 <input type="text" placeholder="Nit" v-model="id" required :disabled="editMode">
             </div>
             <div class="container-input1">
@@ -11,19 +11,19 @@
                 <input type="text" placeholder="Nombre" v-model="nombre" required>
             </div>
             <div class="container-input1">
-                <img src="../components/icons/icons8-contraseña-50.png" alt="Direccion">
+                <img src="../components/icons/direction_gps_location_map_maps_navigation_pin_icon_123198.png" alt="Direccion">
                 <input type="text" placeholder="Direccion" v-model="direccion" required>
             </div>
             <div class="container-input1">
-                <img src="../components/icons/icons8-contraseña-50.png" alt="Ciudad">
+                <img src="../components/icons/4213476-apartment-architecture-building-city-company-house-officel_115390.png" alt="Ciudad">
                 <input type="text" placeholder="Ciudad" v-model="ciudad" required>
             </div>
             <div class="container-input1">
-                <img src="../components/icons/icons8-contraseña-50.png" alt="Telefono">
+                <img src="../components/icons/phone-handset_icon-icons.com_48252.png" alt="Telefono">
                 <input type="text" placeholder="Telefono" v-model="telefono" required>
             </div>
             <div class="container-input1">
-                <img src="../components/icons/icons8-contraseña-50.png" alt="Telefono">
+                <img src="../components/icons/admin_user_icon_188317.png" alt="Telefono">
                 <input type="text" placeholder="Administrador (opcional)" v-model="usuario">
             </div>
             <div class="butons">

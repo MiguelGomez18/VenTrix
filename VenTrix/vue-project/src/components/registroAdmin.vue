@@ -7,7 +7,7 @@
                 <input type="text" placeholder="Documento" v-model="documento" required>
             </div>
             <div class="container-input2">
-                <img src="../components/icons/icons8-tarjeta-de-identificación-50.png" alt="Sucursal">
+                <img src="../components/icons/groceriesstore_120814.png" alt="Sucursal">
                 <input type="text" placeholder="Sucursal" v-model="sucursal" required>
             </div>
             <div class="container-input2">
