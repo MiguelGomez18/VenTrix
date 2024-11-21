@@ -84,7 +84,7 @@
   }
   
   .sidebar .li{
-    padding: 8px;
+    padding: 8px 12px;
     cursor: pointer;
     color: black;
     transition: background-color 0.3s;

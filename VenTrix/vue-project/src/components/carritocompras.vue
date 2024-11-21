@@ -50,7 +50,6 @@ const props = defineProps({
   }
 });
 
-const detalle = ref({})
 const emit = defineEmits();
 const cartStore = useCart();
 const route = useRoute(); // Obtener la ruta actual
@@ -61,8 +60,6 @@ const comanda = ref(false);
 
 // Computed para obtener los productos específicos de la mesa
 const mesaProducts = computed(() => cartStore.products[mesaId] || []);
-console.log(cartStore.products)
-console.log(mesaProducts.value)
 
 const agregarProducto = (producto) => {
   cartStore.addProduct({ ...producto, mesaId });  // Pasamos mesaId al agregar el producto
@@ -126,6 +123,7 @@ const comandar = async () => {
       title: 'Ticket exitoso',
       text: 'Ha sido enviado a cocina',
     });
+    cartStore.resetCart(mesaId);
   } catch (error) {
     Swal.fire({
       icon: 'error',

@@ -200,7 +200,7 @@ const eliminarEmpleado = async (indice) => {
     color: var(--color_letra_blanca);
     margin-left: 5px;
     padding: 5px 10px;
-    border-radius: 10px;
+    border-radius: 5px;
     border: none;
   }
   .paginacion {

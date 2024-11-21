@@ -7,10 +7,11 @@
         :key="detalle.id_detalle_pedido"
         class="card"
       >
-        <h3>Pedido ID: {{ detalle.id_detalle_pedido }}</h3>
+        <h3>Pedido: {{ detalle.id_detalle_pedido }}</h3>
         <p><strong>Cantidad:</strong> {{ detalle.cantidad }}</p>
         <p><strong>Precio Unitario:</strong> {{ detalle.precio_unitario }}</p>
         <p><strong>Precio Total:</strong> {{ detalle.precio_total }}</p>
+        <p><strong>Producto:</strong> {{ detalle.producto.nombre }}</p>
         <button @click="eliminarDetalle(detalle.id_detalle_pedido)" class="btn-eliminar">
           Eliminar
         </button>
@@ -26,10 +27,7 @@ import { useRouter, useRoute } from 'vue-router';
 
 const route = useRoute();
 const router = useRouter();
-
-
 const detalles = ref([]); 
-
 
 const buscar = async () => {
   try {
@@ -39,7 +37,6 @@ const buscar = async () => {
     console.error("Error al cargar detalles", error);
   }
 };
-
 
 const eliminarDetalle = async (detalleId) => {
   try {
@@ -82,7 +79,7 @@ onMounted(() => {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  justify-content: center;
+  justify-content: start;
 }
 
 .card {
