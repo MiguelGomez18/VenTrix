@@ -70,10 +70,15 @@
   
   <style>
   .contenedor-categorias {
+    position: sticky; 
+    top: 75px;
     width: 100%;
     padding: 30px;
     border: solid 3px var(--color_principal);
     border-radius: 10px;
+    z-index: 10;
+    cursor: pointer;
+    background-color: #f9f9f9;
   }
   
   .titulo-buscar {

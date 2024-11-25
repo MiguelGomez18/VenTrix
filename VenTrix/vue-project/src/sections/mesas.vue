@@ -21,7 +21,6 @@ const props = defineProps({
 });
 const { nit } = props;
 const { rol } = props;
-console.log(rol);
 
 </script>
 

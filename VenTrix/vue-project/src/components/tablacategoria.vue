@@ -12,7 +12,6 @@
     <div class="contenedorformulario">
       <form class="formulario" @submit.prevent="estaEditando ? actualizarCategoria() : agregarCategoria()">
         <input type="text" v-model="categoria.nombre" placeholder="Nombre de la categoría" required />
-        <input type="text" v-model="categoria.descripcion" placeholder="Descripcion" required />
         <button class="btnAggAct" type="submit">{{ estaEditando ? 'Actualizar' : 'Agregar' }}</button>
         <button class="btncancelar" type="button" @click="cancelarEdicion" v-if="estaEditando">Cancelar</button>
       </form>
@@ -22,14 +21,12 @@
       <thead class="encabezado">
         <tr>
           <th>Nombre</th>
-          <th>Descripcion</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
         <tr class="tr" v-for="(cate, indice) in categoriasPaginadas" :key="cate.id">
           <td>{{ cate.nombre }}</td>
-          <td>{{ cate.descripcion }}</td>
           <td>
             <button class="btnEditar" @click="editarCategoria(indice)">Editar</button>
             <button class="btnEliminar" @click="eliminarCategoria(indice)">Eliminar</button>
@@ -58,7 +55,6 @@ const nit = cart.nit;
 const categorias = ref([]);
 const categoria = ref({
   id: '',
-  descripcion:'',
   nombre: '',
   sucursal: nit
 });
@@ -171,7 +167,7 @@ const cancelarEdicion = () => {
 };
 
 const resetearFormulario = () => {
-  categoria.value = { id: '', nombre: '', descripcion: '', sucursal: nit };
+  categoria.value = { id: '', nombre: '', sucursal: nit };
   estaEditando.value = false;
   indiceEdicion.value = null;
 };

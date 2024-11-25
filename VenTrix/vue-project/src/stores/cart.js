@@ -10,10 +10,13 @@ export const useCart = defineStore('cart', {
   }),
   getters: {
     // Calcula el total del carrito para una mesa específica
-    total: (state) => (mesaId) => {
-      const mesaProducts = state.products[mesaId] || [];
-      return mesaProducts.reduce((acc, product) => acc + product.precio * product.cantidad, 0);
-    },
+    total: (state) => (mesaId,pedido) => {
+      const mesaProducts = state.products[mesaId]?.[pedido] || [];
+      return mesaProducts.reduce(
+        (acc, group) => acc + group.productos.reduce((sum, p) => sum + p.precio * p.cantidad, 0),
+        0
+      );
+    },    
   },
   actions: {
     setNit(nitValue) {
@@ -28,38 +31,76 @@ export const useCart = defineStore('cart', {
     setDocumento(documentoValue) {
       this.documento = documentoValue;
     },
-    addProduct(product) {
-      const { mesaId } = product;
+    addPedido(mesaId, id_pedido) {
       if (!this.products[mesaId]) {
-        this.products[mesaId] = [];
+        this.products[mesaId] = {};
       }
-      const existingProduct = this.products[mesaId].find(p => p.id_producto === product.id_producto);
+      // Aseguramos que el ID de pedido sea único dentro de la mesa
+      if (!this.products[mesaId][id_pedido]) {
+        this.products[mesaId][id_pedido] = { productos: [] };
+      }
+    },    
+    addProduct(mesaId, id_pedido, producto) {
+      if (!this.products[mesaId] || !this.products[mesaId][id_pedido]) {
+        console.error(`Pedido con ID ${id_pedido} no encontrado en la mesa ${mesaId}.`);
+        return;
+      }
+    
+      const pedido = this.products[mesaId][id_pedido];
+      const existingProduct = pedido.productos.find(p => p.id_producto === producto.id_producto && !p.disabled);
+    
       if (existingProduct) {
-        existingProduct.cantidad += 1;
+        existingProduct.cantidad += producto.cantidad || 1;
       } else {
-        this.products[mesaId].push({ ...product, cantidad: 1 });
+        pedido.productos.push({ ...producto, cantidad: 1, descripcion: '', disabled: false });
       }
-    },
-    increaseQuantity(mesaId, productId) {
-      const product = this.products[mesaId]?.find(p => p.id_producto === productId);
+    },           
+    increaseQuantity(mesaId, id_pedido, productId) {
+      const pedido = this.products[mesaId]?.[id_pedido];
+      if (!pedido) return;
+    
+      const product = pedido.productos.find(p => p.id_producto === productId && !p.disabled);
       if (product) {
         product.cantidad += 1;
       }
     },
-    decreaseQuantity(mesaId, productId) {
-      const product = this.products[mesaId]?.find(p => p.id_producto === productId);
+    
+    decreaseQuantity(mesaId, id_pedido, productId) {
+      const pedido = this.products[mesaId]?.[id_pedido];
+      if (!pedido) return;
+    
+      const product = pedido.productos.find(p => p.id_producto === productId && !p.disabled);
       if (product && product.cantidad > 1) {
         product.cantidad -= 1;
       }
-    },
-    removeProduct(mesaId, productId) {
-      if (this.products[mesaId]) {
-        this.products[mesaId] = this.products[mesaId].filter(p => p.id_producto !== productId);
+    },   
+    updateCart(mesaId, pedidoId, productos) {
+      if (!this.products[mesaId]) {
+        this.products[mesaId] = {};
       }
-    },
-    resetCart(mesaId) {
-      if (mesaId) {
-        this.products[mesaId] = [];
+      this.products[mesaId][pedidoId] = { productos };
+    },    
+    removeProduct(mesaId, id_pedido, productId) {
+      const pedido = this.products[mesaId]?.[id_pedido];
+      if (!pedido) return;
+    
+      // Elimina solo el primer producto con el `id_producto` coincidente
+      const index = pedido.productos.findIndex(p => p.id_producto === productId && !p.disabled);
+      if (index !== -1) {
+        pedido.productos.splice(index, 1);
+      }
+    },  
+    resetCart(mesaId, pedidoId) {
+      if (mesaId && pedidoId) {
+        if (this.products[mesaId]) {
+          delete this.products[mesaId][pedidoId];
+    
+          if (Object.keys(this.products[mesaId]).length === 0) {
+            delete this.products[mesaId];
+          }
+        }
+      } else if (mesaId) {
+        delete this.products[mesaId];
       } else {
         this.products = {};
         this.nit = '';
@@ -67,7 +108,7 @@ export const useCart = defineStore('cart', {
         this.rol = '';
         this.documento = '';
       }
-    },
+    },    
   },
   persist: {
     enabled: true,

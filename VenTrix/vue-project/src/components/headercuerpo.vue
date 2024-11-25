@@ -77,7 +77,7 @@ const settings = () => {
     router.push({ name: "EditUsuarioMesero" })
   } else if (cart.rol == "ADMINISTRADOR_SUCURSAL") {
     router.push({ name: "EditUsuario" })
-  } else if (cart.rol == "COCINERO") {
+  } else if (cart.rol == "COCINA") {
     router.push({ name: "EditUsuarioCocinero" })
   } else {
     router.push({ name: 'EditUser' })
@@ -103,7 +103,7 @@ onMounted(() => {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   color: var(--color_letra_blanca);
-  z-index: 3;
+  z-index: 20;
 }
 
 .nav1 {

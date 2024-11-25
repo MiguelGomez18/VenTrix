@@ -18,7 +18,9 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router';
+import { useCart } from '@/stores/cart';
 
+const cart = useCart();
 const route = useRoute();
 const router = useRouter();
 const nit = ref(route.params.nit);
@@ -32,6 +34,12 @@ const mesa = ref({
     id: nit.value
   }
 });
+const date = new Date();
+const dia = (date.getDate() < 10 ? '0':'') + date.getDate();
+const mes = date.getMonth() + 1;
+const año = date.getFullYear();
+const hora = date.getHours();
+const minutos = date.getMinutes();
 
 const buscarMesas = async (nit) => {
   try {
@@ -42,13 +50,25 @@ const buscarMesas = async (nit) => {
   }
 };
 
-const navegarARuta = (mesaId) => {
+const navegarARuta = async (mesaId) => {
   window.dispatchEvent(new Event('ocultarInicio'));
-  if (rol.value == "MESERO" || rol.value == "CAJERO") {
-    router.push({ name: 'SeleccionarProductosMesero', params: { id_mesa: mesaId, nit: nit.value } });
-  } else {
-    router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId, nit: nit.value } });
+  const user = ref([]);
+  const response = await axios.get(`http://127.0.0.1:8080/usuario/${cart.documento}`);
+  user.value = response.data;
+  const pedidos = {
+    fecha_pedido: `${año}-${mes}-${dia}`,
+    hora_pedido: `${hora}:${minutos}`,
+    mesa: {
+      id: mesaId,
+    },
+    nombre: user.value.nombre,
+    sucursal: nit.value,
   }
+  
+  const respuesta = await axios.post('http://127.0.0.1:8080/pedidos', pedidos);
+  const pedido = respuesta.data;
+
+  router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId , pedido: pedido } });
   
 };
 

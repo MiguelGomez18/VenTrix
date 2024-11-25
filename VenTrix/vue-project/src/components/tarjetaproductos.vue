@@ -1,5 +1,5 @@
 <template>
-    <div class="contenedor-categorias">
+    <div class="contenedor-productos">
         <div class="titulobuscar">
         <input 
             type="text" 
@@ -33,6 +33,10 @@
     nit: {
         type: String,
         required: true
+    },
+    pedido: {
+        type: String,
+        required: true
     }
   });
 
@@ -54,6 +58,7 @@
         const respuesta = await axios.get(url);
 
         productos.value = respuesta.data;
+
         console.log("Productos cargados: ",productos.value)
     } catch (error) {
         console.error("Error al cargar productos", error);
@@ -77,28 +82,27 @@
   });
   
   const seleccionarProducto = (producto) => {
-      const productoConMesaId = { ...producto, mesaId };
-  
-      cart.addProduct(productoConMesaId); 
-      selectedProductId.value = producto.id_producto; 
-      console.log(`Producto seleccionado: ${producto.id_producto} en la mesa: ${mesaId}`); 
-  
-      setTimeout(() => {
-          selectedProductId.value = null;
-      }, 300);
-  };
+    cart.addProduct(mesaId, props.pedido, producto); 
+    selectedProductId.value = producto.id_producto; 
+    console.log(`Producto seleccionado: ${producto.id_producto} en la mesa: ${mesaId}`); 
+
+    setTimeout(() => {
+        selectedProductId.value = null;
+    }, 300);
+};
   
 </script>
 
 
 <style scoped>
-  .contenedor-categorias {
+  .contenedor-productos {
     width: 100%;
     padding: 30px;
     border-radius: 10px;
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
+    border: solid 3px var(--color_principal);
   }
 
   .titulobuscar {

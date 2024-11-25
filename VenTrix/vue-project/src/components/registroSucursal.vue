@@ -31,14 +31,16 @@
 
 <script setup>
 import Swal from 'sweetalert2';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
+import { useCart } from '@/stores/cart';
 
+const cart = useCart();
 const route = useRoute();
 const documento = ref('');
 const sucursal = ref(route.params.nit);
-const roles = ["CAJERO","MESERO","COCINERO"];
+const roles = ref(["CAJERO","MESERO","COCINA"]);
 const rol = ref('');
 const nombre = ref('');
 const correo = ref('');
@@ -57,6 +59,18 @@ correo.value = '';
 password.value = '';
 rol.value = '';
 };
+
+const buscar = async () => {
+    const empleados = ref([]);
+    const respuesta1 = await axios.get(`http://127.0.0.1:8080/usuario/sucursales/${cart.nit}`);
+    empleados.value = respuesta1.data;
+
+    for (let index = 0; index < empleados.value.length; index++) {
+        if (empleados.value[index].rol == "COCINA") {           
+            roles.value = roles.value.filter(r => r !== "COCINA");
+        }
+    }   
+}
 
 const validarPassword = (password) => {
 const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!?¡¿@#<>$%^&*])[A-Za-z\d!?¡¿@<>#$%^&*]{8,}$/;
@@ -81,7 +95,8 @@ try {
         password: password.value,
         rol: rol.value,
         fecha_creacion: fecha_creacion.value,
-        sucursal: sucursal.value
+        sucursal: sucursal.value,
+        estado: "ACTIVO"
     });
     console.log('Registro OK');
     Swal.fire({
@@ -89,6 +104,10 @@ try {
         title: `${rol.value} registrado.`,
         text: 'Se registró de manera exitosa'
     });
+
+    if (rol.value === "COCINA") {
+      roles.value = roles.value.filter(r => r !== "COCINA");
+    }
 
     limpiarInputs();
 
@@ -104,11 +123,17 @@ try {
 }
 };
 
+onMounted(() => {
+  buscar();
+});
+
+
 </script>
 
 
 <style scoped>
 .container2{
+padding-top: 40px;
 margin-bottom: 80px;
 width: 70%;
 margin-left: auto;

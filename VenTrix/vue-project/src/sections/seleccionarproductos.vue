@@ -2,22 +2,29 @@
     <div class="cuadro1">
       <div class="section1">
         <menucategorias :nit="nit"></menucategorias>
-        <tarjetaproductos :nit="nit"></tarjetaproductos>
+        <tarjetaproductos :pedido="props.pedido" :nit="nit"></tarjetaproductos>
       </div>
       <div class="section2">
-        <carritocompras :rol="rol" @open-payment-modal="openModal"></carritocompras>
+        <carritocompras :pedido="props.pedido" :rol="rol" @open-payment-modal="openModal"></carritocompras>
         <pago v-if="showModal" @close-modal="closeModal"></pago>
       </div>
     </div>
   </template>
   
   <script setup>
-  import { ref } from 'vue';
+  import { ref, defineProps } from 'vue';
   import menucategorias from '@/components/menucategorias.vue';
   import carritocompras from '@/components/carritocompras.vue';
   import tarjetaproductos from '@/components/tarjetaproductos.vue';
   import pago from '@/components/pago.vue';
   import { useCart } from '@/stores/cart';
+
+  const props = defineProps({
+    pedido: {
+        type: String,
+        required: true
+    }
+  });
 
   const cart = useCart();
   const nit = cart.nit;
@@ -51,7 +58,6 @@
     gap: 15px;
   }
   .section1 {
-    position: relative;
     width: 60%;
     display: flex;
     justify-content: start;
@@ -67,6 +73,7 @@
     flex-wrap: wrap;
     gap: 10px;
     align-self: start; 
+    z-index: 10;
   }
   </style>
   

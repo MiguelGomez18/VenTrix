@@ -19,7 +19,6 @@
             {{ cate.nombre }}
           </option>
         </select>
-        <input type="text" v-model="producto.descripcion" placeholder="Descripcion"/>
         <div class="custom-file-input">
           <label for="file-upload" class="custom-label">
             <span v-if="!file">Imagen</span>
@@ -109,7 +108,6 @@ const producto = ref({
     id: ''
   },
   nombre: '',
-  descripcion: '',
   imagen : '',
   disponibilidad : false
 });
@@ -173,7 +171,6 @@ const agregarProducto = async () => {
     const formData = new FormData();
     formData.append("nombre", producto.value.nombre);
     formData.append("precio", producto.value.precio);
-    formData.append("descripcion", producto.value.descripcion);
     formData.append("disponibilidad", producto.value.disponibilidad);
     formData.append("id_categoria", producto.value.categoria.id);
     formData.append("id_sucursal", nit)
@@ -210,9 +207,9 @@ const editarProducto = (indice) => {
 
   const id_categoria = categorias.value.find(cate => cate.producto.some(prod => prod.id_producto === productos.value[indice].id_producto))?.id;
 
-  const { id_producto, nombre, precio, descripcion, imagen, disponibilidad } = productos.value[indice];
+  const { id_producto, nombre, precio, imagen, disponibilidad } = productos.value[indice];
 
-  producto.value = { id_producto, nombre, precio, categoria: { id: id_categoria }, descripcion, imagen, disponibilidad };
+  producto.value = { id_producto, nombre, precio, categoria: { id: id_categoria }, imagen, disponibilidad };
   
   estaEditando.value = true;
   indiceEdicion.value = id_producto; 
@@ -226,7 +223,6 @@ const actualizarProducto = async () => {
         formData.append('nombre', producto.value.nombre);
         formData.append('precio', producto.value.precio);
         formData.append("id_categoria", producto.value.categoria.id);
-        formData.append('descripcion', producto.value.descripcion);
         formData.append('disponibilidad', producto.value.disponibilidad);
 
 
@@ -237,7 +233,7 @@ const actualizarProducto = async () => {
         } else {
 
           const productoEncontrado = productos.value.find(p => p.id_producto === producto.value.id_producto);
-          console.log(productoEncontrado.imagen);
+
           try {
             const imagenUrl = `http://127.0.0.1:8080${productoEncontrado.imagen}`;
             const respuesta = await fetch(imagenUrl);
@@ -249,7 +245,6 @@ const actualizarProducto = async () => {
             const imagenBlob = await respuesta.blob();
             const imagenFile = new File([imagenBlob], productoEncontrado.imagen.split('/imagenes/'+productoEncontrado.id_producto+'-').pop(), { type: imagenBlob.type });
 
-            console.log(imagenFile);
             formData.append('imagen', imagenFile);
           } catch (error) {
             console.error('Error al obtener la imagen existente:', error);
@@ -271,7 +266,7 @@ const actualizarProducto = async () => {
     });
     
     resetearFormulario();
-    console.log(file.value)
+    
   } catch (error) {
     console.error('Error al actualizar el producto:', error);
     Swal.fire({
@@ -318,7 +313,6 @@ const resetearFormulario = () => {
     precio: '',
     categoria: { id: '' },
     nombre: '',
-    descripcion: '', 
     imagen: '',      
     disponibilidad: false 
   };

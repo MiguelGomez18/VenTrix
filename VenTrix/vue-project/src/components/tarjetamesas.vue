@@ -18,24 +18,88 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router';
+import { useCart } from '@/stores/cart';
 
+const cart = useCart();
 const route = useRoute();
 const router = useRouter();
 const mesas = ref([]); 
 const nit = ref(route.params.nit);
 const rol = ref(route.params.rol);
-console.log(rol.value);
+const date = new Date();
+const dia = (date.getDate() < 10 ? '0':'') + date.getDate();
+const mes = date.getMonth() + 1;
+const año = date.getFullYear();
+const hora = (date.getHours() < 10 ? '0':'') + date.getHours();
+const minutos = (date.getMinutes() < 10 ? '0':'') + date.getMinutes();
 
-const navegarARuta = (mesaId) => {
-  window.dispatchEvent(new Event('ocultarInicio'));
-  router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId , nit: nit.value} });
+const navegarARuta = async (mesaId) => {
+  try {
+    window.dispatchEvent(new Event('ocultarInicio'));
+
+    const { data: pedidos } = await axios.get(`http://127.0.0.1:8080/mesa/${mesaId}`);
+    
+    let pedidoActivo = pedidos.pedido.find(p => p.estado === 'COMANDADO');
+    if (pedidoActivo) {
+
+      router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId, pedido: pedidoActivo.id_pedido } });
+      return;
+    }
+
+    const pedidoEnCart = cart.products[mesaId];
+    let pedidoCartId = null;
+    console.log(pedidoEnCart);
+    
+    if (pedidoEnCart) {
+      for (const key of Object.keys(pedidoEnCart)) {
+        console.log(key);
+        console.log(pedidoEnCart.productos);
+        
+        if (pedidoEnCart[key].productos.length == 0) {
+          cart.resetCart(mesaId, key);
+        } else {
+          console.log("ENTRA");
+          pedidoCartId = key;
+          break;
+        }
+      }
+    }
+
+    if (pedidoCartId) {
+      router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId, pedido: pedidoCartId } });
+      return;
+    }
+
+    const user = ref([]);
+    const { data: usuario } = await axios.get(`http://127.0.0.1:8080/usuario/${cart.documento}`);
+    user.value = usuario;
+
+    const nuevoPedido = {
+      fecha_pedido: `${año}-${mes}-${dia}`,
+      hora_pedido: `${hora}:${minutos}`,
+      mesa: { id: mesaId },
+      nombre: user.value.nombre,
+      sucursal: nit.value,
+      estado: 'ORDENADO'
+    };
+
+    const { data: pedidoCreado } = await axios.post('http://127.0.0.1:8080/pedidos', nuevoPedido);
+
+    cart.addPedido(mesaId, pedidoCreado);
+    router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId, pedido: pedidoCreado } });
+  } catch (error) {
+    console.error('Error al navegar a la ruta:', error);
+    Swal.fire('Error', 'Ocurrió un problema al procesar la solicitud.', 'error');
+  }
 };
+
 
 
 const obtenerMesas = async (nit) => {
   try {
     const response = await axios.get(`http://127.0.0.1:8080/mesa/id_sucursal/${nit.value}`); 
     mesas.value = response.data; 
+    
   } catch (error) {
     console.error('Error al obtener las mesas:', error);
   }

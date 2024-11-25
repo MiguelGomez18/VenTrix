@@ -152,7 +152,7 @@ const routes = [
         props: true 
       },
       {
-        path: '/seleccionarproductos/:id_mesa/:nit',
+        path: '/seleccionarproductos/:id_mesa/:pedido',
         name: 'SeleccionarProductos',
         component: seleccionarproductos,
         props: true,
