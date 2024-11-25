@@ -7,7 +7,7 @@ import registroAdmin from "@/components/registroAdmin.vue";
 import registroSucursal from "@/components/registroSucursal.vue";
 import tarjetassucursales from "@/components/tarjetassucursales.vue";
 import restaurante from "@/components/restaurante.vue";
-import cocinero from "@/pages/cocinero.vue";
+import cocinero from "@/pages/cocina.vue";
 import mesero from "@/pages/mesero.vue";
 import edicion from "@/sections/edicion.vue";
 import mesas from "@/sections/mesas.vue";
