@@ -8,12 +8,16 @@
         class="card"
       >
         <h3>Pedido: {{ detalle.id_detalle_pedido }}</h3>
-        <p><strong>Cantidad:</strong> {{ detalle.cantidad }}</p>
-        <p><strong>Precio Unitario:</strong> {{ detalle.precio_unitario }}</p>
-        <p><strong>Precio Total:</strong> {{ detalle.precio_total }}</p>
+        <p><strong>Fecha:</strong> {{ detalle.pedido.fecha_pedido }}</p>
+        <p><strong>Mesero:</strong> {{ detalle.pedido.nombre }}</p>
+        <p><strong>Hora:</strong> {{ detalle.hora_detalle }}</p>
         <p><strong>Producto:</strong> {{ detalle.producto.nombre }}</p>
+        <p><strong>Descripcion:</strong> {{ detalle.descripcion }}</p>  
+        <p><strong>Cantidad:</strong> {{ detalle.cantidad }}</p>
+        <p><strong>Precio Total:</strong> {{ detalle.precio_total }}</p>
+        
         <button @click="eliminarDetalle(detalle.id_detalle_pedido)" class="btn-eliminar">
-          Eliminar
+          Preparado
         </button>
       </div>
     </div>
@@ -33,7 +37,9 @@ const buscar = async () => {
   try {
     const respuesta = await axios.get('http://127.0.0.1:8080/detalles-pedido');
     detalles.value = respuesta.data
+    console.log(detalles.value)
   } catch (error) {
+    
     console.error("Error al cargar detalles", error);
   }
 };
