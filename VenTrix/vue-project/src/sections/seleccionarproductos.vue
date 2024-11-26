@@ -1,80 +1,100 @@
 <template>
-    <div class="cuadro1">
-      <div class="section1">
-        <menucategorias :nit="nit"></menucategorias>
-        <tarjetaproductos :pedido="props.pedido" :nit="nit"></tarjetaproductos>
-      </div>
-      <div class="section2">
-        <carritocompras :pedido="props.pedido" :rol="rol" @open-payment-modal="openModal"></carritocompras>
-        <pago v-if="showModal" @close-modal="closeModal" :pedido="props.pedido"></pago>
-      </div>
+  <div class="cuadro1" :style="{ '--tamaño-section2': `${tamaño}%` }">
+    <div class="section1">
+      <menucategorias v-if="nomostrar" :nit="nit"></menucategorias>
+      <tarjetaproductos v-if="nomostrar" :pedido="props.pedido" :nit="nit"></tarjetaproductos>
     </div>
-  </template>
-  
-  <script setup>
-  import { ref, defineProps } from 'vue';
-  import menucategorias from '@/components/menucategorias.vue';
-  import carritocompras from '@/components/carritocompras.vue';
-  import tarjetaproductos from '@/components/tarjetaproductos.vue';
-  import pago from '@/components/pago.vue';
-  import { useCart } from '@/stores/cart';
+    <div class="section2">
+      <carritocompras :pedido="props.pedido" :rol="rol" @open-payment-modal="openModal"></carritocompras>
+      <pago v-if="showModal" @close-modal="closeModal" :pedido="props.pedido"></pago>
+    </div>
+  </div>
+</template>
 
-  const props = defineProps({
-    pedido: {
-        type: String,
-        required: true
-    }
-  });
+<script setup>
+import { ref, defineProps } from 'vue';
+import menucategorias from '@/components/menucategorias.vue';
+import carritocompras from '@/components/carritocompras.vue';
+import tarjetaproductos from '@/components/tarjetaproductos.vue';
+import pago from '@/components/pago.vue';
+import { useCart } from '@/stores/cart';
 
-  const cart = useCart();
-  const nit = cart.nit;
-  const rol = cart.rol;
-  
-  const showModal = ref(false);
-  
-  const openModal = () => {
-    showModal.value = true; 
-    console.log("Modal abierto:", showModal.value);
-  };
+const props = defineProps({
+  pedido: {
+    type: String,
+    required: true
+  }
+});
 
-  const closeModal = () => {
-    showModal.value = false;
-    console.log("Modal cerrado desde el padre:", showModal.value);
-  };
+const cart = useCart();
+const nit = cart.nit;
+const rol = cart.rol;
 
-  </script>
-  
+const showModal = ref(false);
+const nomostrar = ref(false);
+let tamaño = 100; 
+
+if (cart.rol === "MESERO") {
+  nomostrar.value = true;
+  tamaño = 40;
+}
+
+const openModal = () => {
+  showModal.value = true; 
+  console.log("Modal abierto:", showModal.value);
+};
+
+const closeModal = () => {
+  showModal.value = false;
+  console.log("Modal cerrado desde el padre:", showModal.value);
+};
+</script>
   
   <style>
   .cuadro1 {
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 80px;
-    width: 88%;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: start;
-    flex-wrap: nowrap;
-    gap: 15px;
+  margin: 0 auto 80px;
+  width: 88%;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 15px;
+  flex-wrap: nowrap;
+}
+
+.section1 {
+  width: calc(100% - var(--tamaño-section2, 40%));
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.section2 {
+  position: sticky;
+  top: 75px;
+  width: var(--tamaño-section2, 40%); 
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 10;
+  background: #fff;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .cuadro1 {
+    flex-direction: column;
   }
-  .section1 {
-    width: 60%;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
+  .section1,
+  .section2 {
+    width: 100%;
   }
   .section2 {
-    position: sticky; 
-    top: 75px;
-    width: 40%;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-self: start; 
-    z-index: 10;
+    position: relative;
   }
+}
+
   </style>
   
   

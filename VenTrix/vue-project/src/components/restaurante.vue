@@ -27,6 +27,20 @@
                     <img src="../components/icons/icons8-correo-50.png" alt="Correo">
                     <input type="email" placeholder="Correo" v-model="correo" required>
                 </div>
+                <div class="custom-file-input1">
+                    <label for="file-upload" class="custom-label1">
+                        <img src="../components/icons/icons8-attach-24.png" alt="">
+                        <span v-if="!file">Agrega un logo!!</span>
+                        <span v-else>{{ file.name }}</span>
+                    </label>
+                    <input
+                        id="file-upload"
+                        class="hidden-file-input1"
+                        type="file"
+                        @change="onFileChange"
+                        ref="fileInput"
+                    />
+                </div>
                 <div class="container-input1">
                     <img src="../components/icons/3586371-calendar-date-event-schedule_107943.png" alt="Fecha_finalizacion">
                     <input type="date" placeholder="Fecha finalizacion" v-model="fecha_finalizacion" required>
@@ -36,91 +50,98 @@
             </form>
         </div>
     </div>
-    </template>
+</template>
     
-    <script setup>
-    import Swal from 'sweetalert2';
-    import { ref, defineProps } from 'vue';
-    import axios from 'axios';
-    import { useRouter } from 'vue-router';
-    import { useCart } from '@/stores/cart';
-    
-    const props = defineProps({
-        usuario: {
-            type: String,
-            required: true
-        }
-    });
+<script setup>
+import Swal from 'sweetalert2';
+import { ref, defineProps } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+import { useCart } from '@/stores/cart';
 
-    const cart = useCart();
-    const id = ref('');
-    const nombre = ref('');
-    const descripcion = ref('');
-    const telefono = ref('');
-    const direccion = ref('');
-    const correo = ref('')
-    const date = new Date();
-    const dia = (date.getDate() < 10 ? '0':'') + date.getDate();
-    const mes = date.getMonth() + 1;
-    const año = date.getFullYear();
-    const fecha_creacion = ref(`${año}-${mes}-${dia}`);
-    const fecha_finalizacion = ref('');
-    const usuario = props.usuario;
-    const router = useRouter();
+const props = defineProps({
+    usuario: {
+        type: String,
+        required: true
+    }
+});
+
+const file = ref(null);
+const fileInput = ref(null);
+const onFileChange = (event) => {
+    file.value = event.target.files[0];
+};
+const cart = useCart();
+const id = ref('');
+const nombre = ref('');
+const descripcion = ref('');
+const telefono = ref('');
+const direccion = ref('');
+const correo = ref('')
+const date = new Date();
+const dia = (date.getDate() < 10 ? '0':'') + date.getDate();
+const mes = date.getMonth() + 1;
+const año = date.getFullYear();
+const fecha_creacion = ref(`${año}-${mes}-${dia}`);
+const fecha_finalizacion = ref('');
+const usuario = props.usuario;
+const router = useRouter();
+
+const limpiarInputs = () => {
+    id.value = '';
+    nombre.value = '';
+    descripcion.value = '';
+    telefono.value = '';
+    direccion.value = '';
+    correo.value = '';
+    fecha_creacion.value = '';
+    fecha_finalizacion.value = '';
+};
+
+const registerRestaurant = async () => {
+    try { 
+        const formData = new FormData();
+        formData.append("id", id.value);
+        formData.append("nombre", nombre.value);
+        formData.append("descripcion", descripcion.value);
+        formData.append("telefono", telefono.value);
+        formData.append("correo", correo.value);
+        formData.append("imagen", file.value);
+        formData.append("fecha_creacion", fecha_creacion.value);
+        formData.append("fecha_finalizacion", fecha_finalizacion.value);
+        formData.append("estado", 'ACTIVO');
+        formData.append("usuario", { documento: usuario });
+
+        const response = await axios.post(
+        'http://127.0.0.1:8080/restaurante', 
+        formData, 
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+        );
+
+        console.log('Restaurante registrado exitosamente', response.data);
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Restaurante Registrado',
+            text: 'Se registró de manera exitosa'
+        });
+        cart.restaurante = id.value;
+
+        router.push({ name: 'TarjetasSucursales', params: { idrestaurante: id.value } });
+        limpiarInputs();
+
+    } catch (error) {
+        console.error("Error al registrar el restaurante", error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error al registrar',
+            text: 'Ocurrió un problema al registrar el restaurante. Intenta nuevamente.'
+        });
+    }
+};
+</script>
     
-    const limpiarInputs = () => {
-      id.value = '';
-      nombre.value = '';
-      descripcion.value = '';
-      telefono.value = '';
-      direccion.value = '';
-      correo.value = '';
-      fecha_creacion.value = '';
-      fecha_finalizacion.value = '';
-    };
-    
-    const registerRestaurant = async () => {
-        try { 
-            const response = await axios.post('http://127.0.0.1:8080/restaurante', {
-                id: id.value,
-                nombre: nombre.value,
-                descripcion: descripcion.value,
-                telefono: telefono.value,
-                direccion: direccion.value,
-                correo: correo.value,
-                imagen: 'hh',
-                fecha_creacion: fecha_creacion.value,
-                fecha_finalizacion: fecha_finalizacion.value,
-                estado: 'ACTIVO',
-                usuario: {
-                    documento: usuario
-                }
-            });
-    
-            console.log('Restaurante registrado exitosamente', response.data);
-    
-            Swal.fire({
-                icon: 'success',
-                title: 'Restaurante Registrado',
-                text: 'Se registró de manera exitosa'
-            });
-            cart.restaurante = id.value;
-    
-            router.push({ name: 'TarjetasSucursales', params: { idrestaurante: id.value } });
-            limpiarInputs();
-    
-        } catch (error) {
-            console.error("Error al registrar el restaurante", error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error al registrar',
-                text: 'Ocurrió un problema al registrar el restaurante. Intenta nuevamente.'
-            });
-        }
-    };
-    </script>
-    
-    <style>
+    <style scoped>
     .body1{
         width: 100%;
         height: 100vh;
@@ -143,7 +164,7 @@
     .container1 .sign-up1{
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: space-evenly;
         align-items: center;
         transition: transform 0.8s ease-in;
     }
@@ -184,7 +205,36 @@
         font-size: 17px;
         background-color: #eeeeee;
     }
-    
+
+    .custom-file-input1 {
+        width: 100%;
+        display: flex;
+        justify-content: start;
+        align-items: start;
+    }
+
+    .hidden-file-input1 {
+        display: none;
+    }
+
+    .custom-label1 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+        background-color: rgba(234, 234, 234, 0.673);
+        border: 1px solid rgba(219, 219, 219, 0.973);
+        color: black;
+        padding: 6px 20px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+
+    .custom-label1 span {
+        max-width: 400px;
+    }
+
     .container-input1 img{
         width: 10%;
         height: 25px;

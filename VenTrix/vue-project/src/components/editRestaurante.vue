@@ -36,6 +36,7 @@
   </template>
   
   <script setup>
+  import Swal from 'sweetalert2';
   import { ref, onMounted } from 'vue';
   import axios from 'axios';
   import { useCart } from '@/stores/cart';
@@ -64,11 +65,57 @@
   
   const actualizar = async () => {
     try {
-      const response = await axios.put(`http://127.0.0.1:8080/restaurante/${userData.value.id}`, userData.value);
+      const formData = new FormData();
+      formData.append("nombre", userData.value.nombre);
+      formData.append("descripcion", userData.value.descripcion);
+      formData.append("telefono", userData.value.telefono);
+      formData.append("direccion", userData.value.direccion);
+      formData.append("correo", userData.value.correo);
+
+      if (file.value != null) {
+
+        formData.append('imagen', file.value);
+
+      } else {
+
+        try {
+          const imagenUrl = `http://127.0.0.1:8080${userData.value.imagen}`;
+          const respuesta = await fetch(imagenUrl);
+          
+          if (!respuesta.ok) {
+            throw new Error('No se pudo obtener la imagen');
+          }
+
+          const imagenBlob = await respuesta.blob();
+          const imagenFile = new File([imagenBlob], userData.value.imagen.split('/imagenes/'+userData.value.id+'-').pop(), { type: imagenBlob.type });
+
+          formData.append('imagen', imagenFile);
+        } catch (error) {
+          console.error('Error al obtener la imagen existente:', error);
+        }
+      }
+
+      const response = await axios.put(`http://127.0.0.1:8080/restaurante/${userData.value.id}`, formData, {
+          headers: {
+              'Content-Type': 'multipart/form-data'
+          }
+      });
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Restaurante Actualizado',
+        text: 'Se actualizo de manera exitosa'
+      });
+
       await buscar();
       editMode.value = false; 
     } catch (error) {
       console.error('Error al actualizar:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al actualizar',
+        text: 'Ocurrió un problema al actualizar el restaurante. Intenta nuevamente.'
+      });
     }
   };
   

@@ -18,8 +18,8 @@
         </thead>
         <tbody>
           <tr v-for="producto in obtenerProductos" :key="producto.id_producto" >
-            <td>{{ producto.nombre }}</td>
-            <td>
+            <td :class="{ 'full-width': Rol === 'CAJERO' }">{{ producto.nombre }}</td>
+            <td :class="{ 'full-width': Rol === 'CAJERO' }">
               <button 
                 class="quantity-btn" 
                 @click="disminuirCantidad(producto)" 
@@ -36,22 +36,18 @@
                 +
               </button>
             </td>
-            <td>{{ producto.precio * producto.cantidad || currency }}</td>
-            <td>
-              <img 
-                :src="`http://127.0.0.1:8080${producto.imagen}`" 
-                alt="" 
-                style="width: 80px;"
-              >
+            <td :class="{ 'full-width': Rol === 'CAJERO' }">{{ producto.precio * producto.cantidad || currency }}</td>
+            <td class="tdimg" :class="{ 'full-width': Rol === 'CAJERO' }" :style="{ '--tamaño-section3': `${tamañoImagen}px` }">
+              <img :src="`http://127.0.0.1:8080${producto.imagen}`" alt="">
             </td>
-            <td class="tdinput">
+            <td :class="['tdinput',{ 'full-width': Rol === 'CAJERO' }]" :style="{ '--tamaño-section4': `${tamaño1}px` }">
               <textarea 
                 v-model="producto.descripcion" 
                 placeholder="Comentarios" 
                 :disabled="producto.disabled"
               ></textarea>
             </td>
-            <td>
+            <td :class="{ 'full-width': Rol === 'CAJERO' }">
               <button 
                 class="remove-btn" 
                 @click="eliminarProducto(producto)" 
@@ -84,6 +80,8 @@ const props = defineProps({
   }
 });
 
+let tamaño1 = 70;
+let tamañoImagen = 80;
 const isComandado = ref(false);
 const emit = defineEmits();
 const cartStore = useCart();
@@ -127,6 +125,8 @@ if (Rol == "MESERO") {
   comanda.value = ref(true);
 } else if (Rol == "CAJERO") {
   pago.value = ref(true);
+  tamaño1 = 30;
+  tamañoImagen = 80;
 } 
 
 const mesaTotal = computed(() => {
@@ -245,6 +245,14 @@ onMounted(async () => {
     background-color: #f9f9f9;
     border: 3px solid var(--color_principal);
   }
+
+  .full-width {
+    width: 180px;
+  }
+
+  .tdimg img {
+    width: var(--tamaño-section3);
+  }
   
   .cart-title {
     text-align: center;
@@ -259,6 +267,7 @@ onMounted(async () => {
   }
 
   .cart-table {
+    width: 100%;
     margin-bottom: 15px;
   }
 
@@ -276,11 +285,12 @@ onMounted(async () => {
     padding: 5px;
     text-align: center;
   }
-  
+
+
   .cart-table .tdinput textarea {
     display: block;
     width: 100%;
-    height: 70px;
+    height: var(--tamaño-section4);
     background-color: #f9f9f9;
     border: none;
     resize: none;
