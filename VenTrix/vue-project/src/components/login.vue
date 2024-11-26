@@ -156,8 +156,6 @@ const loginPropietario = async () => {
             await buscardocumentoSucursal(documento1);
             cart.nit = sucursal1.value;
             cart.rol = rol1.value;
-            console.log(sucursal1.value);
-            
             router.push({ name: 'MesasMesero', params: { nit: sucursal1.value, rol: rol1.value } });
             
         } else if (rol1.value == roles[3]) {

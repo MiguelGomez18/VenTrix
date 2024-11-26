@@ -29,12 +29,13 @@ const props = defineProps({
 const cart = useCart();
 const nit = cart.nit;
 const rol = cart.rol;
+const rapida = cart.rapida;
 
 const showModal = ref(false);
 const nomostrar = ref(false);
 let tamaño = 100; 
 
-if (cart.rol === "MESERO") {
+if (cart.rol === "MESERO" || cart.rapida == "RAPIDA") {
   nomostrar.value = true;
   tamaño = 40;
 }

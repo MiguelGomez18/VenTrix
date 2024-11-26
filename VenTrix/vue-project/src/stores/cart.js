@@ -6,6 +6,7 @@ export const useCart = defineStore('cart', {
     nit: '', 
     restaurante: '',
     rol: '',
+    rapida: '',
     documento: '',
   }),
   getters: {
@@ -27,6 +28,9 @@ export const useCart = defineStore('cart', {
     },
     setRol(rolValue) {
       this.rol = rolValue;
+    },
+    setRapida(rapidaValue) {
+      this.rapida = rapidaValue;
     },
     setDocumento(documentoValue) {
       this.documento = documentoValue;
@@ -106,6 +110,7 @@ export const useCart = defineStore('cart', {
         this.nit = '';
         this.restaurante = '';
         this.rol = '';
+        this.rapida = '';
         this.documento = '';
       }
     },    

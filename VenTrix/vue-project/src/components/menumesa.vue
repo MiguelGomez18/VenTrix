@@ -19,11 +19,12 @@ const rol = cart.rol;
 
 const navegarARuta = (name) => {
   window.dispatchEvent(new Event('ocultarInicio')); 
+  cart.rapida = '';
   router.push({ name: name, params: { nit: nit, rol: rol } });
 };
 </script>
   
-  <style>
+<style>
   /* Estilos para el contenedor del botón flotante */
   .contenedor-boton-flotante {
     position: relative;
