@@ -50,6 +50,7 @@ const nit = cart.nit;
 const showModal = ref(true);
 const route = useRoute();
 const mesaId = route.params.id_mesa; 
+const pedido = route.params.pedido;
 const tiposPago = ref([]); 
 const tipoPago = ref({
   id: '',        
@@ -81,7 +82,7 @@ const tiposPagoFiltrados = computed(() => {
 });
 
 // Total del carrito
-const totalCarrito = computed(() => cart.total(mesaId));
+const totalCarrito = computed(() => cart.total(mesaId,pedido));
 
 // Formatear el total del carrito como moneda
 const formattedTotalCarrito = computed(() => {
@@ -126,16 +127,24 @@ const allPaymentMethodsValid = computed(() => {
 });
 
 
-const closeModal = () => {
+const closeModal = async () => {
   if (remainingAmount.value === 0 && allPaymentMethodsValid.value) {
     Swal.fire({
       icon: 'success',
       title: 'Pago exitoso',
       text: 'Gracias por comprar con nosotros',
     });
-    console.log(cart.products[mesaId])
+    
+    await axios.put(`http://127.0.0.1:8080/pedidos/${pedido}`, {
+      total_pedido: totalCarrito.value,
+      tipo_pago: {
+        id: paymentMethods.value[0].type,
+      },
+      estado: 'PAGADO'
+    });
+
     paymentMethods.value = [{ type: "", amount: 0 }];
-    cart.resetCart(mesaId); 
+    cart.resetCart(mesaId,pedido)
     showModal.value = false;
     emit('close-modal');
   } else {
@@ -146,7 +155,6 @@ const closeModal = () => {
     });
   }
 };
-
 
 onMounted(() => {
   buscarTiposPago();

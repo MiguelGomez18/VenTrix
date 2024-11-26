@@ -15,6 +15,7 @@
 </template>
 
 <script setup>
+import Swal from 'sweetalert2';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router';
@@ -39,7 +40,7 @@ const navegarARuta = async (mesaId) => {
 
     const { data: pedidos } = await axios.get(`http://127.0.0.1:8080/mesa/${mesaId}`);
     
-    let pedidoActivo = pedidos.pedido.find(p => p.estado === 'COMANDADO');
+    let pedidoActivo = pedidos.pedido.find(p => p.estado === 'COMANDADO' || p.estado === 'LISTO');
     if (pedidoActivo) {
 
       router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId, pedido: pedidoActivo.id_pedido } });
@@ -52,13 +53,10 @@ const navegarARuta = async (mesaId) => {
     
     if (pedidoEnCart) {
       for (const key of Object.keys(pedidoEnCart)) {
-        console.log(key);
-        console.log(pedidoEnCart.productos);
-        
+
         if (pedidoEnCart[key].productos.length == 0) {
           cart.resetCart(mesaId, key);
         } else {
-          console.log("ENTRA");
           pedidoCartId = key;
           break;
         }

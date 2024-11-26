@@ -10,13 +10,13 @@ export const useCart = defineStore('cart', {
   }),
   getters: {
     // Calcula el total del carrito para una mesa específica
-    total: (state) => (mesaId,pedido) => {
-      const mesaProducts = state.products[mesaId]?.[pedido] || [];
+    total: (state) => (mesaId, pedidoId) => {
+      const mesaProducts = state.products[mesaId]?.[pedidoId]?.productos || [];
       return mesaProducts.reduce(
-        (acc, group) => acc + group.productos.reduce((sum, p) => sum + p.precio * p.cantidad, 0),
+        (acc, producto) => acc + producto.precio * producto.cantidad,
         0
       );
-    },    
+    },   
   },
   actions: {
     setNit(nitValue) {

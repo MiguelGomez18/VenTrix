@@ -6,7 +6,7 @@
       </div>
       <div class="section2">
         <carritocompras :pedido="props.pedido" :rol="rol" @open-payment-modal="openModal"></carritocompras>
-        <pago v-if="showModal" @close-modal="closeModal"></pago>
+        <pago v-if="showModal" @close-modal="closeModal" :pedido="props.pedido"></pago>
       </div>
     </div>
   </template>

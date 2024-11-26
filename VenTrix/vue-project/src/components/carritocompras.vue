@@ -71,7 +71,7 @@
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router'; // Para obtener el id de la mesa
+import { useRoute } from 'vue-router'; 
 import { useCart } from '../stores/cart';
 import { ref, computed, defineEmits, defineProps, onMounted } from 'vue';
 import Swal from 'sweetalert2';
@@ -176,6 +176,10 @@ const comandar = async () => {
   }
 
   try {
+    const pedido1 = {
+      id_pedido: pedido
+    }
+    
     for (const producto of nuevosProductos) {
       
       const date = new Date();
@@ -190,7 +194,7 @@ const comandar = async () => {
         precio_total: producto.precio * producto.cantidad,
         sucursal: cartStore.nit,
         producto: { id_producto: producto.id_producto },
-        pedido: { id_pedido: pedido },
+        pedido: { id_pedido: pedido1.id_pedido },
       };
       console.log(detalle);
       await axios.post('http://127.0.0.1:8080/detalles-pedido', detalle);
@@ -199,7 +203,7 @@ const comandar = async () => {
     await axios.put(`http://127.0.0.1:8080/pedidos/${pedido}`, {
       total_pedido: 0.0,
       estado: 'COMANDADO'
-    })
+    });
 
     nuevosProductos.forEach(producto => {
       producto.disabled = true;
