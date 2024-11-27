@@ -243,7 +243,7 @@ const actualizarProducto = async () => {
             }
 
             const imagenBlob = await respuesta.blob();
-            const imagenFile = new File([imagenBlob], productoEncontrado.imagen.split('/imagenes/'+productoEncontrado.id_producto+'-').pop(), { type: imagenBlob.type });
+            const imagenFile = new File([imagenBlob], productoEncontrado.imagen.split('/imagenes/productos/'+productoEncontrado.id_producto+'-').pop(), { type: imagenBlob.type });
 
             formData.append('imagen', imagenFile);
           } catch (error) {

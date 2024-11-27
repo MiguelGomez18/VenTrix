@@ -87,7 +87,7 @@
           }
 
           const imagenBlob = await respuesta.blob();
-          const imagenFile = new File([imagenBlob], userData.value.imagen.split('/imagenes/'+userData.value.id+'-').pop(), { type: imagenBlob.type });
+          const imagenFile = new File([imagenBlob], userData.value.imagen.split('/imagenes/restaurantes/'+userData.value.id+'-').pop(), { type: imagenBlob.type });
 
           formData.append('imagen', imagenFile);
         } catch (error) {

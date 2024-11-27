@@ -34,7 +34,9 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import { useCart } from '@/stores/cart';
 
+const cart = useCart();
 const detallesAgrupados = ref([]); 
 
 // Función para agrupar los detalles por id_pedido y hora_detalle
@@ -71,10 +73,8 @@ const agruparPedidos = (detalles) => {
 
 const buscar = async () => {
   try {
-    const respuesta = await axios.get('http://127.0.0.1:8080/detalles-pedido');
-    console.log('Datos de la API:', respuesta.data); 
+    const respuesta = await axios.get(`http://127.0.0.1:8080/detalles-pedido/sucursal/${cart.nit}`);
     detallesAgrupados.value = agruparPedidos(respuesta.data);
-    console.log('Detalles agrupados:', detallesAgrupados.value);
   } catch (error) {
     console.error('Error al cargar detalles:', error);
   }

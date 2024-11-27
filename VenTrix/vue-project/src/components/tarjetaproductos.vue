@@ -31,22 +31,27 @@
 
   const props = defineProps({
     nit: {
-        type: String,
-        required: true
+      type: String,
+      required: true
     },
     pedido: {
-        type: String,
-        required: true
+      type: String,
+      required: true
     }
   });
 
   const productos = ref([]);
+  const pedido = ref(props.pedido);
   const consultaBusqueda = ref('');
   const cart = useCart();
   const selectedProductId = ref(null);
   const route = useRoute();
   const mesaId = route.params.id_mesa; 
   const categoria = ref(route.params.categoria);
+
+  if (categoria.value == 0) {
+    buscar();
+  }
 
   const buscar = async () => {
     try {
@@ -82,7 +87,7 @@
   });
   
   const seleccionarProducto = (producto) => {
-    cart.addProduct(mesaId, props.pedido, producto); 
+    cart.addProduct(mesaId, pedido.value, producto); 
     selectedProductId.value = producto.id_producto; 
     console.log(`Producto seleccionado: ${producto.id_producto} en la mesa: ${mesaId}`); 
 

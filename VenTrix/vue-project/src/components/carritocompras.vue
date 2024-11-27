@@ -190,6 +190,7 @@ const comandar = async () => {
       const detalle = {
         cantidad: producto.cantidad,
         hora_detalle: `${hora}:${minutos}:${segundos}`,
+        estado: 'PREPARANDO',
         descripcion: producto.descripcion,
         precio_total: producto.precio * producto.cantidad,
         sucursal: cartStore.nit,
