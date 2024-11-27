@@ -2,7 +2,9 @@
   <div class="detalle-pedidos">
     <h1 class="titulo-cocina">📋 Detalles de Pedido</h1>
     <div class="cards-container">
-      <!-- Iterar sobre los pedidos agrupados por hora -->
+      <div v-if="detallesAgrupados.length === 0" class="cart-empty">
+        <p>No hay pedidos ordenados.</p>
+      </div>
       <div
         v-for="(detallesPorHora, key) in detallesAgrupados"
         :key="key"
@@ -23,7 +25,7 @@
           <p><strong>Hora:</strong> {{ detalle.hora_detalle }}</p>
         </div>
 
-        <button @click="eliminarPedido(detallesPorHora[0].pedido.id_pedido)" class="btn-eliminar">
+        <button @click="eliminarPedido(key)" class="btn-eliminar">
           Preparado
         </button>
       </div>
@@ -74,23 +76,40 @@ const agruparPedidos = (detalles) => {
 const buscar = async () => {
   try {
     const respuesta = await axios.get(`http://127.0.0.1:8080/detalles-pedido/sucursal/${cart.nit}`);
-    detallesAgrupados.value = agruparPedidos(respuesta.data);
+    const data = ref([]);
+    const filtrados = ref([]);
+    data.value = respuesta.data
+
+    for (let index = 0; index < data.value.length; index++) {
+      const element = data.value[index];
+      if (element.estado == "PREPARANDO") {
+        filtrados.value.push(element);
+      }
+    }
+    
+    detallesAgrupados.value = agruparPedidos(filtrados.value);
+    
   } catch (error) {
     console.error('Error al cargar detalles:', error);
   }
 };
 
-const eliminarPedido = async (idPedido) => {
+const eliminarPedido = async (key) => {
   try {
-    // Cambiar el estado del pedido a "LISTO"
-    await axios.put(`http://127.0.0.1:8080/pedidos/${idPedido}`, {
-      estado: 'LISTO' // Asegúrate de que tu API esté configurada para aceptar esto
-    });
+    for (let index = 0; index < detallesAgrupados.value.length; index++) {
+      const element = detallesAgrupados.value[index];
+      if (index == key) {
+        for (let index = 0; index < element.length; index++) {
+          const element1 = element[index];
+          await axios.put(`http://127.0.0.1:8080/detalles-pedido/${element1.id_detalle_pedido}`, {
+            estado: "LISTO",
+          });
+        }
+      }
+    }    
 
-    // Ahora eliminamos el pedido de la interfaz
-    detallesAgrupados.value = detallesAgrupados.value.filter(
-      (pedido) => pedido[0].pedido.id_pedido !== idPedido
-    );
+    await buscar();
+   
   } catch (error) {
     console.error('Error al cambiar el estado o eliminar el pedido:', error);
   }
@@ -104,6 +123,13 @@ onMounted(() => {
 <style scoped>
 .espacio_detalle{
   margin-top: 20px;
+}
+
+.cart-empty {
+  width: 100%;
+  text-align: center;
+  font-style: italic;
+  color: #777;
 }
 
 .detalle-pedidos {

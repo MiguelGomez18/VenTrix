@@ -364,7 +364,7 @@ const resetearFormulario = () => {
     padding: 10px;
   }
   .contenedorProductos{
-    width: 80%;
+    width: 94%;
     height: auto;
     border-radius: 10px;
     padding: 30px;

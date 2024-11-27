@@ -18,10 +18,10 @@
             <img src="./icons/store-bar-svgrepo-com (1).svg" class="imagen-icono" />
             <span>Sucursales</span>
           </v-btn>
-          <v-btn class="boton-secundario" color="green darken-2" large @click="navegarARuta('InformesAdmin')">
+          <!--<v-btn class="boton-secundario" color="green darken-2" large @click="navegarARuta('InformesAdmin')">
             <img src="./icons/data-svgrepo-com.svg" class="imagen-icono" />
             <span>Informes</span>
-          </v-btn>
+          </v-btn>-->
         </div>
       </div>
     </v-app>
