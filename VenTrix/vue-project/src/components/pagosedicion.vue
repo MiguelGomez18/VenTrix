@@ -132,7 +132,7 @@ const editarTipoPago = (indice) => {
 const actualizarTipoPago = async () => {
   try {
     const tipoPagoActualizado = { ...tipoPago.value };
-    await axios.put(`http://127.0.0.1:8000/tipo_pago/${tipoPagoActualizado.id}`, tipoPagoActualizado); // Cambiar URL aquí
+    await axios.put(`http://127.0.0.1:8080/tipo_pago/${tipoPagoActualizado.id}`, tipoPagoActualizado); // Cambiar URL aquí
 
     await buscarTiposPago(); // Volver a cargar toda la lista de tipos de pago
 

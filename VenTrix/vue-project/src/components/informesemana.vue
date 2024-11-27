@@ -75,7 +75,7 @@ export default {
       const totalData = this.totalPorDia; // Usamos el array acumulado de totales por día
 
       // Nombres de los días
-      const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+      const dayNames = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado','Domingo'];
       for (let i = 0; i < 7; i++) {
         labels.push(dayNames[i]); // Solo el nombre del día
       }

@@ -7,15 +7,15 @@
   
         <div v-if="mostrarBotones" class="contenedor-botones">
           <v-btn class="boton-secundario" color="green darken-2" large @click="navegarARuta('Sucursal')">
-            <img src="./icons/edit-svgrepo-com.svg" class="imagen-icono" />
-            <span>Sucursal</span>
+            <img src="./icons/edit-clipboard-svgrepo-com.svg" class="imagen-icono" />
+            <span>Registro Sucursal</span>
           </v-btn>
           <v-btn class="boton-secundario" color="green darken-2" large @click="navegarARuta('RegistroAdmin')">
             <img src="./icons/edit-svgrepo-com.svg" class="imagen-icono" />
-            <span>Registro</span>
+            <span>Registro Admi</span>
           </v-btn>
           <v-btn class="boton-secundario" color="green darken-2" large @click="navegarARuta('TarjetasSucursales')">
-            <img src="./icons/table-svgrepo-com.svg" class="imagen-icono" />
+            <img src="./icons/store-bar-svgrepo-com (1).svg" class="imagen-icono" />
             <span>Sucursales</span>
           </v-btn>
           <v-btn class="boton-secundario" color="green darken-2" large @click="navegarARuta('InformesAdmin')">
