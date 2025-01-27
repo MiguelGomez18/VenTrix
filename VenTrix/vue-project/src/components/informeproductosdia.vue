@@ -41,8 +41,9 @@ export default {
         // Obtenemos los pedidos y filtramos solo los del día actual y estado "PAGADO"
         const { data: pedidos } = await axios.get('http://127.0.0.1:8080/pedidos');
         const cart = useCart();
+        
         const pedidosHoy = pedidos.filter(
-          (pedido) => pedido.estado === 'PAGADO' && pedido.fecha_pedido === fechaFormateada && pedido.sucursal === cart.nit
+          (pedido) => pedido.estado == 'PAGADO' && pedido.fecha_pedido == fechaFormateada && pedido.sucursal == cart.nit
         );
 
 

@@ -137,6 +137,9 @@ const buscarcategorias = async () => {
 };
 
 const totalPaginas = computed(() => {
+  if (productosFiltrados.value.length == 0) {
+    return 1;
+  }
   return Math.ceil(productosFiltrados.value.length / filasPorPagina);
 });
 

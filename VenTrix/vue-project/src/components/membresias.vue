@@ -40,7 +40,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
 #cuadro{
     margin-top: 50px;
     padding: 30px 0;
@@ -221,4 +221,79 @@
     transition: all 0.2s;
     font-weight: 700;
 }
+
+/* Para tablets (pantallas entre 768px y 1024px) */
+@media (max-width: 1024px) and (min-width: 768px) {
+    #content {
+        flex-wrap: wrap; 
+        gap: 20px;
+        justify-content: center; 
+    }
+
+    .cua, .cua1 {
+        width: 30%; 
+        padding: 20px;
+    }
+
+    .cua > h1, .cua1 > h1 {
+        font-size: 40px;
+    }
+
+    .cua > h2, .cua1 > h2 {
+        font-size: 28px; 
+    }
+}
+
+/* Para teléfonos pantallas menores a 768px */
+@media (max-width: 767px) {
+    #cuadro {
+        padding: 20px 0px; 
+    }
+
+    #cuadro > h1 {
+        font-size: 24px; 
+        text-align: center; 
+    }
+
+    #cuadro > h2 {
+        font-size: 10px; 
+        margin-top: 30px; 
+    }
+
+    #cuadro > h3 {
+        font-size: 10px; 
+        width: 90%; 
+    }
+
+    #content {
+        flex-wrap: wrap; 
+        flex-direction: column; 
+        align-items: center; 
+        gap: 15px; 
+    }
+
+    .cua, .cua1 {
+        width: 80%;
+        padding: 15px; 
+    }
+
+    .cua > h1, .cua1 > h1 {
+        font-size: 36px; 
+    }
+
+    .cua > h2, .cua1 > h2 {
+        font-size: 24px;
+    }
+
+    .menu, .menu1 {
+        text-align: center;
+        margin: 10px 0; 
+    }
+
+    .plan {
+        width: 100%; 
+        font-size: 14px; 
+    }
+}
+
 </style>

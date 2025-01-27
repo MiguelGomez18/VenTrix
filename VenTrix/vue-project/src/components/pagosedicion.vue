@@ -76,6 +76,9 @@ const buscarTiposPago = async () => {
 };
 
 const totalPaginas = computed(() => {
+  if (tiposPagoFiltrados.value.length == 0) {
+    return 1;
+  }
   return Math.ceil(tiposPagoFiltrados.value.length / filasPorPagina);
 });
 

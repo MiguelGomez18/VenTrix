@@ -76,6 +76,9 @@ const buscarMesas = async (nit) => {
 };
 
 const totalPaginas = computed(() => {
+  if (mesasFiltradas.value.length == 0) {
+    return 1;
+  }
   return Math.ceil(mesasFiltradas.value.length / filasPorPagina);
 });
 

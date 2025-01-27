@@ -80,7 +80,7 @@ const direccion = ref('');
 const correo = ref('')
 const date = new Date();
 const dia = (date.getDate() < 10 ? '0':'') + date.getDate();
-const mes = date.getMonth() + 1;
+const mes = ((date.getMonth() + 1) < 10 ? '0':'') + (date.getMonth() + 1);
 const año = date.getFullYear();
 const fecha_creacion = ref(`${año}-${mes}-${dia}`);
 const fecha_finalizacion = ref('');
@@ -105,12 +105,13 @@ const registerRestaurant = async () => {
         formData.append("nombre", nombre.value);
         formData.append("descripcion", descripcion.value);
         formData.append("telefono", telefono.value);
+        formData.append("direccion", direccion.value);
         formData.append("correo", correo.value);
         formData.append("imagen", file.value);
         formData.append("fecha_creacion", fecha_creacion.value);
         formData.append("fecha_finalizacion", fecha_finalizacion.value);
         formData.append("estado", 'ACTIVO');
-        formData.append("usuario", { documento: usuario });
+        formData.append("usuario", JSON.stringify({ documento: usuario }));
 
         const response = await axios.post(
         'http://127.0.0.1:8080/restaurante', 

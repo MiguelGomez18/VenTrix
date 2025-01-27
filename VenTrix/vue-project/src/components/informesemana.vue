@@ -31,7 +31,7 @@ export default {
         const { data: pedidos } = await axios.get('http://127.0.0.1:8080/pedidos');
         const cart = useCart();
         const pedidosHoy = pedidos.filter(
-          (pedido) => pedido.estado === 'PAGADO' && pedido.sucursal === cart.nit
+          (pedido) => pedido.estado == 'PAGADO' && pedido.sucursal == cart.nit
         );
 
         if (pedidosHoy.length === 0) {

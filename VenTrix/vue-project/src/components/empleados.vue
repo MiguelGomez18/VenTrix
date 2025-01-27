@@ -33,9 +33,9 @@
         </tbody>
         </table>
         <div class="paginacion">
-        <button :disabled="paginaActual === 1" @click="paginaActual--">Anterior</button>
-        <span>Página {{ paginaActual }} de {{ totalPaginas }}</span>
-        <button :disabled="paginaActual === totalPaginas" @click="paginaActual++">Siguiente</button>
+          <button :disabled="paginaActual === 1" @click="paginaActual--">Anterior</button>
+          <span>Página {{ paginaActual }} de {{ totalPaginas }}</span>
+          <button :disabled="paginaActual === totalPaginas" @click="paginaActual++">Siguiente</button>
         </div>
     </div>
 </template>
@@ -93,6 +93,9 @@ const buscar = async () => {
 };
 
 const totalPaginas = computed(() => {
+  if (empleadosFiltrados.value.length == 0) {
+    return 1;
+  }
   return Math.ceil(empleadosFiltrados.value.length / filasPorPagina);
 });
 

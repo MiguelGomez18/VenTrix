@@ -40,9 +40,9 @@ export default {
     const cart = useCart();
     const pedidosHoy = pedidos.filter(
       (pedido) =>
-        pedido.estado === 'PAGADO' &&
-        pedido.fecha_pedido === fechaFormateada &&
-        pedido.sucursal === cart.nit
+        pedido.estado == 'PAGADO' &&
+        pedido.fecha_pedido == fechaFormateada &&
+        pedido.sucursal == cart.nit
     );
 
     if (pedidosHoy.length === 0) {

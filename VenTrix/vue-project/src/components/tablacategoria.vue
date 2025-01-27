@@ -76,6 +76,9 @@ const buscarCategorias = async () => {
 buscarCategorias();
 
 const totalPaginas = computed(() => {
+  if (categoriasFiltradas.value.length == 0) {
+    return 1;
+  }
   return Math.ceil(categoriasFiltradas.value.length / filasPorPagina);
 });
 

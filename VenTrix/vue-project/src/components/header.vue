@@ -14,35 +14,28 @@
       <ul class="links" id="menu">
         <li><a href=""><router-link class="link" to="/registro">Iniciar Sesion</router-link></a></li>
         <li><a class="a1 link" href="#cuadro2">Nosotros</a></li>
-        <li><a class="a1" href="#cuadro">Servicios</a></li>
+        <li><a class="a1 link" href="#cuadro">Servicios</a></li>
       </ul>
-      <div>
-        <a href="">
-          <img src="" alt="" />
-        </a>
-        <a href="">
-          <img src="" alt="" />
-        </a>
-        <a href="">
-          <img src="" alt="" />
-        </a>
-      </div>
     </nav>
   </header>
 </template>
 
-<style>
+<style scoped>
 .header {
   background-color: var(--color_secundario);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  padding: 0 30px;
+  height: 5vh;
+  padding: 10px 30px;
   box-shadow: 0px 2px 10px 4px gray;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   z-index: 3;
+  max-height: 5vh;
+  display: flex;
+  align-items: center;
 }
 
 .header:hover {
@@ -55,17 +48,21 @@
   justify-content: space-between;
   align-items: center;
   padding: 3px 30px;
+  width: 100%;
+  max-height: 100%;
 }
 
 .logo {
-  display: flex;
+  display: grid;
+  grid-template-columns: 15% 85%;
   align-items: center;
-  gap: 10px;
-  width: 60%;
+  gap: 15px;
+  width: 50%;
 }
 
 .logo img {
-  width: 6%;
+  width: 100%;
+  height: 50%;
 }
 
 .logo a {
@@ -81,6 +78,7 @@
   gap: 30px;
   width: 40%;
   justify-content: right;
+  align-items: center;
 }
 
 .links li a {
@@ -106,9 +104,9 @@
   height: 0;
 }
 
-@media screen and (min-width: 280px) and (max-width: 490px) {
+@media (max-width: 540px) {
   .header {
-    padding: 0;
+    padding: 5px;
   }
 
   .logo {
@@ -120,7 +118,7 @@
   }
 
   .logo img {
-    width: 25%;
+    width: 20%;
   }
 
   .logo a {
@@ -138,14 +136,23 @@
     right: 0;
     background-color: var(--color_principal);
     display: grid;
-    place-content: space-around;
+    justify-content: center;
+    align-content: center;
     clip-path: circle(0% at top right);
-    transition: clip-path 1.4s;
+    transition: clip-path 0.8s;
+    text-align: center;
+    width: 100%;
+    padding: 0px;
+    gap: 180px;
+  }
+
+  .links li a {
+    font-size: 25px;
   }
 
   .a1 {
     text-decoration: none;
-    color: var(--color_letra);
+    color: var(--color_letra_negra);
   }
 
   .target > img {

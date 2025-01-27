@@ -84,6 +84,77 @@
     border-radius: 10%;
     object-fit: cover; /* Ajusta la imagen para cubrir el contenedor sin distorsionarse */
 }
+
+@media (max-width: 1024px) and (min-width: 920px) {
+    .contenedor_padre_main1 {
+        grid-template-columns: 60% 40%; /* Cambia a una sola columna */
+        gap: 2rem; /* Reduce el espacio entre columnas */
+        margin: 5% 5%;
+        padding: 40px 20px;
+        align-items: start;
+    }
+
+    .texto_main1 h1 {
+        font-size: 3.5rem; /* Ajusta el tamaño del texto */
+    }
+
+    .texto_main1 h2 {
+        font-size: 1.2rem; /* Ajusta el tamaño del subtítulo */
+        max-width: 100%; /* Asegura que el texto no se corte */
+    }
+
+    .slider img {
+        max-height: 80vh;
+        height: 80vh;
+        max-width: 100%;
+    }
+ 
+}
+
+/* Para teléfonos (pantallas menores a 768px) */
+@media (max-width: 913px) or (height: 1366px) {
+    .contenedor_padre_main1 {
+        display: flex;
+        flex-direction: column; /* Cambia a una disposición en columna */
+        gap: 1rem;
+        margin: 15% 0%;
+        padding: 10px 20px;
+    }
+
+    .texto_main1 h1 {
+        font-size: 2.8rem; /* Reduce el tamaño del título */
+        text-align: center; /* Centra el texto */
+    }
+
+    .texto_main1 h2 {
+        font-size: 1rem; /* Ajusta el tamaño del subtítulo */
+        line-height: 1.4; /* Mejora la legibilidad */
+        margin: 20px auto; /* Ajusta los márgenes */
+        max-width: 100%; /* Asegura que el texto no se corte */
+        text-align: center; /* Centra el texto */
+    }
+
+    .botones {
+        display: flex;
+        flex-direction: column; /* Botones en una columna */
+        align-items: center;
+    }
+
+    .botones button {
+        margin-bottom: 10px; /* Espaciado entre botones */
+        width: 90%; /* Asegura que los botones ocupen la mayor parte del ancho */
+    }
+
+    .img_main1 {
+        width: 100%;
+    }
+
+    .slider img {
+        height: 60vh; /* Reduce aún más la altura de las imágenes */
+        max-width: 100%;
+    }
+}
+
 </style>
 <script>
 import pruebaImagenChef1 from '@/components/img/prueba_imagen_chef1.webp';

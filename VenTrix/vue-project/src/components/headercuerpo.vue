@@ -7,7 +7,7 @@
       </div>
       <a href="#menu" class="target">
         <img
-          src="../components/icons/Menu_icon_2_icon-icons.com_71856.svg"
+          src="../components/icons/icons8-menú-24.png"
           class="icon"
         />
       </a>
@@ -236,6 +236,7 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
+  color:  white;
 }
 
 .ul a:hover {
@@ -258,5 +259,10 @@ onMounted(() => {
   font-size: 18px;
   font-family: fuente_principal;
   filter: drop-shadow(0px 0px 3px rgb(51, 51, 51));
+}
+
+.icon {
+  width: 0;
+  height: 0;
 }
 </style>

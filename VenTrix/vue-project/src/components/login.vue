@@ -90,7 +90,7 @@ const password = ref('');
 const roles = ["ADMINISTRADOR","ADMINISTRADOR_SUCURSAL","CAJERO","MESERO","COCINA"];
 const date = new Date();
 const dia = (date.getDate() < 10 ? '0':'') + date.getDate();
-const mes = date.getMonth() + 1;
+const mes = ((date.getMonth() + 1) < 10 ? '0':'') + (date.getMonth() + 1);
 const año = date.getFullYear();
 const fecha_creacion = ref(`${año}-${mes}-${dia}`);
 const frmlogin = ref(true);
@@ -183,6 +183,7 @@ const loginPropietario = async () => {
                 });
                 return; 
             }
+            console.log(fecha_creacion.value);
             const response = await axios.post('http://127.0.0.1:8080/usuario', {
                 documento: documento.value,
                 nombre: nombre.value,
@@ -191,6 +192,7 @@ const loginPropietario = async () => {
                 rol: "ADMINISTRADOR",
                 fecha_creacion: fecha_creacion.value
             });
+            
             console.log('Registro OK');
             Swal.fire({
                 icon: 'success',

@@ -22,7 +22,7 @@
   </section>
 </template>
 
-<style>
+<style scoped>
 .footer {
   background-color: var(--color_terciario);
   padding: 40px 30px;
@@ -100,7 +100,7 @@ div a {
   }
 
   .cuadro {
-    width: 30%;
+    width: 40%;
     display: flex;
     flex-direction: column;
     gap: 5px;

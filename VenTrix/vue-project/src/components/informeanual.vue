@@ -33,7 +33,7 @@ export default {
 
         // Filtrar los pedidos que están en estado "PAGADO" y pertenecen a la sucursal correcta
         const pedidosHoy = pedidos.filter(
-          (pedido) => pedido.estado === 'PAGADO' && pedido.sucursal === cart.nit
+          (pedido) => pedido.estado == 'PAGADO' && pedido.sucursal == cart.nit
         );
 
         if (pedidosHoy.length === 0) {
