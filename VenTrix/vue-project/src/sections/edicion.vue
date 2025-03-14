@@ -49,7 +49,7 @@ const navegarARuta = (name) => {
     position: relative;
     top: 100px;
     right: 50px; 
-    z-index: 20;
+    z-index: 10;
   }
 
   .boton-flotante1 {

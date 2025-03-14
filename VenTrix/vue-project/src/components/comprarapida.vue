@@ -36,7 +36,7 @@ const mesa = ref({
 });
 const date = new Date();
 const dia = (date.getDate() < 10 ? '0':'') + date.getDate();
-const mes = date.getMonth() + 1;
+const mes = ((date.getMonth() + 1) < 10 ? '0':'') + (date.getMonth() + 1);
 const año = date.getFullYear();
 const hora = (date.getHours() < 10 ? '0':'') + date.getHours();
 const minutos = (date.getMinutes() < 10 ? '0':'') + date.getMinutes();
@@ -110,13 +110,13 @@ const navegarARuta = async (mesaId) => {
 
 
 const agregarMesa = async () => {
-  if (mesaCompraRapida.value.length === 0) {
+  if (mesaCompraRapida.value.length == 0) {
     try {
       const nuevaMesa = { ...mesa.value };
       const response = await axios.post('http://127.0.0.1:8080/mesa', nuevaMesa);
       await buscarMesas(nit); 
     } catch (error) {
-      console.error("Error al agregar mesa rápida", error);
+      console.error("Mesa ya existente", error);
     }
   }
 };
