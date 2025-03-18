@@ -54,9 +54,9 @@ const limpiarInputs = () => {
 };
 
 const validarPassword = (password) => {
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!?¡¿@#<>$%^&*])[A-Za-z\d!?¡¿@<>#$%^&*]{8,}$/;
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¡¿])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¡¿]{8,}$/;
     return regex.test(password);
-};
+  };
 
 const loginPropietario = async () => {
     try {
@@ -74,7 +74,7 @@ const loginPropietario = async () => {
             await Swal.fire({
                 icon: 'error',
                 title: 'Error de contraseña',
-                text: 'La contraseña debe tener al menos 8 caracteres, incluyendo letras, números y caracteres especiales.'
+                text: 'La contraseña debe tener al menos 8 caracteres, incluyendo letras con almenos una mayuscula, números y caracteres especiales.'
             });
             return;
         }
@@ -86,7 +86,8 @@ const loginPropietario = async () => {
             password: password.value,
             rol: "ADMINISTRADOR_SUCURSAL",
             fecha_creacion: fecha_creacion.value,
-            sucursal: sucursal.value
+            sucursal: sucursal.value,
+            estado: "ACTIVO"
         });
 
         console.log('Registro OK');

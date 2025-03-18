@@ -105,73 +105,155 @@ const limpiarInputs = () => {
 };
 
 const validarPassword = (password) => {
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!?¡¿@#<>$%^&*])[A-Za-z\d!?¡¿@<>#$%^&*]{8,}$/;
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¡¿])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¡¿]{8,}$/;
     return regex.test(password);
 };
 
 const loginPropietario = async () => {
     try {
         if (frmlogin.value) {
-        const response = await axios.post('http://127.0.0.1:8080/usuario/login', {
-            correo: correo.value,
-            password: password.value
-        });
 
-        await buscarRol(correo.value);
-        await buscardocumento(correo.value);
-        cart.documento = documento1.value;
-        if (rol1.value == roles[0]) {
-            await buscarid_restaurante(documento1.value);
+            await buscardocumento(correo.value);
+            cart.documento = documento1.value;
+            const estadoResponse = await axios.get(`http://127.0.0.1:8080/usuario/${cart.documento}`);
+            const estadoUsuario = estadoResponse.data;
+            
+            if (estadoUsuario.estado == 'INACTIVO') {
+                if (estadoUsuario.rol == "ADMINISTRADOR") {
+                    await Swal.fire({
+                        icon: 'error',
+                        title: 'Membresía Expirada',
+                        text: 'Tu membresía ha expirado. Por favor, contacta al soporte para renovarla.'
+                    });
+                } else {
+                    await Swal.fire({
+                        icon: 'error',
+                        title: 'Membresía Expirada',
+                        text: 'Tu membresía ha expirado. Por favor, contacta a el Propietario.'
+                    });
+                }
+                return;
+            }
 
-            if (idrestaurante.value == '') {
-                cart.rol = rol1.value;
-                router.push({ name: 'Restaurante', params: { usuario: documento1.value } });
-
+            let fechaFinalizacionStr = "";
+            if (estadoUsuario.rol == "ADMINISTRADOR") {
+                await buscarid_restaurante(documento1.value);
+                cart.restaurante = idrestaurante.value;
+                const fechaFinalizacionResponse = await axios.get(`http://127.0.0.1:8080/restaurante/${cart.restaurante}`);
+                fechaFinalizacionStr = fechaFinalizacionResponse.data.fecha_finalizacion; 
             } else {
+                await buscarSucursal(documento1);
+                cart.nit = sucursal1.value;
+                
+                const response = await axios.get(`http://127.0.0.1:8080/sucursal/id_restaurante/${cart.nit}`);
+                const fechaFinalizacionResponse = await axios.get(`http://127.0.0.1:8080/restaurante/${response.data}`);
+                fechaFinalizacionStr = fechaFinalizacionResponse.data.fecha_finalizacion; 
+            }
+
+            const fechaFinalizacion = new Date(fechaFinalizacionStr);
+            const hoy = new Date(); 
+
+            const diferenciaTiempo = fechaFinalizacion - hoy; 
+            const diferenciaDias = Math.floor(diferenciaTiempo / (1000 * 60 * 60 * 24)); 
+
+            console.log("Diferencia de días:", diferenciaDias);
+            if (diferenciaDias >= 2 && diferenciaDias <= 4) {
+                await Swal.fire({
+                    icon: 'warning',
+                    title: 'Membresía por Expirar',
+                    text: `Tu membresía expirará en ${diferenciaDias+1} días. Por favor, renueva tu membresía.`
+                });
+            
+            } else if (diferenciaDias == 1) {
+                await Swal.fire({
+                    icon: 'warning',
+                    title: 'Membresía por Expirar',
+                    text: 'Tu membresía expirará en 2 días. Por favor, renueva tu membresía.'
+                });
+            } else if (diferenciaDias == 0) {
+                await Swal.fire({
+                    icon: 'warning',
+                    title: 'Membresía por Expirar',
+                    text: 'Tu membresía expirará mañana. Por favor, renueva tu membresía.'
+                });
+            } else if (diferenciaDias < 0) {
+                estadoUsuario.estado = 'INACTIVO';
+                const response = await axios.put(`http://127.0.0.1:8080/usuario/${estadoUsuario.documento}`, estadoUsuario);
+                if (estadoUsuario.rol == "ADMINISTRADOR") {
+                    await Swal.fire({
+                        icon: 'error',
+                        title: 'Membresía Expirada',
+                        text: 'Tu membresía ha expirado. Por favor, contacta al soporte para renovarla.'
+                    });
+                } else {
+                    await Swal.fire({
+                        icon: 'error',
+                        title: 'Membresía Expirada',
+                        text: 'Tu membresía ha expirado. Por favor, contacta a el Propietario.'
+                    });
+                }
+                return; 
+            }
+
+            const response = await axios.post('http://127.0.0.1:8080/usuario/login', {
+                correo: correo.value,
+                password: password.value
+            });
+            
+            await buscarRol(correo.value);
+            
+            if (rol1.value == roles[0]) {
+                await buscarid_restaurante(documento1.value);
+
+                if (idrestaurante.value == '') {
+                    cart.rol = rol1.value;
+                    router.push({ name: 'Restaurante', params: { usuario: documento1.value } });
+
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Inicio de sesión exitoso',
+                        text: 'Bienvenido a tu cuenta'
+                    });
+                    cart.restaurante = idrestaurante.value;
+                    cart.rol = rol1.value;
+                    
+                    router.push({ name: 'TarjetasSucursales', params: { idrestaurante: idrestaurante.value } });
+                }
+
+            } else if (rol1.value == roles[1]) {
+                await buscarSucursal(documento1);
+
                 Swal.fire({
                     icon: 'success',
                     title: 'Inicio de sesión exitoso',
                     text: 'Bienvenido a tu cuenta'
                 });
                 cart.restaurante = idrestaurante.value;
+                cart.nit = sucursal1.value;
                 cart.rol = rol1.value;
+                router.push({ name: 'Edicion' });
                 
-                router.push({ name: 'TarjetasSucursales', params: { idrestaurante: idrestaurante.value } });
+            } else if (rol1.value == roles[2]) {
+                await buscardocumentoSucursal(documento1);
+                cart.nit = sucursal1.value;
+                cart.rol = rol1.value;
+                router.push({ name: 'MesasMesero', params: { nit: sucursal1.value, rol: rol1.value } });
+                
+            } else if (rol1.value == roles[3]) {
+                await buscardocumentoSucursal(documento1);
+                cart.nit = sucursal1.value;
+                cart.rol = rol1.value;
+                router.push({ name: 'MesasMesero', params: { nit: sucursal1.value, rol: rol1.value } });
+
+            } else if (rol1.value == roles[4]) {
+                await buscardocumentoSucursal(documento1);
+                cart.nit = sucursal1.value;
+                cart.rol = rol1.value;
+                router.push({ name: 'Pedidos', params: { nit: sucursal1.value } });
             }
 
-        } else if (rol1.value == roles[1]) {
-            await buscarSucursal(documento1);
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Inicio de sesión exitoso',
-                text: 'Bienvenido a tu cuenta'
-            });
-            cart.restaurante = idrestaurante.value;
-            cart.nit = sucursal1.value;
-            cart.rol = rol1.value;
-            router.push({ name: 'Edicion' });
-            
-        } else if (rol1.value == roles[2]) {
-            await buscardocumentoSucursal(documento1);
-            cart.nit = sucursal1.value;
-            cart.rol = rol1.value;
-            router.push({ name: 'MesasMesero', params: { nit: sucursal1.value, rol: rol1.value } });
-            
-        } else if (rol1.value == roles[3]) {
-            await buscardocumentoSucursal(documento1);
-            cart.nit = sucursal1.value;
-            cart.rol = rol1.value;
-            router.push({ name: 'MesasMesero', params: { nit: sucursal1.value, rol: rol1.value } });
-
-        } else if (rol1.value == roles[4]) {
-            await buscardocumentoSucursal(documento1);
-            cart.nit = sucursal1.value;
-            cart.rol = rol1.value;
-            router.push({ name: 'Pedidos', params: { nit: sucursal1.value } });
-        }
-
-        limpiarInputs();
+            limpiarInputs();
 
         } else {
 
@@ -179,7 +261,7 @@ const loginPropietario = async () => {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error de contraseña',
-                    text: 'La contraseña debe tener al menos 8 caracteres, incluyendo letras, números y caracteres especiales.'
+                    text: 'La contraseña debe tener al menos 8 caracteres, incluyendo letras con almenos una mayuscula, números y caracteres especiales.'
                 });
                 return; 
             }
@@ -190,7 +272,8 @@ const loginPropietario = async () => {
                 correo: correo.value,
                 password: password.value,
                 rol: "ADMINISTRADOR",
-                fecha_creacion: fecha_creacion.value
+                fecha_creacion: fecha_creacion.value,
+                estado: "ACTIVO"
             });
             
             console.log('Registro OK');

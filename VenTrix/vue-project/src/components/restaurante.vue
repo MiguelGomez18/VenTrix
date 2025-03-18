@@ -68,9 +68,6 @@ const props = defineProps({
 
 const file = ref(null);
 const fileInput = ref(null);
-const onFileChange = (event) => {
-    file.value = event.target.files[0];
-};
 const cart = useCart();
 const id = ref('');
 const nombre = ref('');
@@ -98,8 +95,40 @@ const limpiarInputs = () => {
     fecha_finalizacion.value = '';
 };
 
+const onFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+        // Validar el tamaño del archivo (10 MB = 10 * 1024 * 1024 bytes)
+        const maxSize = 10 * 1024 * 1024; // 10 MB en bytes
+        if (selectedFile.size > maxSize) {
+            // Mostrar mensaje de error
+            Swal.fire({
+                icon: 'error',
+                title: 'Archivo demasiado grande',
+                text: 'El archivo no puede superar los 10 MB.',
+            });
+            // Limpiar el input de archivo
+            file.value = null;
+            fileInput.value.value = ''; // Limpiar el input file
+        } else {
+            // Si el archivo es válido, asignarlo a la variable `file`
+            file.value = selectedFile;
+        }
+    }
+};
+
 const registerRestaurant = async () => {
     try { 
+
+        if (file.value && file.value.size > 10 * 1024 * 1024) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Archivo demasiado grande',
+                text: 'El archivo no puede superar los 10 MB.',
+            });
+            return; // Detener la ejecución si el archivo es demasiado grande
+        }
+
         const formData = new FormData();
         formData.append("id", id.value);
         formData.append("nombre", nombre.value);

@@ -20,6 +20,7 @@
   </template>
   
   <script setup>
+  import Swal from 'sweetalert2';
   import { ref, onMounted } from 'vue';
   import axios from 'axios';
   import { useCart } from '@/stores/cart';
@@ -29,6 +30,11 @@
   const editMode = ref(false);
   const rol = ref('');
   
+  const validarPassword = (password) => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¡¿])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¡¿]{8,}$/;
+    return regex.test(password);
+  };
+
   const buscar = async () => {
     try {   
       const response = await axios.get(`http://127.0.0.1:8080/usuario/${cart.documento}`);
@@ -49,9 +55,25 @@
   
   const actualizar = async () => {
     try {
+      console.log(userData.value.password);
+      
+      if (!validarPassword(userData.value.password)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de contraseña',
+            text: 'La contraseña debe tener al menos 8 caracteres, incluyendo letras con almenos una mayuscula, números y caracteres especiales.'
+        });
+        return; 
+      }
       const response = await axios.put(`http://127.0.0.1:8080/usuario/${userData.value.documento}`, userData.value);
       await buscar();
       editMode.value = false; 
+      Swal.fire({
+          icon: 'success',
+          title: 'Actualizacion Correcta',
+          text: 'Tu informacion a sido actualizada exitosamente',
+          timer: 2000
+      });
     } catch (error) {
       console.error('Error al actualizar:', error);
     }

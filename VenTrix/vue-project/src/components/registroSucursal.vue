@@ -73,9 +73,9 @@ const buscar = async () => {
 }
 
 const validarPassword = (password) => {
-const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!?¡¿@#<>$%^&*])[A-Za-z\d!?¡¿@<>#$%^&*]{8,}$/;
-return regex.test(password);
-};
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¡¿])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¡¿]{8,}$/;
+    return regex.test(password);
+  };
 
 const loginPropietario = async () => {
 try {
@@ -83,7 +83,7 @@ try {
         Swal.fire({
             icon: 'error',
             title: 'Error de contraseña',
-            text: 'La contraseña debe tener al menos 8 caracteres, incluyendo letras, números y caracteres especiales.'
+            text: 'La contraseña debe tener al menos 8 caracteres, incluyendo letras con almenos una mayuscula, números y caracteres especiales.'
         });
         return; 
     };
