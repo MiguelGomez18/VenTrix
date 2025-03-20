@@ -5,9 +5,9 @@
         <form class="sign-in" @submit.prevent="loginPropietario">
         <h2>INICIAR SESIÓN</h2>
         <div class="redes-sociales">
-            <img src="../components/icons/icons8-whatsapp-50.png" alt="WhatsApp">
-            <img src="../components/icons/icons8-instagram-50.png" alt="Instagram">
-            <img src="../components/icons/icons8-facebook-nuevo-50 (1).png" alt="Facebook">
+            <a href="https://wa.me/573507113526"><img src="../components/icons/icons8-whatsapp-50.png" alt="WhatsApp"></a>
+            <a href=""><img src="../components/icons/icons8-instagram-50.png" alt="Instagram"></a>
+            <a href=""><img src="../components/icons/icons8-facebook-nuevo-50 (1).png" alt="Facebook"></a>
         </div>
         <span>Use su correo y su contraseña</span>
         <div class="container-input">
@@ -28,9 +28,9 @@
         <form class="sign-up" @submit.prevent="loginPropietario">
         <h2>REGISTRARSE</h2>
         <div class="redes-sociales">
-            <img src="../components/icons/icons8-whatsapp-50.png" alt="WhatsApp">
-            <img src="../components/icons/icons8-instagram-50.png" alt="Instagram">
-            <img src="../components/icons/icons8-facebook-nuevo-50 (1).png" alt="Facebook">
+            <a href="https://wa.me/573507113526"><img src="../components/icons/icons8-whatsapp-50.png" alt="WhatsApp"></a>
+            <a href=""><img src="../components/icons/icons8-instagram-50.png" alt="Instagram"></a>
+            <a href=""><img src="../components/icons/icons8-facebook-nuevo-50 (1).png" alt="Facebook"></a>
         </div>
         <span>Use su correo electrónico para registrarse</span>
         <div class="container-input">
@@ -43,12 +43,17 @@
         </div>
         <div class="container-input">
             <img src="../components/icons/icons8-correo-50.png" alt="Correo">
-            <input type="email" placeholder="Email" v-model="correo" required>
+            <input type="email" placeholder="Correo" v-model="correo" required>
         </div>
         <div class="container-input">
             <img src="../components/icons/icons8-contraseña-50.png" alt="Contraseña">
-            <input type="password" placeholder="Password" v-model="password" required>
+            <input type="password" placeholder="Contraseña" v-model="password" required>
         </div>
+        <div class="container-input">
+            <img src="../components/icons/icons8-contraseña-50.png" alt="Contraseña confirmacion">
+            <input type="password" placeholder="Confirmar Contraseña" v-model="confirmPassword" required>
+        </div>
+        <p class="contra" v-if="passwordMismatch">Las contraseñas no coinciden</p>
         <router-link to="/">Volver..</router-link>
         <button class="button" type="submit">{{ frmlogin ? 'INICIAR SESIÓN' : 'REGISTRARSE' }}</button>
         </form>
@@ -72,7 +77,7 @@
 
 <script setup>
 import Swal from 'sweetalert2';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { useCart } from '@/stores/cart';
@@ -87,6 +92,7 @@ const sucursal1 = ref('');
 const nombre = ref('');
 const correo = ref('');
 const password = ref('');
+const confirmPassword = ref('');
 const roles = ["ADMINISTRADOR","ADMINISTRADOR_SUCURSAL","CAJERO","MESERO","COCINA"];
 const date = new Date();
 const dia = (date.getDate() < 10 ? '0':'') + date.getDate();
@@ -104,6 +110,10 @@ const limpiarInputs = () => {
   password.value = '';
 };
 
+const passwordMismatch = computed(() => {
+    return password.value !== confirmPassword.value && confirmPassword.value !== '';
+})
+
 const validarPassword = (password) => {
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¡¿])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¡¿]{8,}$/;
     return regex.test(password);
@@ -113,39 +123,33 @@ const loginPropietario = async () => {
     try {
         if (frmlogin.value) {
 
+            const response = await axios.post('http://127.0.0.1:8080/usuario/login', {
+                correo: correo.value,
+                password: password.value
+            });
+
             await buscardocumento(correo.value);
             cart.documento = documento1.value;
             const estadoResponse = await axios.get(`http://127.0.0.1:8080/usuario/${cart.documento}`);
             const estadoUsuario = estadoResponse.data;
             
-            if (estadoUsuario.estado == 'INACTIVO') {
-                if (estadoUsuario.rol == "ADMINISTRADOR") {
-                    await Swal.fire({
-                        icon: 'error',
-                        title: 'Membresía Expirada',
-                        text: 'Tu membresía ha expirado. Por favor, contacta al soporte para renovarla.'
-                    });
-                } else {
-                    await Swal.fire({
-                        icon: 'error',
-                        title: 'Membresía Expirada',
-                        text: 'Tu membresía ha expirado. Por favor, contacta a el Propietario.'
-                    });
-                }
-                return;
-            }
-
             let fechaFinalizacionStr = "";
             if (estadoUsuario.rol == "ADMINISTRADOR") {
+
                 await buscarid_restaurante(documento1.value);
                 cart.restaurante = idrestaurante.value;
                 const fechaFinalizacionResponse = await axios.get(`http://127.0.0.1:8080/restaurante/${cart.restaurante}`);
                 fechaFinalizacionStr = fechaFinalizacionResponse.data.fecha_finalizacion; 
-            } else {
+            } else if (estadoUsuario.rol == "ADMINISTRADOR_SUCURSAL") {
+
                 await buscarSucursal(documento1);
                 cart.nit = sucursal1.value;
-                
                 const response = await axios.get(`http://127.0.0.1:8080/sucursal/id_restaurante/${cart.nit}`);
+                const fechaFinalizacionResponse = await axios.get(`http://127.0.0.1:8080/restaurante/${response.data}`);
+                fechaFinalizacionStr = fechaFinalizacionResponse.data.fecha_finalizacion; 
+            } else {
+
+                const response = await axios.get(`http://127.0.0.1:8080/sucursal/id_restaurante/${estadoUsuario.sucursal}`);
                 const fechaFinalizacionResponse = await axios.get(`http://127.0.0.1:8080/restaurante/${response.data}`);
                 fechaFinalizacionStr = fechaFinalizacionResponse.data.fecha_finalizacion; 
             }
@@ -157,48 +161,106 @@ const loginPropietario = async () => {
             const diferenciaDias = Math.floor(diferenciaTiempo / (1000 * 60 * 60 * 24)); 
 
             console.log("Diferencia de días:", diferenciaDias);
-            if (diferenciaDias >= 2 && diferenciaDias <= 4) {
-                await Swal.fire({
-                    icon: 'warning',
-                    title: 'Membresía por Expirar',
-                    text: `Tu membresía expirará en ${diferenciaDias+1} días. Por favor, renueva tu membresía.`
-                });
-            
-            } else if (diferenciaDias == 1) {
-                await Swal.fire({
-                    icon: 'warning',
-                    title: 'Membresía por Expirar',
-                    text: 'Tu membresía expirará en 2 días. Por favor, renueva tu membresía.'
-                });
-            } else if (diferenciaDias == 0) {
-                await Swal.fire({
-                    icon: 'warning',
-                    title: 'Membresía por Expirar',
-                    text: 'Tu membresía expirará mañana. Por favor, renueva tu membresía.'
-                });
-            } else if (diferenciaDias < 0) {
-                estadoUsuario.estado = 'INACTIVO';
-                const response = await axios.put(`http://127.0.0.1:8080/usuario/${estadoUsuario.documento}`, estadoUsuario);
+            if (diferenciaDias >= 1 && diferenciaDias <= 4) {
                 if (estadoUsuario.rol == "ADMINISTRADOR") {
                     await Swal.fire({
-                        icon: 'error',
-                        title: 'Membresía Expirada',
-                        text: 'Tu membresía ha expirado. Por favor, contacta al soporte para renovarla.'
+                        icon: 'warning',
+                        title: 'Membresía por Expirar',
+                        text: `Tu membresía expirará en ${diferenciaDias+1} días. Por favor, renueva tu membresía.`,
+                        showCancelButton: true,
+                        confirmButtonText: 'Pagar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/ruta-de-pago'; 
+                        }
                     });
+                } else if (estadoUsuario.rol == "ADMINISTRADOR_SUCURSAL") {
+                    await Swal.fire({
+                        icon: 'warning',
+                        title: 'Membresía por Expirar',
+                        text: `Tu membresía expirará en ${diferenciaDias+1} días. Por favor, Comunicate con el Propietario.`
+                    })
                 } else {
                     await Swal.fire({
-                        icon: 'error',
-                        title: 'Membresía Expirada',
-                        text: 'Tu membresía ha expirado. Por favor, contacta a el Propietario.'
-                    });
+                        icon: 'warning',
+                        title: 'Membresía por Expirar',
+                        text: `Tu membresía expirará en ${diferenciaDias+1} días. Por favor, Comunicate con el Administrador de Sucursal.`
+                    })
                 }
-                return; 
-            }
+                if (estadoUsuario.estado == 'INACTIVO') {
+                    estadoUsuario.estado = 'ACTIVO';
+                    const response = await axios.put(`http://127.0.0.1:8080/usuario/${estadoUsuario.documento}`, estadoUsuario);
+                } 
+                
+            } else if (diferenciaDias == 0) {
+                if (estadoUsuario.rol == "ADMINISTRADOR") {
+                    await Swal.fire({
+                        icon: 'warning',
+                        title: 'Membresía por Expirar',
+                        text: 'Tu membresía expirará mañana. Por favor, renueva tu membresía.',
+                        showCancelButton: true,
+                        confirmButtonText: 'Pagar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/ruta-de-pago'; 
+                        }
+                    });
+                } else if (estadoUsuario.rol == "ADMINISTRADOR_SUCURSAL") {
+                    await Swal.fire({
+                        icon: 'warning',
+                        title: 'Membresía por Expirar',
+                        text: 'Tu membresía expirará mañana. Por favor, Comunicate con el Propietario.'
+                    })
+                } else {
+                    await Swal.fire({
+                        icon: 'warning',
+                        title: 'Membresía por Expirar',
+                        text: 'Tu membresía expirará mañana. Por favor, Comunicate con el Administrador de Sucursal.'
+                    })
+                }
+                if (estadoUsuario.estado == 'INACTIVO') {
+                    estadoUsuario.estado = 'ACTIVO';
+                    const response = await axios.put(`http://127.0.0.1:8080/usuario/${estadoUsuario.documento}`, estadoUsuario);
+                } 
 
-            const response = await axios.post('http://127.0.0.1:8080/usuario/login', {
-                correo: correo.value,
-                password: password.value
-            });
+            } else if (diferenciaDias < 0) {
+                if (estadoUsuario.estado == 'INACTIVO') {
+                    if (estadoUsuario.rol == "ADMINISTRADOR") {
+                        await Swal.fire({
+                            icon: 'error',
+                            title: 'Membresía Expirada',
+                            text: 'Tu membresía ha expirado. Por favor, contacta al soporte para renovarla.'
+                        });
+                    } else {
+                        await Swal.fire({
+                            icon: 'error',
+                            title: 'Membresía Expirada',
+                            text: 'Tu membresía ha expirado. Por favor, contacta a el Propietario.'
+                        });
+                    }
+                    return;
+                } else {
+                    estadoUsuario.estado = 'INACTIVO';
+                    const response = await axios.put(`http://127.0.0.1:8080/usuario/${estadoUsuario.documento}`, estadoUsuario);
+                    if (estadoUsuario.rol == "ADMINISTRADOR") {
+                        await Swal.fire({
+                            icon: 'error',
+                            title: 'Membresía Expirada',
+                            text: 'Tu membresía ha expirado. Por favor, contacta al soporte para renovarla.'
+                        });
+                    } else {
+                        await Swal.fire({
+                            icon: 'error',
+                            title: 'Membresía Expirada',
+                            text: 'Tu membresía ha expirado. Por favor, contacta a el Propietario.'
+                        });
+                    }
+                    return; 
+                }
+                
+            } 
             
             await buscarRol(correo.value);
             
@@ -295,8 +357,6 @@ const loginPropietario = async () => {
         title: 'Error al iniciar sesión',
         text: 'No se pudo iniciar sesión. Por favor, revisa el nombre y contraseña.'
         });
-        limpiarInputs();
-        toggleSignIn();
     }
 };
 
@@ -306,7 +366,7 @@ const buscardocumento = async (correo) => {
     const respuesta = await axios.get(`http://127.0.0.1:8080/usuario/correo/${correo}`); 
     documento1.value = respuesta.data;
   } catch (error) {
-    console.error("Error al el documento", error);
+    console.error("Error en el documento", error);
   }
 };
 
@@ -418,12 +478,19 @@ function toggleSignUp() {
     margin-bottom: 25px;
 }
 
-.redes-sociales img{
+.redes-sociales a{
+    cursor: pointer;
+    width: 15%;
+    height: 30px;
+    margin: 8px;
+}
+
+.redes-sociales a img{
     border: 1px solid #c9cccb;
     border-radius: 6px;
     padding: 8px;
     cursor: pointer;
-    width:15%;
+    width: 100%;
     height: 30px;
 }
 
@@ -432,8 +499,8 @@ function toggleSignUp() {
     margin-bottom: 15px;
 }
 .container-input{
-    width: 300px;
-    height: 80px;
+    width: 400px;
+    height: 60px;
     margin-bottom: 25px;
     display: flex;
     justify-content: center;
@@ -447,13 +514,13 @@ function toggleSignUp() {
     border: none;
     outline: none;
     width: 100%;
-    height: 70px;
+    height: 55px;
     font-size: 17px;
     background-color: #eeeeee;
 }
 
 .container-input img{
-    width:15%;
+    width: 12%;
     height: 30px;
 }
 
@@ -462,6 +529,17 @@ function toggleSignUp() {
     font-size: 14px;
     margin-bottom: 10px;
     margin-top: 5px;
+}
+
+.contra {
+    color: red; 
+    border-radius: 8px; 
+    width: 400px;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 5px;
+    border: 1px solid rgba(255, 0, 0, 0.334); 
+    background-color: rgba(255, 0, 0, 0.199);
 }
 
 .button{

@@ -15,7 +15,7 @@
         <a href="https://wa.me/573507113526"><img src="../components/icons/icons8-whatsapp-48.png" alt="WhatsApp"></a>
         <a href=""><img src="../components/icons/icons8-instagram-48.png" alt="Instagram"></a>
         <a href=""><img src="../components/icons/icons8-facebook-48 (1).png" alt="Facebook"></a>
-        <li><a class="a1" href=""><router-link class="link" to="">SOPORTE</router-link></a></li>
+        <li><a class="a1" href="https://wa.me/573507113526">SOPORTE</a></li>
       </ul>
       <div class="user-container">
         <img 

@@ -6,10 +6,10 @@
   <section class="footer">
     <article class="cuadro">
       <article class="numero">
-        <div><a class="telefono" href=""><img class="img" src="../components/icons/icons8-teléfono-50.png" alt=""><p>​ +1 (234) 567-8910</p></a></div>
+        <div><a class="telefono" href="https://wa.me/573507113526"><img class="img" src="../components/icons/icons8-teléfono-50.png" alt=""><p>​ +1 (234) 567-8910</p></a></div>
       </article>
       <article class="chatear">
-        <div><a class="whatsapp" href=""><img class="img" src="../components/icons/whatsapp.svg" alt=""><p>​Chatear ahora</p></a></div>
+        <div><a class="whatsapp" href="https://wa.me/573507113526"><img class="img" src="../components/icons/whatsapp.svg" alt=""><p>​Chatear ahora</p></a></div>
       </article>
     </article>
     

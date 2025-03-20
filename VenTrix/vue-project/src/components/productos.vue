@@ -171,6 +171,14 @@ const categoriasFiltradas = computed(() => {
 
 const agregarProducto = async () => {
   try {
+    if (!file.value) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Imagen requerida',
+        text: 'No puede agregar si no hay una imagen de referencia.'
+      });
+      return;
+    }
     const formData = new FormData();
     formData.append("nombre", producto.value.nombre);
     formData.append("precio", producto.value.precio);

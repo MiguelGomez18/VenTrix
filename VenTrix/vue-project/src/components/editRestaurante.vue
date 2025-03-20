@@ -3,12 +3,27 @@
     <div class="container-form3">
       <form class="sign-up3" @submit.prevent="actualizar">
         <h2>Restaurante</h2>
+        <label for="">Identificador</label>
         <input type="text" placeholder="Id" v-model="userData.id" disabled>
+        <label for="">Nombre</label>
         <input type="text" placeholder="Nombre" v-model="userData.nombre" :disabled="!editMode">
+        <label for="">Descripción</label>
         <input type="text" placeholder="Descripcion" v-model="userData.descripcion" :disabled="!editMode">
+        <label for="">Telefono</label>
         <input type="text" placeholder="Telefono" v-model="userData.telefono" :disabled="!editMode">
+        <label for="">Dirección</label>
         <input type="text" placeholder="Direccion" v-model="userData.direccion" :disabled="!editMode">
+        <label for="">Correo</label>
         <input type="text" placeholder="Correo" v-model="userData.correo" :disabled="!editMode">
+        <div class="fecha">
+          <label for="">Fecha de Caducidad de la Membresia</label>
+          <input type="text" placeholder="Fecha Membresia" v-model="userData.fecha_finalizacion" disabled>
+          <v-btn class="fecha_pago" large @click="navegarARuta('Informes',boleano)">
+            <span>Pagar</span>
+            <img src="../components/icons/icons8-tarjeta-24.png" alt="">
+          </v-btn>
+        </div>
+        
         <div class="custom-file-input">
           <label for="file-upload" class="custom-label">
               <img src="../components/icons/icons8-attach-24.png" alt="">
@@ -41,7 +56,9 @@ import Swal from 'sweetalert2';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useCart } from '@/stores/cart';
+import { useRouter } from 'vue-router'; 
 
+const router = useRouter(); 
 const file = ref(null);
 const fileInput = ref(null);
 const onFileChange = (event) => {
@@ -50,6 +67,26 @@ const onFileChange = (event) => {
 const userData = ref([]);
 const cart = useCart();
 const editMode = ref(false);
+const boleano = ref(false);
+
+const pagar = () => {
+  const fechaFinalizacion = new Date(userData.value.fecha_finalizacion);
+  const hoy = new Date(); 
+
+  const diferenciaTiempo = fechaFinalizacion - hoy; 
+  const diferenciaDias = Math.floor(diferenciaTiempo / (1000 * 60 * 60 * 24)); 
+
+  if (diferenciaDias <= 4) {
+    boleano.value = true;
+  } 
+}
+
+const navegarARuta = (name,boleano) => {
+  if (boleano) {
+    window.dispatchEvent(new Event('ocultarInicio')); 
+    router.push({ name: name, params: { idrestaurante: cart.restaurante } });
+  };
+}
 
 const buscar = async () => {
   try {   
@@ -121,8 +158,9 @@ const actualizar = async () => {
   }
 };
 
-onMounted(() => {
-  buscar();
+onMounted( async () => {
+  await buscar();
+  pagar();
 });
 </script>
 
@@ -143,20 +181,19 @@ onMounted(() => {
   flex-direction: column;
   justify-content: center;
   align-items: start;
-  gap: 25px;
   transition: transform 0.8s ease-in;
 }
 
 .content-img {
-width: 40%;
-max-height: fit-content;
-border: 10px solid rgb(217, 217, 217);
-border-radius: 20px;
-margin-left: 40px;
-display: flex;
-align-items: center;
-justify-content: center;
-padding: 10px;
+  width: 40%;
+  max-height: fit-content;
+  border: 10px solid rgb(217, 217, 217);
+  border-radius: 20px;
+  margin-left: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
 }
 
 .content-img img {
@@ -166,21 +203,65 @@ border-radius: 10px;
 
 .sign-up3 h2{
   font-size: 30px;
-  margin-bottom: 10px;
+  margin-bottom: 35px;
 }
 
+.sign-up3 label {
+  color: rgba(128, 128, 128, 0.923);
+  font-size: 18px;
+  padding-left: 5px;
+  margin-bottom: 5px;
+}
 
 .sign-up3 input{
   width: 85%;
   padding: 10px 10px;
+  margin-bottom: 20px;
   font-size: 15px;
   background-color: rgba(234, 234, 234, 0.673);
   border: 1px solid rgba(219, 219, 219, 0.973);
   border-radius: 10px
 }
 
+.fecha {
+  width: 85%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.fecha label {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.fecha input {
+  width: 40%;
+}
+
+.fecha .fecha_pago {
+  height: 40px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-weight: 900;
+  margin-left: 30px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #04376e;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  color: white;
+}
+
 .hidden-file-input {
   display: none;
+}
+
+.custom-file-input {
+  margin: 5px 0 10px 0;
 }
 
 .custom-label {
@@ -218,6 +299,7 @@ margin-top: 7px;
   background-color: #989898;
   border: none;
   border-radius: 5px;
+  margin-bottom: 30px;
 }
 
 .edit:hover {
@@ -229,6 +311,7 @@ margin-top: 7px;
 
 .button3{
   padding: 15px 20px;
+  margin-bottom: 30px;
   font-size: 16px;
   border: none;
   border-radius: 5px;

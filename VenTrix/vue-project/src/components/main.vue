@@ -5,8 +5,8 @@
                 <h1>Cada pedido, cada detalle. Todo en un solo lugar</h1>
                 <h2>Gestiona fácilmente cada aspecto de tus pedidos y sus detalles en un solo lugar. Optimiza tu flujo de trabajo con una plataforma que simplifica la organización y te permite tener el control total de tu negocio. Desde el primer contacto con el cliente hasta la entrega del producto, todo está diseñado para maximizar la eficiencia y potenciar el crecimiento de tu empresa. ¡Empieza a organizarte de manera inteligente hoy mismo!</h2>
                 <div class="botones">
-                    <button class="boton_prueba_gratis">Prueba gratis</button>
-                    <button>Hablar con un asesor</button>
+                    <button class="boton_prueba_gratis"><a href="#cuadro" style="color: white;">Compra tu plan</a></button>
+                    <button><a href="https://wa.me/573507113526">Hablar con un asesor</a></button>
                 </div>
             </div>
             <div class="img_main1">
