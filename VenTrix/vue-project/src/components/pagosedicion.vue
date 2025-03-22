@@ -314,4 +314,108 @@ const resetearFormulario = () => {
   font-size: 14px;
   font-weight: bold;
 }
+
+
+@media (max-width: 1024px) and (min-width: 820px) {
+  .contenedorTipoPago {
+    padding: 20px;
+  }
+
+  .titulobuscar h1 {
+    font-size: 22px;
+  }
+
+  .titulobuscar input {
+    width: 40%;
+  }
+
+  .formulario {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .formulario input {
+    width: 100%;
+  }
+
+  .btnAggAct, .btncancelar {
+    width: 100%;
+    margin-top: 5px;
+  }
+
+  table {
+    font-size: 14px;
+  }
+
+  .btnEditar, .btnEliminar {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  .paginacion {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .paginacion button {
+    width: 100%;
+  }
+}
+
+
+@media (max-width: 819px) {
+  .contenedorTipoPago {
+    padding: 15px;
+  }
+
+  .titulobuscar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .titulobuscar h1 {
+    font-size: 20px;
+  }
+
+  .titulobuscar input {
+    width: 100%;
+  }
+
+  .formulario {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .formulario input {
+    width: 100%;
+  }
+
+  .btnAggAct, .btncancelar {
+    width: 100%;
+    margin-top: 5px;
+  }
+
+  table {
+    font-size: 12px;
+  }
+
+  th, td {
+    padding: 3px;
+  }
+
+  .btnEditar, .btnEliminar {
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+
+  .paginacion {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .paginacion button {
+    width: 100%;
+  }
+}
 </style>

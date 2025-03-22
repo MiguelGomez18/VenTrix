@@ -232,4 +232,95 @@ const eliminarEmpleado = async (indice) => {
   font-size: 14px;
   font-weight: bold;
 }
+
+@media (max-width: 1024px) and (min-width: 820px) {
+  .contenedorEmpleados {
+    width: 90%; /* Aumentamos el ancho del contenedor */
+    padding: 20px; /* Reducimos el padding */
+  }
+
+  .titulobuscar {
+    flex-direction: column; /* Apilamos el título y el campo de búsqueda */
+    align-items: flex-start; /* Alineamos a la izquierda */
+    gap: 10px; /* Espacio entre elementos */
+    margin-bottom: 20px; /* Reducimos el margen inferior */
+  }
+
+  .titulobuscar input {
+    width: 100%; /* El campo de búsqueda ocupa todo el ancho */
+  }
+
+  table {
+    font-size: 14px; /* Reducimos el tamaño de la fuente */
+  }
+
+  th, td {
+    padding: 5px; /* Reducimos el padding de las celdas */
+  }
+
+  .btnEliminar {
+    padding: 4px 8px; /* Reducimos el padding del botón */
+    font-size: 12px; /* Reducimos el tamaño de la fuente */
+  }
+
+  .paginacion {
+    flex-direction: column; /* Apilamos los botones de paginación */
+    gap: 5px; /* Reducimos el espacio entre botones */
+  }
+
+  .paginacion button {
+    width: 100%; /* Los botones ocupan todo el ancho */
+  }
+}
+
+
+@media (max-width: 819px) {
+  .contenedorEmpleados {
+    width: 100%; /* El contenedor ocupa todo el ancho */
+    padding: 15px; /* Reducimos el padding */
+  }
+
+  .titulobuscar {
+    flex-direction: column; /* Apilamos el título y el campo de búsqueda */
+    align-items: flex-start; /* Alineamos a la izquierda */
+    gap: 10px; /* Espacio entre elementos */
+    margin-bottom: 20px; /* Reducimos el margen inferior */
+  }
+
+  .titulobuscar h1 {
+    font-size: 20px; /* Reducimos el tamaño del título */
+  }
+
+  .titulobuscar input {
+    width: 100%; /* El campo de búsqueda ocupa todo el ancho */
+    font-size: 14px; /* Reducimos el tamaño de la fuente */
+  }
+
+  table {
+    font-size: 12px; /* Reducimos el tamaño de la fuente */
+  }
+
+  th, td {
+    padding: 3px; /* Reducimos el padding de las celdas */
+  }
+
+  .btnEliminar {
+    padding: 3px 6px; /* Reducimos el padding del botón */
+    font-size: 10px; /* Reducimos el tamaño de la fuente */
+  }
+
+  .paginacion {
+    flex-direction: column; /* Apilamos los botones de paginación */
+    gap: 5px; /* Reducimos el espacio entre botones */
+  }
+
+  .paginacion button {
+    width: 100%; /* Los botones ocupan todo el ancho */
+  }
+
+  /* Ocultar columnas no esenciales */
+  th:nth-child(2), td:nth-child(2) {
+    display: none; /* Ocultamos la columna "Nit" */
+  }
+}
 </style>

@@ -173,4 +173,67 @@
 .button3:hover {
     background-color: #2bff75;
 }
+
+
+@media (max-width: 1024px) and (min-width: 820px) {
+  .container-form3 {
+    width: 90%; /* Aumentamos el ancho para aprovechar mejor el espacio */
+    padding: 20px;
+  }
+
+  .sign-up3 input {
+    width: 70%; /* Aumentamos el ancho de los inputs */
+  }
+
+  .butons {
+    width: 70%; /* Ajustamos el ancho del contenedor de botones */
+  }
+
+  .button3 {
+    padding: 12px 18px; /* Reducimos el padding del botón */
+    font-size: 14px; /* Reducimos el tamaño de la fuente */
+  }
+
+  .edit img {
+    width: 20px; /* Reducimos el tamaño del ícono de editar */
+  }
+}
+
+
+@media (max-width: 819px) {
+  .container-form3 {
+    width: 100%; /* Ocupamos todo el ancho disponible */
+    padding: 15px;
+  }
+
+  .sign-up3 h2 {
+    font-size: 24px; /* Reducimos el tamaño del título */
+  }
+
+  .sign-up3 input {
+    width: 100%; /* Los inputs ocupan todo el ancho */
+    font-size: 14px; /* Reducimos el tamaño de la fuente */
+  }
+
+  .butons {
+    width: 100%; /* Los botones ocupan todo el ancho */
+    flex-direction: column; /* Apilamos los botones verticalmente */
+    gap: 10px; /* Reducimos el espacio entre botones */
+  }
+
+  .button3 {
+    width: 100%; /* El botón ocupa todo el ancho */
+    padding: 10px 15px; /* Reducimos el padding */
+    font-size: 14px; /* Reducimos el tamaño de la fuente */
+  }
+
+  .edit {
+    width: 100%; /* El botón de editar ocupa todo el ancho */
+    text-align: center; /* Centramos el ícono */
+  }
+
+  .edit img {
+    width: 18px; /* Reducimos el tamaño del ícono */
+  }
+}
 </style>

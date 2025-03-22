@@ -506,4 +506,134 @@ const resetearFormulario = () => {
   font-size: 14px;
   font-weight: bold;
 }
+
+
+/* Media Queries */
+@media (max-width: 1024px) and (min-width: 820px) {
+  .contenedorProductos {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .titulobuscar h1 {
+    font-size: 22px;
+  }
+
+  .titulobuscar input {
+    width: 40%;
+  }
+
+  .formulario {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .formulario input,
+  .formulario select,
+  .custom-file-input,
+  .custom-checkbox {
+    flex: 1 1 45%;
+  }
+
+  .btnAggAct,
+  .btncancelar {
+    width: 45%;
+    font-size: 14px;
+  }
+
+  table {
+    font-size: 14px;
+  }
+
+  td img {
+    width: 60px;
+  }
+
+  .btnEditar,
+  .btnEliminar {
+    padding: 4px 8px;
+    font-size: 14px;
+  }
+
+  .paginacion {
+    gap: 8px;
+  }
+
+  .paginacion button {
+    padding: 4px 8px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 819px) {
+  .contenedorProductos {
+    width: 100%;
+    padding: 10px;
+    border: none;
+  }
+
+  .titulobuscar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .titulobuscar h1 {
+    font-size: 20px;
+  }
+
+  .titulobuscar input {
+    width: 100%;
+  }
+
+  .formulario {
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .formulario input,
+  .formulario select,
+  .custom-file-input,
+  .custom-checkbox {
+    width: 100%;
+  }
+
+  .btnAggAct,
+  .btncancelar {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  table {
+    font-size: 12px;
+  }
+
+  th,
+  td {
+    padding: 4px;
+  }
+
+  td img {
+    width: 50px;
+  }
+
+  .btnEditar,
+  .btnEliminar {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  .paginacion {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .paginacion button {
+    width: 100%;
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+}
 </style>

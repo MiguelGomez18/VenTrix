@@ -258,4 +258,103 @@ const editar = async () => {
     color: black;
 }
 
+
+
+@media (max-width: 1024px) and (min-width: 820px) {
+  .container1 {
+    width: 80%; 
+  }
+
+  .sign-up1 {
+    padding: 20px;
+    max-width: 100%;
+  }
+
+  .sign-up1 h2 {
+    font-size: 26px; 
+    margin-bottom: 20px;
+  }
+
+  .container-input1 {
+    width: 100%;
+    height: 45px; 
+    margin-bottom: 12px;
+  }
+
+  .container-input1 img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .container-input1 input {
+    font-size: 15px; 
+  }
+
+  .button3 {
+    padding: 12px 20px; 
+    font-size: 15px;
+  }
+
+  .edit img {
+    width: 25px; 
+    height: 25px;
+  }
+
+  .butons {
+    gap: 20px; 
+  }
+}
+
+@media (max-width: 819px) {
+  .container1 {
+    width: 90%; 
+    margin-bottom: 40px; 
+  }
+
+  .sign-up1 {
+    padding: 15px; 
+    border-radius: 10px;
+  }
+
+  .sign-up1 h2 {
+    font-size: 22px; 
+    margin-bottom: 15px;
+  }
+
+  .container-input1 {
+    width: 100%; 
+    height: 40px; 
+    margin-bottom: 10px;
+    padding: 0 10px;
+  }
+
+  .container-input1 img {
+    width: 18px; 
+    height: 18px;
+  }
+
+  .container-input1 input {
+    font-size: 14px; 
+  }
+
+  .button3 {
+    padding: 10px 15px; 
+    font-size: 14px;
+  }
+
+  .edit img {
+    width: 22px; 
+    height: 22px;
+  }
+
+  .butons {
+    gap: 15px; 
+    flex-direction: column; 
+  }
+
+  .edit {
+    padding: 5px; 
+  }
+}
+
 </style>

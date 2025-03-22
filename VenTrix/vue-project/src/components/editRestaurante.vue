@@ -323,4 +323,88 @@ margin-top: 7px;
 .button3:hover {
   background-color: #2bff75;
 }
+
+@media (max-width: 1024px) and (min-width: 820px) {
+  .container-form3 {
+    padding: 20px; /* Reducimos el padding */
+    flex-direction: column; /* Apilamos el formulario y la imagen */
+    align-items: center; /* Centramos los elementos */
+  }
+
+  .sign-up3 {
+    width: 80%; /* Aumentamos el ancho del formulario */
+  }
+
+  .content-img {
+    width: 60%; /* Reducimos el ancho de la imagen */
+    margin-left: 0; /* Eliminamos el margen izquierdo */
+    margin-top: 20px; /* Añadimos margen superior */
+  }
+
+  .sign-up3 input {
+    width: 100%; /* Los inputs ocupan todo el ancho */
+  }
+
+  .butons {
+    width: 100%; /* Los botones ocupan todo el ancho */
+  }
+
+  .button3 {
+    padding: 12px 18px; /* Reducimos el padding del botón */
+    font-size: 14px; /* Reducimos el tamaño de la fuente */
+  }
+
+  .edit img {
+    width: 20px; /* Reducimos el tamaño del ícono de editar */
+  }
+}
+
+
+@media (max-width: 819px) {
+  .container-form3 {
+    padding: 15px; /* Reducimos el padding */
+    flex-direction: column; /* Apilamos el formulario y la imagen */
+    align-items: center; /* Centramos los elementos */
+  }
+
+  .sign-up3 {
+    width: 100%; /* El formulario ocupa todo el ancho */
+  }
+
+  .content-img {
+    width: 80%; /* Reducimos el ancho de la imagen */
+    margin-left: 0; /* Eliminamos el margen izquierdo */
+    margin-top: 20px; /* Añadimos margen superior */
+  }
+
+  .sign-up3 h2 {
+    font-size: 24px; /* Reducimos el tamaño del título */
+  }
+
+  .sign-up3 input {
+    width: 100%; /* Los inputs ocupan todo el ancho */
+    font-size: 14px; /* Reducimos el tamaño de la fuente */
+  }
+
+  .butons {
+    width: 100%; /* Los botones ocupan todo el ancho */
+    flex-direction: column; /* Apilamos los botones verticalmente */
+    gap: 10px; /* Reducimos el espacio entre botones */
+  }
+
+  .button3 {
+    width: 100%; /* El botón ocupa todo el ancho */
+    padding: 10px 15px; /* Reducimos el padding */
+    font-size: 14px; /* Reducimos el tamaño de la fuente */
+  }
+
+  .edit {
+    width: 100%; /* El botón de editar ocupa todo el ancho */
+    text-align: center; /* Centramos el ícono */
+  }
+
+  .edit img {
+    width: 18px; /* Reducimos el tamaño del ícono */
+  }
+}
 </style>

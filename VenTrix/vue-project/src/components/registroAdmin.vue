@@ -216,5 +216,84 @@ const loginPropietario = async () => {
     width:15%;
     height: 30px;
 }
+
+
+@media (max-width: 1024px) and (min-width: 820px) {
+  .container2 {
+    width: 80%; 
+  }
+
+  .sign-up2 {
+    padding: 20px; 
+    max-width: 100%;
+  }
+
+  .sign-up2 h2 {
+    font-size: 26px; 
+    margin-bottom: 20px;
+  }
+
+  .container-input2 {
+    width: 100%; 
+    height: 45px;
+    margin-bottom: 12px;
+  }
+
+  .container-input2 img {
+    width: 20px; 
+    height: 20px;
+  }
+
+  .container-input2 input {
+    font-size: 15px; 
+  }
+
+  .button2 {
+    width: 150px; 
+    height: 50px; 
+    font-size: 15px; 
+  }
+}
+
+
+@media (max-width: 819px) {
+  .container2 {
+    width: 90%; 
+    margin-bottom: 40px; 
+    padding-top: 20px; 
+  }
+
+  .sign-up2 {
+    padding: 15px; 
+    border-radius: 10px; 
+  }
+
+  .sign-up2 h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+  }
+
+  .container-input2 {
+    width: 100%; 
+    height: 40px; 
+    margin-bottom: 10px;
+    padding: 0 10px;
+  }
+
+  .container-input2 img {
+    width: 18px; 
+    height: 18px;
+  }
+
+  .container-input2 input {
+    font-size: 14px; 
+  }
+
+  .button2 {
+    width: 130px; 
+    height: 45px; 
+    font-size: 14px; 
+  }
+}
 </style>
 
