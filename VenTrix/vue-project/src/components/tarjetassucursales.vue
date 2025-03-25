@@ -23,10 +23,10 @@
   </template>
   
   <script setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, watch } from 'vue';
   import axios from 'axios';
   import { defineProps } from 'vue';
-  import { useRouter, useRoute } from 'vue-router';
+  import { useRouter } from 'vue-router';
   import { useCart } from '@/stores/cart';
 
   const props = defineProps({
@@ -38,8 +38,7 @@
   
   const cart = useCart();
   const router = useRouter();
-  const route = useRoute();
-  const restauranteId = ref(route.params.idrestaurante); 
+  const restauranteId = ref(props.idrestaurante); 
   const sucursales = ref([]);
   const loading = ref(true);
   const error = ref('');
@@ -82,12 +81,10 @@
   
   // Función para manejar el clic en "Ver detalles"
   const verDetalles = (id) => {
-    console.log(`Ver detalles de la sucursal con ID: ${id}`);
     cart.nit = id;
     router.push({ name: 'EdicionAdmin' });
   };
 
-  // Ejecutar la obtención de sucursales al montar el componente
   onMounted(() => {
     obtenerSucursales();
   });

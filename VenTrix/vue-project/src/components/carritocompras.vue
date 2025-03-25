@@ -164,14 +164,14 @@ const comandar = async () => {
   const productos = cartStore.products[mesaId]?.[pedido];
 
   if (!productos || productos.productos.length === 0) {
-    Swal.fire('Advertencia', 'Completa toda la información de los productos antes de comandar.', 'warning');
+    Swal.fire('Advertencia', 'Completa toda la información de los productos antes de comandar.', 'warning', 'backdrop: false', 'allowOutsideClick: false', );
     return;
   }
 
   const nuevosProductos = productos.productos.filter(producto => !producto.disabled);
 
   if (nuevosProductos.length === 0) {
-    Swal.fire('Advertencia', 'No hay productos nuevos para comandar.', 'warning');
+    Swal.fire('Advertencia', 'No hay productos nuevos para comandar.', 'warning', 'backdrop: false','allowOutsideClick: false', );
     return;
   }
 
@@ -215,9 +215,11 @@ const comandar = async () => {
       text: 'La comanda fue enviada correctamente.',
       icon: 'success',
       timer: 2000,
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
   } catch (error) {
-    Swal.fire('Error', 'No se pudo enviar la comanda', 'error');
+    Swal.fire('Error', 'No se pudo enviar la comanda', 'error', 'backdrop: false', 'allowOutsideClick: false', );
   }
 };
 

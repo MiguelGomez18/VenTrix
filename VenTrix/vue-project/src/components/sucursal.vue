@@ -88,7 +88,9 @@ const loginSucursal = async () => {
                 await Swal.fire({
                     icon: 'error',
                     title: 'Error en el administrador',
-                    text: 'La Usuario no existe o No es Administrador Sucursal.'
+                    text: 'La Usuario no existe o No es Administrador Sucursal.',
+                    backdrop: false,  // Evita problemas con el fondo modal
+                    allowOutsideClick: false, 
                 });
                 return; 
             }
@@ -113,7 +115,9 @@ const loginSucursal = async () => {
         Swal.fire({
             icon: 'success',
             title: 'Sucursal Registradoa',
-            text: 'Se registró de manera exitosa'
+            text: 'Se registró de manera exitosa',
+            backdrop: false,  // Evita problemas con el fondo modal
+            allowOutsideClick: false, 
         });
         cart.nit = id.value;
         editMode.value = false;
@@ -126,7 +130,9 @@ const loginSucursal = async () => {
         Swal.fire({
         icon: 'error',
         title: 'Error al registrar',
-        text: 'No se pudo registrar la sucursal. Por favor, revisa la informacion.'
+        text: 'No se pudo registrar la sucursal. Por favor, revisa la informacion.',
+        backdrop: false,  // Evita problemas con el fondo modal
+        allowOutsideClick: false, 
         });
         limpiarInputs();
     }

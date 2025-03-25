@@ -9,11 +9,11 @@
       />
     </div>
 
-    <div class="contenedorformulario">
+    <div v-if="!mostrar1" class="contenedorformulario">
       <form class="formulario" @submit.prevent="estaEditando ? actualizarTipoPago() : agregarTipoPago()">
         <input type="text" v-model="tipoPago.descripcion" placeholder="Descripción del tipo de pago" required />
         <button class="btnAggAct" type="submit">{{ estaEditando ? 'Actualizar' : 'Agregar' }}</button>
-        <button class="btncancelar" type="button" @click="cancelarEdicion" v-if="estaEditando">Cancelar</button>
+        <button class="btncancelar" type="button" @click="cancelarEdicion">Cancelar</button>
       </form>
     </div>
 
@@ -21,13 +21,13 @@
       <thead class="encabezado">
         <tr>
           <th>Descripción</th>
-          <th>Acciones</th>
+          <th v-if="!mostrar1">Acciones</th>
         </tr>
       </thead>
       <tbody>
         <tr class="tr" v-for="(tp, indice) in tiposPagoPaginados" :key="tp.id">
           <td>{{ tp.descripcion }}</td>
-          <td>
+          <td v-if="!mostrar1">
             <button class="btnEditar" @click="editarTipoPago(indice)">Editar</button>
             <button class="btnEliminar" @click="eliminarTipoPago(indice)">Eliminar</button>
           </td>
@@ -40,13 +40,22 @@
       <button :disabled="paginaActual === totalPaginas" @click="paginaActual++">Siguiente</button>
     </div>
   </div>
+  <ModalSucursales
+    v-if="cart.rol === 'ADMINISTRADOR'"
+    :mostrar="mostrarModalSucursales"
+    :sucursales="todasLasSucursales"
+    @confirmar="handleSucursalesSeleccionadas"
+    @cerrar="mostrarModalSucursales = false"
+  />
 </template>
 
 <script setup>
 import Swal from 'sweetalert2';
+import { defineProps } from 'vue';
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import { useCart } from '@/stores/cart';
+import ModalSucursales from '@/components/ModalSucursales.vue';
 
 const paginaActual = ref(1);
 const filasPorPagina = 6;
@@ -60,6 +69,14 @@ const tipoPago = ref({
   sucursal: nit
 });
 
+const props = defineProps({
+  mostrar: {
+    type: Boolean,
+    required: true
+  }
+});
+
+const mostrar1 = ref(props.mostrar);
 const estaEditando = ref(false); // Estado de edición
 const indiceEdicion = ref(null); // Índice para saber cuál elemento se está editando
 const consultaBusqueda = ref(''); // Campo de búsqueda
@@ -91,6 +108,9 @@ const tiposPagoPaginados = computed(() => {
 // Llamar a buscarTiposPago cuando el componente se monte
 onMounted(() => {
   buscarTiposPago();
+  if (cart.rol == 'ADMINISTRADOR') {
+    cargarTodasLasSucursales();
+  }
 });
 
 // Función computada para filtrar los tipos de pago según la búsqueda
@@ -100,26 +120,79 @@ const tiposPagoFiltrados = computed(() => {
   );
 });
 
+const mostrarModalSucursales = ref(false);
+const todasLasSucursales = ref([]);
+const sucursalesSeleccionadas = ref([]);
+
+const cargarTodasLasSucursales = async () => {
+  try {
+    const respuesta = await axios.get(`http://localhost:8080/sucursal/restaurante/${cart.restaurante}`);
+    todasLasSucursales.value = respuesta.data;
+  } catch (error) {
+    console.error("Error al cargar todas las sucursales", error);
+  }
+};
+
+const handleSucursalesSeleccionadas = (seleccionadas) => {
+  sucursalesSeleccionadas.value = seleccionadas;
+  mostrarModalSucursales.value = false;
+  agregarTipoPago();
+};
+
 // Función para agregar un nuevo tipo de pago
 const agregarTipoPago = async () => {
+
+  if (cart.rol === 'ADMINISTRADOR' && sucursalesSeleccionadas.value.length === 0) {
+    mostrarModalSucursales.value = true;
+    return;
+  }
+
   try {
-    const nuevoTipoPago = { ...tipoPago.value };
-    const response = await axios.post('http://127.0.0.1:8080/tipo_pago/registrar', nuevoTipoPago); // Cambiar URL aquí
-    await buscarTiposPago()
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Tipo de Pago Agregado',
-      text: 'El tipo de pago se ha agregado exitosamente.'
-    });
+    if (cart.rol == "ADMINISTRADOR") {
+      const sucursalesAUsar = cart.rol === 'ADMINISTRADOR' ? sucursalesSeleccionadas.value : [nit];
+      
+      for (const sucursalId of sucursalesAUsar) {
+        tipoPago.value.sucursal = sucursalId;
 
-    resetearFormulario();
+        const nuevoTipoPago = { ...tipoPago.value };
+        const response = await axios.post('http://127.0.0.1:8080/tipo_pago/registrar', nuevoTipoPago); 
+      }
+
+      await buscarTiposPago()
+      Swal.fire({
+        icon: 'success',
+        title: 'Mesa Agregada',
+        text: `El Tipo de pago se ha agregado exitosamente a ${sucursalesAUsar.length} sucursal(es).`,
+        backdrop: false,  // Evita problemas con el fondo modal
+        allowOutsideClick: false, 
+      });
+      resetearFormulario();
+    } else {
+
+      const nuevoTipoPago = { ...tipoPago.value };
+      const response = await axios.post('http://127.0.0.1:8080/tipo_pago/registrar', nuevoTipoPago); 
+      await buscarTiposPago()
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Tipo de Pago Agregado',
+        text: 'El tipo de pago se ha agregado exitosamente.',
+        backdrop: false,  // Evita problemas con el fondo modal
+        allowOutsideClick: false, 
+      });
+
+      resetearFormulario();
+    }
+    
   } catch (error) {
     console.error('Error al agregar el tipo de pago:', error.response ? error.response.data : error);
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema al agregar el tipo de pago.'
+      text: 'Hubo un problema al agregar el tipo de pago.',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
   }
 };
@@ -142,7 +215,9 @@ const actualizarTipoPago = async () => {
     Swal.fire({
       icon: 'success',
       title: 'Tipo de Pago Actualizado',
-      text: 'El tipo de pago se ha actualizado exitosamente.'
+      text: 'El tipo de pago se ha actualizado exitosamente.',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
     resetearFormulario();
   } catch (error) {
@@ -150,7 +225,9 @@ const actualizarTipoPago = async () => {
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema al actualizar el tipo de pago.'
+      text: 'Hubo un problema al actualizar el tipo de pago.',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
   }
 };
@@ -166,14 +243,18 @@ const eliminarTipoPago = async (indice) => {
     Swal.fire({
       icon: 'success',
       title: 'Tipo de Pago Eliminado',
-      text: 'El tipo de pago ha sido eliminado exitosamente.'
+      text: 'El tipo de pago ha sido eliminado exitosamente.',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
   } catch (error) {
     console.error('Error al eliminar el tipo de pago:', error);
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema al eliminar el tipo de pago.'
+      text: 'Hubo un problema al eliminar el tipo de pago.',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
   }
 };

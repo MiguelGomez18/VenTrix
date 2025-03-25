@@ -9,11 +9,11 @@
       />
     </div>
 
-    <div class="contenedorformulario">
+    <div v-if="!mostrar1" class="contenedorformulario">
       <form class="formulario" @submit.prevent="estaEditando ? actualizarCategoria() : agregarCategoria()">
         <input type="text" v-model="categoria.nombre" placeholder="Nombre de la categoría" required />
         <button class="btnAggAct" type="submit">{{ estaEditando ? 'Actualizar' : 'Agregar' }}</button>
-        <button class="btncancelar" type="button" @click="cancelarEdicion" v-if="estaEditando">Cancelar</button>
+        <button class="btncancelar" type="button" @click="cancelarEdicion">Cancelar</button>
       </form>
     </div>
 
@@ -21,13 +21,13 @@
       <thead class="encabezado">
         <tr>
           <th>Nombre</th>
-          <th>Acciones</th>
+          <th v-if="!mostrar1">Acciones</th>
         </tr>
       </thead>
       <tbody>
         <tr class="tr" v-for="(cate, indice) in categoriasPaginadas" :key="cate.id">
           <td>{{ cate.nombre }}</td>
-          <td>
+          <td v-if="!mostrar1">
             <button class="btnEditar" @click="editarCategoria(indice)">Editar</button>
             <button class="btnEliminar" @click="eliminarCategoria(indice)">Eliminar</button>
           </td>
@@ -40,13 +40,22 @@
       <button :disabled="paginaActual === totalPaginas" @click="paginaActual++">Siguiente</button>
     </div>
   </div>
+  <ModalSucursales
+    v-if="cart.rol === 'ADMINISTRADOR'"
+    :mostrar="mostrarModalSucursales"
+    :sucursales="todasLasSucursales"
+    @confirmar="handleSucursalesSeleccionadas"
+    @cerrar="mostrarModalSucursales = false"
+  />
 </template>
 
 <script setup>
 import Swal from 'sweetalert2';
-import { ref, computed } from 'vue';
+import { defineProps } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import { useCart } from '@/stores/cart';
+import ModalSucursales from '@/components/ModalSucursales.vue';
 
 const paginaActual = ref(1);
 const filasPorPagina = 6;
@@ -59,6 +68,14 @@ const categoria = ref({
   sucursal: nit
 });
 
+const props = defineProps({
+  mostrar: {
+    type: Boolean,
+    required: true
+  }
+});
+
+const mostrar1 = ref(props.mostrar);
 const estaEditando = ref(false);
 const indiceEdicion = ref(null);
 const consultaBusqueda = ref('');
@@ -73,7 +90,13 @@ const buscarCategorias = async () => {
   }
 };
 
-buscarCategorias();
+onMounted(() => {
+  buscarCategorias();
+  if (cart.rol == 'ADMINISTRADOR') {
+    cargarTodasLasSucursales();
+  }
+});
+
 
 const totalPaginas = computed(() => {
   if (categoriasFiltradas.value.length == 0) {
@@ -94,24 +117,75 @@ const categoriasFiltradas = computed(() => {
   );
 });
 
-const agregarCategoria = async () => {
-  try {
-    const nuevaCategoria = { ...categoria.value };
-    const response = await axios.post('http://127.0.0.1:8080/categoria', nuevaCategoria);
+const mostrarModalSucursales = ref(false);
+const todasLasSucursales = ref([]);
+const sucursalesSeleccionadas = ref([]);
 
-    await buscarCategorias()
-    Swal.fire({
-      icon: 'success',
-      title: 'Categoría Agregada',
-      text: 'La categoría se ha agregado exitosamente.'
-    });
-    resetearFormulario();
+const cargarTodasLasSucursales = async () => {
+  try {
+    const respuesta = await axios.get(`http://localhost:8080/sucursal/restaurante/${cart.restaurante}`);
+    todasLasSucursales.value = respuesta.data;
+  } catch (error) {
+    console.error("Error al cargar todas las sucursales", error);
+  }
+};
+
+const handleSucursalesSeleccionadas = (seleccionadas) => {
+  sucursalesSeleccionadas.value = seleccionadas;
+  mostrarModalSucursales.value = false;
+  agregarCategoria();
+};
+
+const agregarCategoria = async () => {
+
+  if (cart.rol === 'ADMINISTRADOR' && sucursalesSeleccionadas.value.length === 0) {
+    mostrarModalSucursales.value = true;
+    return;
+  }
+
+  try {
+    if (cart.rol == "ADMINISTRADOR") {
+      const sucursalesAUsar = cart.rol === 'ADMINISTRADOR' ? sucursalesSeleccionadas.value : [nit];
+      
+      for (const sucursalId of sucursalesAUsar) {
+        categoria.value.sucursal = sucursalId;
+
+        const nuevaCategoria = { ...categoria.value };
+        const response = await axios.post('http://127.0.0.1:8080/categoria', nuevaCategoria);
+      }
+
+      await buscarCategorias()
+      Swal.fire({
+        icon: 'success',
+        title: 'Categoría Agregada',
+        text: `La Categoria se ha agregado exitosamente a ${sucursalesAUsar.length} sucursal(es).`,
+        backdrop: false,  // Evita problemas con el fondo modal
+        allowOutsideClick: false, 
+      });
+      resetearFormulario();
+    } else {
+      const nuevaCategoria = { ...categoria.value };
+      const response = await axios.post('http://127.0.0.1:8080/categoria', nuevaCategoria);
+
+      await buscarCategorias()
+      Swal.fire({
+        icon: 'success',
+        title: 'Categoría Agregada',
+        text: 'La categoría se ha agregado exitosamente.',
+        backdrop: false,  // Evita problemas con el fondo modal
+        allowOutsideClick: false, 
+      });
+      resetearFormulario();
+    }
+    
   } catch (error) {
     console.error('Error al agregar la categoría:', error);
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema al agregar la categoría.'
+      text: 'Hubo un problema al agregar la categoría.',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
   }
 };
@@ -131,7 +205,9 @@ const actualizarCategoria = async () => {
     Swal.fire({
       icon: 'success',
       title: 'Categoría Actualizada',
-      text: 'La categoría se ha actualizado exitosamente.'
+      text: 'La categoría se ha actualizado exitosamente.',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
     resetearFormulario();
   } catch (error) {
@@ -139,7 +215,9 @@ const actualizarCategoria = async () => {
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema al actualizar la categoría.'
+      text: 'Hubo un problema al actualizar la categoría.',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
   }
 };
@@ -153,14 +231,18 @@ const eliminarCategoria = async (indice) => {
     Swal.fire({
       icon: 'success',
       title: 'Categoría Eliminada',
-      text: 'La categoría ha sido eliminada exitosamente.'
+      text: 'La categoría ha sido eliminada exitosamente.',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
   } catch (error) {
     console.error('Error al eliminar la categoría:', error);
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema al eliminar la categoría.'
+      text: 'Hubo un problema al eliminar la categoría.',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
   }
 };

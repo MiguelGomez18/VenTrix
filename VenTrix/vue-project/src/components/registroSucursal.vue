@@ -83,7 +83,9 @@ try {
         Swal.fire({
             icon: 'error',
             title: 'Error de contraseña',
-            text: 'La contraseña debe tener al menos 8 caracteres, incluyendo letras con almenos una mayuscula, números y caracteres especiales.'
+            text: 'La contraseña debe tener al menos 8 caracteres, incluyendo letras con almenos una mayuscula, números y caracteres especiales.',
+            backdrop: false,  // Evita problemas con el fondo modal
+            allowOutsideClick: false, 
         });
         return; 
     };
@@ -102,7 +104,9 @@ try {
     Swal.fire({
         icon: 'success',
         title: `${rol.value} registrado.`,
-        text: 'Se registró de manera exitosa'
+        text: 'Se registró de manera exitosa',
+        backdrop: false,  // Evita problemas con el fondo modal
+        allowOutsideClick: false, 
     });
 
     if (rol.value === "COCINA") {
@@ -117,7 +121,9 @@ try {
     Swal.fire({
         icon: 'error',
         title: 'Error al registrar al administrador de la sucursal',
-        text: 'No se pudo registrar. Por favor, revisa la sucursal y contraseña.'
+        text: 'No se pudo registrar. Por favor, revisa la sucursal y contraseña.',
+        backdrop: false,  // Evita problemas con el fondo modal
+        allowOutsideClick: false, 
     });
     limpiarInputs();
 }

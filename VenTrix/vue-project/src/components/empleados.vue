@@ -138,10 +138,10 @@ const eliminarEmpleado = async (indice) => {
       await axios.delete(`http://127.0.0.1:8080/usuario/${empleadoAEliminar.documento}`);
       await buscar();
 
-      Swal.fire('Eliminado', 'El empleado ha sido eliminado.', 'success');
+      Swal.fire('Eliminado', 'El empleado ha sido eliminado.', 'success', 'backdrop: false', 'allowOutsideClick: false', );
     } catch (error) {
       console.error('Error al eliminar el empleado:', error);
-      Swal.fire('Error', 'Hubo un problema al eliminar el empleado.', 'error');
+      Swal.fire('Error', 'Hubo un problema al eliminar el empleado.', 'error', 'backdrop: false', 'allowOutsideClick: false', );
     }
   }
 };

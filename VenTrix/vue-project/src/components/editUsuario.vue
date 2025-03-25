@@ -64,7 +64,9 @@
         Swal.fire({
             icon: 'error',
             title: 'Error de contraseña',
-            text: 'La contraseña debe tener al menos 8 caracteres, incluyendo letras con almenos una mayuscula, números y caracteres especiales.'
+            text: 'La contraseña debe tener al menos 8 caracteres, incluyendo letras con almenos una mayuscula, números y caracteres especiales.',
+            backdrop: false,  // Evita problemas con el fondo modal
+            allowOutsideClick: false, 
         });
         return; 
       }
@@ -75,7 +77,9 @@
           icon: 'success',
           title: 'Actualizacion Correcta',
           text: 'Tu informacion a sido actualizada exitosamente',
-          timer: 2000
+          timer: 2000,
+          backdrop: false,  // Evita problemas con el fondo modal
+          allowOutsideClick: false, 
       });
     } catch (error) {
       console.error('Error al actualizar:', error);

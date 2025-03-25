@@ -70,7 +70,9 @@ const buscarTiposPago = async () => {
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'No se pudieron cargar los tipos de pago.'
+      text: 'No se pudieron cargar los tipos de pago.',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
   }
 };
@@ -112,6 +114,8 @@ const validatePaymentAmount = () => {
       icon: 'error',
       title: 'Error',
       text: 'El monto total excede el valor de la compra',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
   }
 };
@@ -133,6 +137,8 @@ const closeModal = async () => {
       icon: 'success',
       title: 'Pago exitoso',
       text: 'Gracias por comprar con nosotros',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
     
     await axios.put(`http://127.0.0.1:8080/pedidos/${pedido}`, {
@@ -152,6 +158,8 @@ const closeModal = async () => {
       icon: 'error',
       title: 'Pago incompleto',
       text: 'Asegúrate de seleccionar un método de pago y cubrir el monto total antes de pagar',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
   }
 };
@@ -185,16 +193,19 @@ onMounted(() => {
 }
 
 .modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5); /* Oscurece todo el fondo */
-    backdrop-filter: blur(2px); /* Añade desenfoque al fondo */
-    z-index: 1; /* Coloca la sombra debajo del modal */
-    opacity: 1;
-    transition: opacity 0.4s;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+  opacity: 1;
+  transition: opacity 0.4s;
 }
 
 /* Eliminar esta regla a menos que sea necesaria */

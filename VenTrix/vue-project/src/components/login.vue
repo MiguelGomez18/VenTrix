@@ -77,6 +77,7 @@
 
 <script setup>
 import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 import { computed, ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
@@ -111,7 +112,9 @@ const limpiarInputs = () => {
 };
 
 const passwordMismatch = computed(() => {
-    return password.value !== confirmPassword.value && confirmPassword.value !== '';
+    if (frmlogin.value == true && isToggled.value == false) {
+        return password.value !== confirmPassword.value && confirmPassword.value !== '';
+    }
 })
 
 const validarPassword = (password) => {
@@ -169,7 +172,9 @@ const loginPropietario = async () => {
                         text: `Tu membresía expirará en ${diferenciaDias+1} días. Por favor, renueva tu membresía.`,
                         showCancelButton: true,
                         confirmButtonText: 'Pagar',
-                        cancelButtonText: 'Cancelar'
+                        cancelButtonText: 'Cancelar',
+                        backdrop: false,  // Evita problemas con el fondo modal
+                        allowOutsideClick: false, 
                     }).then((result) => {
                         if (result.isConfirmed) {
                             window.location.href = '/ruta-de-pago'; 
@@ -179,13 +184,17 @@ const loginPropietario = async () => {
                     await Swal.fire({
                         icon: 'warning',
                         title: 'Membresía por Expirar',
-                        text: `Tu membresía expirará en ${diferenciaDias+1} días. Por favor, Comunicate con el Propietario.`
+                        text: `Tu membresía expirará en ${diferenciaDias+1} días. Por favor, Comunicate con el Propietario.`,
+                        backdrop: false,  // Evita problemas con el fondo modal
+                        allowOutsideClick: false, 
                     })
                 } else {
                     await Swal.fire({
                         icon: 'warning',
                         title: 'Membresía por Expirar',
-                        text: `Tu membresía expirará en ${diferenciaDias+1} días. Por favor, Comunicate con el Administrador de Sucursal.`
+                        text: `Tu membresía expirará en ${diferenciaDias+1} días. Por favor, Comunicate con el Administrador de Sucursal.`,
+                        backdrop: false,  // Evita problemas con el fondo modal
+                        allowOutsideClick: false, 
                     })
                 }
                 if (estadoUsuario.estado == 'INACTIVO') {
@@ -201,7 +210,9 @@ const loginPropietario = async () => {
                         text: 'Tu membresía expirará mañana. Por favor, renueva tu membresía.',
                         showCancelButton: true,
                         confirmButtonText: 'Pagar',
-                        cancelButtonText: 'Cancelar'
+                        cancelButtonText: 'Cancelar',
+                        backdrop: false,  // Evita problemas con el fondo modal
+                        allowOutsideClick: false, 
                     }).then((result) => {
                         if (result.isConfirmed) {
                             window.location.href = '/ruta-de-pago'; 
@@ -211,13 +222,17 @@ const loginPropietario = async () => {
                     await Swal.fire({
                         icon: 'warning',
                         title: 'Membresía por Expirar',
-                        text: 'Tu membresía expirará mañana. Por favor, Comunicate con el Propietario.'
+                        text: 'Tu membresía expirará mañana. Por favor, Comunicate con el Propietario.',
+                        backdrop: false,  // Evita problemas con el fondo modal
+                        allowOutsideClick: false, 
                     })
                 } else {
                     await Swal.fire({
                         icon: 'warning',
                         title: 'Membresía por Expirar',
-                        text: 'Tu membresía expirará mañana. Por favor, Comunicate con el Administrador de Sucursal.'
+                        text: 'Tu membresía expirará mañana. Por favor, Comunicate con el Administrador de Sucursal.',
+                        backdrop: false,  // Evita problemas con el fondo modal
+                        allowOutsideClick: false, 
                     })
                 }
                 if (estadoUsuario.estado == 'INACTIVO') {
@@ -231,13 +246,23 @@ const loginPropietario = async () => {
                         await Swal.fire({
                             icon: 'error',
                             title: 'Membresía Expirada',
-                            text: 'Tu membresía ha expirado. Por favor, contacta al soporte para renovarla.'
+                            text: 'Tu membresía ha expirado. Por favor, contacta al soporte para renovarla.',
+                            confirmButtonText: 'Pagar',
+                            cancelButtonText: 'Cancelar',
+                            backdrop: false,  // Evita problemas con el fondo modal
+                            allowOutsideClick: false, 
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/ruta-de-pago'; 
+                            }
                         });
                     } else {
                         await Swal.fire({
                             icon: 'error',
                             title: 'Membresía Expirada',
-                            text: 'Tu membresía ha expirado. Por favor, contacta a el Propietario.'
+                            text: 'Tu membresía ha expirado. Por favor, contacta a el Propietario.',
+                            backdrop: false,  // Evita problemas con el fondo modal
+                            allowOutsideClick: false, 
                         });
                     }
                     return;
@@ -248,13 +273,23 @@ const loginPropietario = async () => {
                         await Swal.fire({
                             icon: 'error',
                             title: 'Membresía Expirada',
-                            text: 'Tu membresía ha expirado. Por favor, contacta al soporte para renovarla.'
+                            text: 'Tu membresía ha expirado. Por favor, contacta al soporte para renovarla.',
+                            confirmButtonText: 'Pagar',
+                            cancelButtonText: 'Cancelar',
+                            backdrop: false,  // Evita problemas con el fondo modal
+                            allowOutsideClick: false, 
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/ruta-de-pago'; 
+                            }
                         });
                     } else {
                         await Swal.fire({
                             icon: 'error',
                             title: 'Membresía Expirada',
-                            text: 'Tu membresía ha expirado. Por favor, contacta a el Propietario.'
+                            text: 'Tu membresía ha expirado. Por favor, contacta a el Propietario.',
+                            backdrop: false,  // Evita problemas con el fondo modal
+                            allowOutsideClick: false, 
                         });
                     }
                     return; 
@@ -275,7 +310,9 @@ const loginPropietario = async () => {
                     Swal.fire({
                         icon: 'success',
                         title: 'Inicio de sesión exitoso',
-                        text: 'Bienvenido a tu cuenta'
+                        text: 'Bienvenido a tu cuenta',
+                        backdrop: false,  // Evita problemas con el fondo modal
+                        allowOutsideClick: false, 
                     });
                     cart.restaurante = idrestaurante.value;
                     cart.rol = rol1.value;
@@ -289,7 +326,9 @@ const loginPropietario = async () => {
                 Swal.fire({
                     icon: 'success',
                     title: 'Inicio de sesión exitoso',
-                    text: 'Bienvenido a tu cuenta'
+                    text: 'Bienvenido a tu cuenta',
+                    backdrop: false,  // Evita problemas con el fondo modal
+                    allowOutsideClick: false, 
                 });
                 cart.restaurante = idrestaurante.value;
                 cart.nit = sucursal1.value;
@@ -323,7 +362,9 @@ const loginPropietario = async () => {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error de contraseña',
-                    text: 'La contraseña debe tener al menos 8 caracteres, incluyendo letras con almenos una mayuscula, números y caracteres especiales.'
+                    text: 'La contraseña debe tener al menos 8 caracteres, incluyendo letras con almenos una mayuscula, números y caracteres especiales.',
+                    backdrop: false,  // Evita problemas con el fondo modal
+                    allowOutsideClick: false, 
                 });
                 return; 
             }
@@ -342,7 +383,9 @@ const loginPropietario = async () => {
             Swal.fire({
                 icon: 'success',
                 title: 'Propietario Registrado',
-                text: 'Se registró de manera exitosa'
+                text: 'Se registró de manera exitosa',
+                backdrop: false,  // Evita problemas con el fondo modal
+                allowOutsideClick: false, 
             });
 
             limpiarInputs();
@@ -355,7 +398,9 @@ const loginPropietario = async () => {
         Swal.fire({
         icon: 'error',
         title: 'Error al iniciar sesión',
-        text: 'No se pudo iniciar sesión. Por favor, revisa el nombre y contraseña.'
+        text: 'No se pudo iniciar sesión. Por favor, revisa el nombre y contraseña.',
+        backdrop: false,  // Evita problemas con el fondo modal
+        allowOutsideClick: false, 
         });
     }
 };

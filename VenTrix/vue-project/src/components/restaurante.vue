@@ -43,7 +43,17 @@
                 </div>
                 <div class="container-input1">
                     <img src="../components/icons/3586371-calendar-date-event-schedule_107943.png" alt="Fecha_finalizacion">
-                    <input type="date" placeholder="Fecha finalizacion" v-model="fecha_finalizacion" required>
+                    <input 
+                        type="text" 
+                        placeholder="Fecha finalizacion" 
+                        v-model="fecha_finalizacion" 
+                        readonly
+                        required
+                        disabled
+                    >
+                    <small style="font-size: 12px; color: #666;">
+                        Fecha De Finalizacion
+                    </small>
                 </div>
                 <router-link to="/registro">Volver..</router-link>
                 <button class="button1" type="submit">REGISTRAR</button>
@@ -54,13 +64,17 @@
     
 <script setup>
 import Swal from 'sweetalert2';
-import { ref, defineProps } from 'vue';
+import { ref, defineProps, watch, onMounted } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { useCart } from '@/stores/cart';
 
 const props = defineProps({
     usuario: {
+        type: String,
+        required: true
+    },
+    mes: {
         type: String,
         required: true
     }
@@ -106,6 +120,8 @@ const onFileChange = (event) => {
                 icon: 'error',
                 title: 'Archivo demasiado grande',
                 text: 'El archivo no puede superar los 10 MB.',
+                backdrop: false,  // Evita problemas con el fondo modal
+                allowOutsideClick: false, 
             });
             // Limpiar el input de archivo
             file.value = null;
@@ -117,6 +133,27 @@ const onFileChange = (event) => {
     }
 };
 
+const calcularFechaFinalizacion = () => {
+    if (!props.mes) return;
+    
+    const today = new Date();
+    const mesNumero = parseInt(props.mes);
+    
+    if (isNaN(mesNumero)) {
+        console.error('El valor de mes no es un número válido');
+        return;
+    }
+    
+    const nuevaFecha = new Date(today);
+    nuevaFecha.setMonth(today.getMonth() + mesNumero);
+    
+    const año = nuevaFecha.getFullYear();
+    const mes = (nuevaFecha.getMonth() + 1).toString().padStart(2, '0');
+    const dia = nuevaFecha.getDate().toString().padStart(2, '0');
+    
+    fecha_finalizacion.value = `${año}-${mes}-${dia}`;
+};
+
 const registerRestaurant = async () => {
     try { 
 
@@ -125,8 +162,10 @@ const registerRestaurant = async () => {
                 icon: 'error',
                 title: 'Archivo demasiado grande',
                 text: 'El archivo no puede superar los 10 MB.',
+                backdrop: false,  // Evita problemas con el fondo modal
+                allowOutsideClick: false, 
             });
-            return; // Detener la ejecución si el archivo es demasiado grande
+            return; 
         }
 
         const formData = new FormData();
@@ -153,7 +192,9 @@ const registerRestaurant = async () => {
         Swal.fire({
             icon: 'success',
             title: 'Restaurante Registrado',
-            text: 'Se registró de manera exitosa'
+            text: 'Se registró de manera exitosa',
+            backdrop: false,  // Evita problemas con el fondo modal
+            allowOutsideClick: false, 
         });
         cart.restaurante = id.value;
 
@@ -165,10 +206,20 @@ const registerRestaurant = async () => {
         Swal.fire({
             icon: 'error',
             title: 'Error al registrar',
-            text: 'Ocurrió un problema al registrar el restaurante. Intenta nuevamente.'
+            text: 'Ocurrió un problema al registrar el restaurante. Intenta nuevamente.',
+            backdrop: false,  // Evita problemas con el fondo modal
+            allowOutsideClick: false, 
         });
     }
 };
+
+onMounted(() => {
+    calcularFechaFinalizacion();
+});
+
+watch(() => props.mes, () => {
+    calcularFechaFinalizacion();
+});
 </script>
     
     <style scoped>

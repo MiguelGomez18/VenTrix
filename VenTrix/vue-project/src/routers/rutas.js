@@ -4,6 +4,7 @@ import cuerpo from "@/pages/cuerpo.vue";
 import inicio from "@/pages/inicio.vue";
 import admin from "@/pages/admin.vue";
 import registroAdmin from "@/components/registroAdmin.vue";
+import registroproductos from "@/components/registroproductos.vue";
 import registroSucursal from "@/components/registroSucursal.vue";
 import tarjetassucursales from "@/components/tarjetassucursales.vue";
 import restaurante from "@/components/restaurante.vue";
@@ -71,6 +72,7 @@ const routes = [
         path: '/tarjetasAdmin/:idrestaurante', 
         name: 'TarjetasSucursales',
         component: tarjetassucursales,
+        props: true,
       },
       {
         path: 'edicionAdmin', 
@@ -92,10 +94,15 @@ const routes = [
         name: 'Sucursal',
         component: sucursal,
       },
+      {
+        path: '/registroproductos',
+        name: 'RegistroProductos',
+        component: registroproductos,
+      },
     ]
   },
   {
-    path: '/restaurante/:usuario',
+    path: '/restaurante/:usuario/:mes',
     name: 'Restaurante',
     component: restaurante,
     props: true // Esto permite pasar el parámetro como prop al componente

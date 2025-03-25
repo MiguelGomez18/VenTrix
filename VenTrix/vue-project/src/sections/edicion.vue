@@ -1,9 +1,9 @@
 <template>
     <div class="contenedorpadre">
-        <productos></productos>
-        <tablacategoria></tablacategoria>
-        <tablamesas></tablamesas>
-        <pagosedicion></pagosedicion>
+        <productos :mostrar="mostrar"></productos>
+        <tablacategoria :mostrar="mostrar"></tablacategoria>
+        <tablamesas :mostrar="mostrar"></tablamesas>
+        <pagosedicion :mostrar="mostrar"></pagosedicion>
     </div>
     <div v-if="mostrar" class="contenedor-boton-flotante1">
         <v-btn class="boton-flotante1" color="green" large @click="navegarARuta('InformesAdmin')">

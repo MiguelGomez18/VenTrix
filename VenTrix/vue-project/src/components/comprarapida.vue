@@ -104,7 +104,7 @@ const navegarARuta = async (mesaId) => {
     router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId, pedido: pedidoCreado } });
   } catch (error) {
     console.error('Error al navegar a la ruta:', error);
-    Swal.fire('Error', 'Ocurrió un problema al procesar la solicitud.', 'error');
+    Swal.fire('Error', 'Ocurrió un problema al procesar la solicitud.', 'error' , 'backdrop: false', 'allowOutsideClick: false', );
   }
 };
 

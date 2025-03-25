@@ -18,7 +18,13 @@
         <div class="fecha">
           <label for="">Fecha de Caducidad de la Membresia</label>
           <input type="text" placeholder="Fecha Membresia" v-model="userData.fecha_finalizacion" disabled>
-          <v-btn class="fecha_pago" large @click="navegarARuta('Informes',boleano)">
+          <v-btn 
+            class="fecha_pago" 
+            :class="{ 'disabled-btn': !boleano }"
+            large 
+            @click="navegarARuta('Informes', boleano)"
+            :disabled="!boleano"
+          >
             <span>Pagar</span>
             <img src="../components/icons/icons8-tarjeta-24.png" alt="">
           </v-btn>
@@ -70,16 +76,18 @@ const editMode = ref(false);
 const boleano = ref(false);
 
 const pagar = () => {
+  if (!userData.value.fecha_finalizacion) {
+    boleano.value = false;
+    return;
+  }
+  
   const fechaFinalizacion = new Date(userData.value.fecha_finalizacion);
-  const hoy = new Date(); 
-
-  const diferenciaTiempo = fechaFinalizacion - hoy; 
-  const diferenciaDias = Math.floor(diferenciaTiempo / (1000 * 60 * 60 * 24)); 
-
-  if (diferenciaDias <= 4) {
-    boleano.value = true;
-  } 
-}
+  const hoy = new Date();
+  
+  // Si la fecha de finalización ya pasó o está a 4 días o menos
+  boleano.value = fechaFinalizacion <= hoy || 
+                  (fechaFinalizacion - hoy) <= (5 * 24 * 60 * 60 * 1000);
+};
 
 const navegarARuta = (name,boleano) => {
   if (boleano) {
@@ -144,6 +152,8 @@ const actualizar = async () => {
       title: 'Restaurante Actualizado',
       text: 'Se actualizo de manera exitosa',
       timer: 1700,
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
 
     await buscar();
@@ -153,7 +163,9 @@ const actualizar = async () => {
     Swal.fire({
       icon: 'error',
       title: 'Error al actualizar',
-      text: 'Ocurrió un problema al actualizar el restaurante. Intenta nuevamente.'
+      text: 'Ocurrió un problema al actualizar el restaurante. Intenta nuevamente.',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
   }
 };
@@ -254,6 +266,44 @@ border-radius: 10px;
   background-color: #04376e;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   color: white;
+}
+
+.fecha_pago.disabled-btn {
+  background-color: #989898;
+  color: #e0e0e0;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.fecha_pago[disabled] {
+  opacity: 1;
+}
+
+/* Estilo para el tooltip */
+[v-tooltip] {
+  position: relative;
+}
+
+[v-tooltip]::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+[v-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
 }
 
 .hidden-file-input {

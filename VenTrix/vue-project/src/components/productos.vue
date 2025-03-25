@@ -9,7 +9,7 @@
       />
     </div>
 
-    <div class="contenedorformulario">
+    <div v-if="!mostrar1" class="contenedorformulario">
       <form class="formulario" @submit.prevent="estaEditando ? actualizarProducto() : agregarProducto()">
         <input type="text" v-model="producto.nombre" placeholder="Nombre del producto" required />
         <input type="number" v-model="producto.precio" placeholder="Precio" required />
@@ -47,7 +47,7 @@
           </label>
         </div>
         <button class="btnAggAct" type="submit">{{ estaEditando ? 'Actualizar' : 'Agregar' }}</button>
-        <button class="btncancelar" type="button" @click="cancelarEdicion" v-if="estaEditando">Cancelar</button>
+        <button class="btncancelar" type="button" @click="cancelarEdicion">Cancelar</button>
       </form>
     </div>
 
@@ -58,7 +58,7 @@
           <th>Precio</th>
           <th>Categoría</th>
           <th>Imagen</th>
-          <th>Acciones</th>
+          <th v-if="!mostrar1">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -69,7 +69,7 @@
             {{ categoriasFiltradas.find(cate => cate.producto.some(pro => pro.id_producto === prod.id_producto))?.nombre || 'Sin Categoría' }}
           </td>
           <td><img :src="`http://127.0.0.1:8080${prod.imagen}`" alt=""></td>
-          <td>
+          <td v-if="!mostrar1">
             <button class="btnEditar" @click="editarProducto(indice)">Editar</button>
             <button class="btnEliminar" @click="eliminarProducto(indice)">Eliminar</button>
           </td>
@@ -82,14 +82,32 @@
       <button :disabled="paginaActual === totalPaginas" @click="paginaActual++">Siguiente</button>
     </div>
   </div>
+  <ModalSucursales
+    v-if="cart.rol === 'ADMINISTRADOR'"
+    :mostrar="mostrarModalSucursales"
+    :sucursales="todasLasSucursales"
+    @confirmar="handleSucursalesSeleccionadas"
+    @cerrar="mostrarModalSucursales = false"
+  />
 </template>
 
 <script setup>
 import Swal from 'sweetalert2';
+import { defineProps } from 'vue';
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import { useCart } from '@/stores/cart';
+import ModalSucursales from '@/components/ModalSucursales.vue';
 
+
+const props = defineProps({
+  mostrar: {
+    type: Boolean,
+    required: true
+  }
+});
+
+const mostrar1 = ref(props.mostrar);
 const paginaActual = ref(1);
 const filasPorPagina = 6;
 const cart = useCart();
@@ -152,6 +170,9 @@ const productosPaginados = computed(() => {
 onMounted(() => {
   buscar();
   buscarcategorias();
+  if (cart.rol == 'ADMINISTRADOR') {
+    cargarTodasLasSucursales();
+  }
 });
 
 
@@ -169,47 +190,134 @@ const categoriasFiltradas = computed(() => {
   );
 });
 
+const mostrarModalSucursales = ref(false);
+const todasLasSucursales = ref([]);
+const sucursalesSeleccionadas = ref([]);
+
+const cargarTodasLasSucursales = async () => {
+  try {
+    const respuesta = await axios.get(`http://localhost:8080/sucursal/restaurante/${cart.restaurante}`);
+    todasLasSucursales.value = respuesta.data;
+  } catch (error) {
+    console.error("Error al cargar todas las sucursales", error);
+  }
+};
+
+const handleSucursalesSeleccionadas = (seleccionadas) => {
+  sucursalesSeleccionadas.value = seleccionadas;
+  mostrarModalSucursales.value = false;
+  agregarProducto();
+};
+
 const agregarProducto = async () => {
+
+  if (cart.rol === 'ADMINISTRADOR' && sucursalesSeleccionadas.value.length === 0) {
+    mostrarModalSucursales.value = true;
+    return;
+  }
+
   try {
     if (!file.value) {
       Swal.fire({
         icon: 'error',
         title: 'Imagen requerida',
-        text: 'No puede agregar si no hay una imagen de referencia.'
+        text: 'No puede agregar si no hay una imagen de referencia.',
+        backdrop: false,  // Evita problemas con el fondo modal
+        allowOutsideClick: false, 
       });
       return;
     }
-    const formData = new FormData();
-    formData.append("nombre", producto.value.nombre);
-    formData.append("precio", producto.value.precio);
-    formData.append("disponibilidad", producto.value.disponibilidad);
-    formData.append("id_categoria", producto.value.categoria.id);
-    formData.append("id_sucursal", nit)
-    formData.append("imagen", file.value);
-    
 
-    const response = await axios.post(
-      'http://127.0.0.1:8080/producto/registrar_producto', 
-      formData, 
-      { headers: { 'Content-Type': 'multipart/form-data' } }
-    );
-    
-    Swal.fire({
-      icon: 'success',
-      title: 'Producto Agregado',
-      text: 'El producto se ha agregado exitosamente.'
-    });
+    if (cart.rol == "ADMINISTRADOR") {
+      const nombreCategoria = categorias.value.find(c => c.id === producto.value.categoria.id)?.nombre;
+      if (!nombreCategoria) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error de categoria encontrada.',
+          backdrop: false,  // Evita problemas con el fondo modal
+          allowOutsideClick: false, 
+        });
+        return;
+      }
 
-    await buscar()
-    await buscarcategorias()
-    resetearFormulario();
+      const formData = new FormData();
+      formData.append("nombre", producto.value.nombre);
+      formData.append("precio", producto.value.precio);
+      formData.append("disponibilidad", producto.value.disponibilidad);
+      formData.append("imagen", file.value);
+
+      const sucursalesAUsar = cart.rol === 'ADMINISTRADOR' ? sucursalesSeleccionadas.value : [nit];
+      
+      for (const sucursalId of sucursalesAUsar) {
+        // Buscar la categoría correspondiente en cada sucursal
+        const categoriasSucursal = await axios.get(`http://127.0.0.1:8080/categoria/id_sucursal/${sucursalId}`);
+        const categoriaSucursal = categoriasSucursal.data.find(c => c.nombre === nombreCategoria);
+        
+        if (!categoriaSucursal) {
+          console.warn(`No se encontró la categoría "${nombreCategoria}" en la sucursal ${sucursalId}`);
+          continue;
+        }
+
+        formData.set("id_categoria", categoriaSucursal.id);
+        formData.set("id_sucursal", sucursalId);
+
+        await axios.post(
+          'http://127.0.0.1:8080/producto/registrar_producto', 
+          formData, 
+          { headers: { 'Content-Type': 'multipart/form-data' } }
+        );
+      }
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Producto Agregado',
+        text: `El Producto se ha agregado exitosamente a ${sucursalesAUsar.length} sucursal(es).`,
+        backdrop: false,
+        allowOutsideClick: false, 
+      });
+
+      await buscar();
+      await buscarcategorias();
+      resetearFormulario();
+      sucursalesSeleccionadas.value = [];
+
+    } else {
+      const formData = new FormData();
+      formData.append("nombre", producto.value.nombre);
+      formData.append("precio", producto.value.precio);
+      formData.append("disponibilidad", producto.value.disponibilidad);
+      formData.append("id_categoria", producto.value.categoria.id);
+      formData.append("id_sucursal", nit);
+      formData.append("imagen", file.value);
+      
+      const response = await axios.post(
+        'http://127.0.0.1:8080/producto/registrar_producto', 
+        formData, 
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      );
+      
+      Swal.fire({
+        icon: 'success',
+        title: 'Producto Agregado',
+        text: 'El producto se ha agregado exitosamente.',
+        backdrop: false,  // Evita problemas con el fondo modal
+        allowOutsideClick: false, 
+      });
+
+      await buscar()
+      await buscarcategorias()
+      resetearFormulario();
+    }
 
   } catch (error) {
     console.error('Error al agregar el producto:', error);
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema al agregar el producto.'
+      text: 'Hubo un problema al agregar el producto.',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
   }
 };
@@ -273,7 +381,9 @@ const actualizarProducto = async () => {
     Swal.fire({
       icon: 'success',
       title: 'Producto Actualizado',
-      text: 'El producto se ha actualizado exitosamente.'
+      text: 'El producto se ha actualizado exitosamente.',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
     
     resetearFormulario();
@@ -283,7 +393,9 @@ const actualizarProducto = async () => {
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema al actualizar el producto.'
+      text: 'Hubo un problema al actualizar el producto.',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
   }
 };
@@ -297,7 +409,9 @@ const eliminarProducto = async (indice) => {
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
     confirmButtonText: 'Sí, eliminar',
-    cancelButtonText: 'Cancelar'
+    cancelButtonText: 'Cancelar',
+    backdrop: false,  // Evita problemas con el fondo modal
+    allowOutsideClick: false, 
   });
   
   if (result.isConfirmed) {
@@ -306,10 +420,22 @@ const eliminarProducto = async (indice) => {
       await axios.delete(`http://127.0.0.1:8080/producto/${productoAEliminar.id_producto}`);
       productos.value.splice(indice, 1);
 
-      Swal.fire('Eliminado', 'El producto ha sido eliminado.', 'success');
+      Swal.fire({
+        title: 'Eliminado',
+        text: 'El producto ha sido eliminado.',
+        icon: 'success',
+        backdrop: false,
+        allowOutsideClick: false
+      });
     } catch (error) {
       console.error('Error al eliminar el producto:', error);
-      Swal.fire('Error', 'Hubo un problema al eliminar el producto.', 'error');
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al eliminar el producto.',
+        icon: 'error',
+        backdrop: false,
+        allowOutsideClick: false
+      });
     }
   }
 };

@@ -9,11 +9,11 @@
       />
     </div>
 
-    <div class="contenedorformulario">
+    <div v-if="!mostrar1" class="contenedorformulario">
       <form class="formulario" @submit.prevent="estaEditando ? actualizarMesa() : agregarMesa()">
         <input type="text" v-model="mesa.nombre" placeholder="Nombre de la mesa" required />
         <button class="btnAggAct" type="submit">{{ estaEditando ? 'Actualizar' : 'Agregar' }}</button>
-        <button class="btncancelar" type="button" @click="cancelarEdicion" v-if="estaEditando">Cancelar</button>
+        <button class="btncancelar" type="button" @click="cancelarEdicion">Cancelar</button>
       </form>
     </div>
 
@@ -21,13 +21,13 @@
       <thead class="encabezado">
         <tr>
           <th>Nombre</th>
-          <th>Acciones</th>
+          <th v-if="!mostrar1">Acciones</th>
         </tr>
       </thead>
       <tbody>
         <tr class="tr" v-for="(mesaItem, indice) in mesasPaginadas" :key="mesaItem.id">
           <td>{{ mesaItem.nombre }}</td>
-          <td>
+          <td v-if="!mostrar1">
             <button class="btnEditar" @click="editarMesa(indice)">Editar</button>
             <button class="btnEliminar" @click="eliminarMesa(indice)">Eliminar</button>
           </td>
@@ -40,13 +40,22 @@
       <button :disabled="paginaActual === totalPaginas" @click="paginaActual++">Siguiente</button>
     </div>
   </div>
+  <ModalSucursales
+    v-if="cart.rol === 'ADMINISTRADOR'"
+    :mostrar="mostrarModalSucursales"
+    :sucursales="todasLasSucursales"
+    @confirmar="handleSucursalesSeleccionadas"
+    @cerrar="mostrarModalSucursales = false"
+  />
 </template>
 
 <script setup>
 import Swal from 'sweetalert2';
+import { defineProps } from 'vue';
 import { ref, computed, onMounted } from 'vue';
 import { useCart } from '../stores/cart';
 import axios from 'axios';
+import ModalSucursales from '@/components/ModalSucursales.vue';
 
 const paginaActual = ref(1);
 const filasPorPagina = 6;
@@ -61,6 +70,14 @@ const mesa = ref({
   }
 });
 
+const props = defineProps({
+  mostrar: {
+    type: Boolean,
+    required: true
+  }
+});
+
+const mostrar1 = ref(props.mostrar);
 const estaEditando = ref(false);
 const indiceEdicion = ref(null);
 const consultaBusqueda = ref('');
@@ -90,6 +107,9 @@ const mesasPaginadas = computed(() => {
 
 onMounted(() => {
   buscarMesas(nit);
+  if (cart.rol == 'ADMINISTRADOR') {
+    cargarTodasLasSucursales();
+  }
 });
 
 // Computed para filtrar mesas
@@ -99,25 +119,80 @@ const mesasFiltradas = computed(() => {
   );
 });
 
+const mostrarModalSucursales = ref(false);
+const todasLasSucursales = ref([]);
+const sucursalesSeleccionadas = ref([]);
+
+const cargarTodasLasSucursales = async () => {
+  try {
+    const respuesta = await axios.get(`http://localhost:8080/sucursal/restaurante/${cart.restaurante}`);
+    todasLasSucursales.value = respuesta.data;
+  } catch (error) {
+    console.error("Error al cargar todas las sucursales", error);
+  }
+};
+
+const handleSucursalesSeleccionadas = (seleccionadas) => {
+  sucursalesSeleccionadas.value = seleccionadas;
+  mostrarModalSucursales.value = false;
+  agregarMesa();
+};
+
 // Función para agregar una nueva mesa
 const agregarMesa = async () => {
+
+  if (cart.rol === 'ADMINISTRADOR' && sucursalesSeleccionadas.value.length === 0) {
+    mostrarModalSucursales.value = true;
+    return;
+  }
+
   try {
-    const nuevaMesa = { ...mesa.value };
-    console.log(nuevaMesa)
-    const response = await axios.post('http://localhost:8080/mesa', nuevaMesa);
-    mesas.value.push(response.data);
-    Swal.fire({
-      icon: 'success',
-      title: 'Mesa Agregada',
-      text: 'La mesa se ha agregado exitosamente.'
-    });
-    resetearFormulario();
+
+    if (cart.rol == "ADMINISTRADOR") {
+      
+      const sucursalesAUsar = cart.rol === 'ADMINISTRADOR' ? sucursalesSeleccionadas.value : [nit];
+      
+      for (const sucursalId of sucursalesAUsar) {
+        mesa.value.sucursal.id = sucursalId;
+
+        const nuevaMesa = { ...mesa.value };
+        const response = await axios.post('http://localhost:8080/mesa', nuevaMesa);
+        mesas.value.push(response.data);
+      }
+        
+      Swal.fire({
+        icon: 'success',
+        title: 'Mesa Agregada',
+        text: `La Mesa se ha agregado exitosamente a ${sucursalesAUsar.length} sucursal(es).`,
+        backdrop: false,  // Evita problemas con el fondo modal
+        allowOutsideClick: false, 
+      });
+      resetearFormulario();
+
+    } else {
+
+      const nuevaMesa = { ...mesa.value };
+      const response = await axios.post('http://localhost:8080/mesa', nuevaMesa);
+      mesas.value.push(response.data);
+      Swal.fire({
+        icon: 'success',
+        title: 'Mesa Agregada',
+        text: 'La mesa se ha agregado exitosamente.',
+        backdrop: false,  // Evita problemas con el fondo modal
+        allowOutsideClick: false, 
+      });
+      resetearFormulario();
+    }
+
+    
   } catch (error) {
     console.error('Error al agregar la mesa:', error);
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema al agregar la mesa.'
+      text: 'Hubo un problema al agregar la mesa.',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
   }
 };
@@ -139,14 +214,18 @@ const actualizarMesa = async () => {
     Swal.fire({
       icon: 'success',
       title: 'Mesa Actualizada',
-      text: 'La mesa se ha actualizado exitosamente.'
+      text: 'La mesa se ha actualizado exitosamente.',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
   } catch (error) {
     console.error('Error al actualizar la mesa:', error);
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema al actualizar la mesa.'
+      text: 'Hubo un problema al actualizar la mesa.',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
   }
 };
@@ -160,14 +239,18 @@ const eliminarMesa = async (indice) => {
     Swal.fire({
       icon: 'success',
       title: 'Mesa Eliminada',
-      text: 'La mesa ha sido eliminada exitosamente.'
+      text: 'La mesa ha sido eliminada exitosamente.',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
   } catch (error) {
     console.error('Error al eliminar la mesa:', error);
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema al eliminar la mesa.'
+      text: 'Hubo un problema al eliminar la mesa.',
+      backdrop: false,  // Evita problemas con el fondo modal
+      allowOutsideClick: false, 
     });
   }
 };

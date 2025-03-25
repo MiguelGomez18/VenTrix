@@ -34,25 +34,35 @@
           </div>
         </div>
       </div>
+      <div v-if="showUserMenu" class="user-menu" :class="{ show: showUserMenu }" ref="userMenuRef"></div>
     </nav>
   </header>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import axios from 'axios';
 import { useCart } from '@/stores/cart';
 import router from '@/routers/rutas';
 
 const showUserMenu = ref(false);
+const userMenuRef = ref(null); // Referencia para el menú de usuario
 const userData = ref([]);
 const cart = useCart();
 
 const toggleUserMenu = () => {
   showUserMenu.value = !showUserMenu.value;
-  setTimeout(() => {
-    showUserMenu.value = false;
-  }, 5000);
+};
+
+// Cerrar menú al hacer clic fuera
+const handleClickOutside = (event) => {
+  if (userMenuRef.value && !userMenuRef.value.contains(event.target)) {
+    // Verificar si el clic no fue en el ícono de usuario
+    const userIcon = document.querySelector('.user1');
+    if (event.target !== userIcon && !userIcon.contains(event.target)) {
+      showUserMenu.value = false;
+    }
+  }
 };
 
 const fetchUserData = async () => {
@@ -91,6 +101,12 @@ const settings = () => {
 
 onMounted(() => {
   fetchUserData();
+  document.addEventListener('click', handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  // Remover event listener cuando el componente se desmonta
+  document.removeEventListener('click', handleClickOutside);
 });
 </script>
 
@@ -181,6 +197,12 @@ onMounted(() => {
   flex-direction: column;
   align-items: start;
   justify-content: space-evenly;
+  transition: all 0.3s ease;
+}
+
+.user-menu.show {
+  opacity: 0;
+  pointer-events: auto;
 }
 
 .user-menu p {
