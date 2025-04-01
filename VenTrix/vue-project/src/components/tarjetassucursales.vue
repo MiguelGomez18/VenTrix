@@ -66,7 +66,7 @@
       })
     );
 
-    sucursales.value = sucursalesConAdministradores;
+    sucursales.value = sucursalesConAdministradores.filter(sucursal => sucursal.estado !== "INACTIVO");
 
     const respuesta1 = await axios.get(`http://localhost:8080/restaurante/nombre/${restauranteId.value}`);
     restauranteNombre.value = respuesta1.data || 'Restaurante no encontrado';

@@ -67,7 +67,7 @@ const filasPorPagina = 6;
 const buscarSucursales = async () => {
   try {
     const respuesta = await axios.get(`http://localhost:8080/sucursal/restaurante/${cart.restaurante}`);
-    sucursales.value = respuesta.data;
+    sucursales.value = respuesta.data.filter(sucursal => sucursal.estado !== "INACTIVO");
   } catch (error) {
     console.error("Error al cargar sucursales", error);
   }

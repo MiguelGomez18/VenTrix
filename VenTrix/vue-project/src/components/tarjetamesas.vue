@@ -78,7 +78,8 @@ const navegarARuta = async (mesaId) => {
       mesa: { id: mesaId },
       nombre: user.value.nombre,
       sucursal: nit.value,
-      estado: 'ORDENADO'
+      estado: 'ORDENADO',
+      activo: 'ACTIVO'
     };
 
     const { data: pedidoCreado } = await axios.post('http://127.0.0.1:8080/pedidos', nuevoPedido);
@@ -96,7 +97,7 @@ const navegarARuta = async (mesaId) => {
 const obtenerMesas = async (nit) => {
   try {
     const response = await axios.get(`http://127.0.0.1:8080/mesa/id_sucursal/${nit.value}`); 
-    mesas.value = response.data; 
+    mesas.value = response.data.filter(mesa => mesa.activo !== "INACTIVO"); 
     
   } catch (error) {
     console.error('Error al obtener las mesas:', error);

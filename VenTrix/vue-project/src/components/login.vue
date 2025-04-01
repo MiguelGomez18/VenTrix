@@ -141,6 +141,12 @@ const loginPropietario = async () => {
             cart.documento = documento1.value;
             const estadoResponse = await axios.get(`http://127.0.0.1:8080/usuario/${cart.documento}`);
             const estadoUsuario = estadoResponse.data;
+
+            if (estadoUsuario.estado == 'INACTIVO') {
+                //estadoUsuario.estado = 'ACTIVO';
+                //const response = await axios.put(`http://127.0.0.1:8080/usuario/${estadoUsuario.documento}`, estadoUsuario);
+                return;
+            }
             
             let fechaFinalizacionStr = "";
             if (estadoUsuario.rol == "ADMINISTRADOR") {
@@ -203,10 +209,6 @@ const loginPropietario = async () => {
                         allowOutsideClick: false, 
                     })
                 }
-                if (estadoUsuario.estado == 'INACTIVO') {
-                    estadoUsuario.estado = 'ACTIVO';
-                    const response = await axios.put(`http://127.0.0.1:8080/usuario/${estadoUsuario.documento}`, estadoUsuario);
-                } 
                 
             } else if (diferenciaDias == 0) {
                 if (estadoUsuario.rol == "ADMINISTRADOR") {
@@ -241,65 +243,33 @@ const loginPropietario = async () => {
                         allowOutsideClick: false, 
                     })
                 }
-                if (estadoUsuario.estado == 'INACTIVO') {
-                    estadoUsuario.estado = 'ACTIVO';
-                    const response = await axios.put(`http://127.0.0.1:8080/usuario/${estadoUsuario.documento}`, estadoUsuario);
-                } 
 
             } else if (diferenciaDias < 0) {
-                if (estadoUsuario.estado == 'INACTIVO') {
-                    if (estadoUsuario.rol == "ADMINISTRADOR") {
-                        await Swal.fire({
-                            icon: 'error',
-                            title: 'Membresía Expirada',
-                            text: 'Tu membresía ha expirado. Por favor, contacta al soporte para renovarla.',
-                            confirmButtonText: 'Pagar',
-                            cancelButtonText: 'Cancelar',
-                            backdrop: false,  // Evita problemas con el fondo modal
-                            allowOutsideClick: false, 
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = '/demopagos'; 
-                            }
-                        });
-                    } else {
-                        await Swal.fire({
-                            icon: 'error',
-                            title: 'Membresía Expirada',
-                            text: 'Tu membresía ha expirado. Por favor, contacta a el Propietario.',
-                            backdrop: false,  // Evita problemas con el fondo modal
-                            allowOutsideClick: false, 
-                        });
-                    }
-                    return;
+               
+                if (estadoUsuario.rol == "ADMINISTRADOR") {
+                    await Swal.fire({
+                        icon: 'error',
+                        title: 'Membresía Expirada',
+                        text: 'Tu membresía ha expirado. Por favor, contacta al soporte para renovarla.',
+                        confirmButtonText: 'Pagar',
+                        cancelButtonText: 'Cancelar',
+                        backdrop: false,  // Evita problemas con el fondo modal
+                        allowOutsideClick: false, 
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/demopagos'; 
+                        }
+                    });
                 } else {
-                    estadoUsuario.estado = 'INACTIVO';
-                    const response = await axios.put(`http://127.0.0.1:8080/usuario/${estadoUsuario.documento}`, estadoUsuario);
-                    if (estadoUsuario.rol == "ADMINISTRADOR") {
-                        await Swal.fire({
-                            icon: 'error',
-                            title: 'Membresía Expirada',
-                            text: 'Tu membresía ha expirado. Por favor, contacta al soporte para renovarla.',
-                            confirmButtonText: 'Pagar',
-                            cancelButtonText: 'Cancelar',
-                            backdrop: false,  // Evita problemas con el fondo modal
-                            allowOutsideClick: false, 
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = '/demopagos'; 
-                            }
-                        });
-                    } else {
-                        await Swal.fire({
-                            icon: 'error',
-                            title: 'Membresía Expirada',
-                            text: 'Tu membresía ha expirado. Por favor, contacta a el Propietario.',
-                            backdrop: false,  // Evita problemas con el fondo modal
-                            allowOutsideClick: false, 
-                        });
-                    }
-                    return; 
+                    await Swal.fire({
+                        icon: 'error',
+                        title: 'Membresía Expirada',
+                        text: 'Tu membresía ha expirado. Por favor, contacta a el Propietario.',
+                        backdrop: false,  // Evita problemas con el fondo modal
+                        allowOutsideClick: false, 
+                    });
                 }
+                return; 
                 
             } 
             
@@ -310,7 +280,7 @@ const loginPropietario = async () => {
 
                 if (idrestaurante.value == '') {
                     cart.rol = rol1.value;
-                    router.push({ name: 'Restaurante', params: { usuario: documento1.value,mes:mesesSeleccionados.value } });
+                    router.push({ name: 'Restaurante', params: { usuario: documento1.value, mes: mesesSeleccionados.value } });
 
                 } else {
                     Swal.fire({

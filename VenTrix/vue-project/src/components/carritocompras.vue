@@ -191,6 +191,7 @@ const comandar = async () => {
         cantidad: producto.cantidad,
         hora_detalle: `${hora}:${minutos}:${segundos}`,
         estado: 'PREPARANDO',
+        activo: 'ACTIVO',
         descripcion: producto.descripcion,
         precio_total: producto.precio * producto.cantidad,
         sucursal: cartStore.nit,

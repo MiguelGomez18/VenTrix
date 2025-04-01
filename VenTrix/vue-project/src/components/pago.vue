@@ -62,9 +62,8 @@ const consultaBusqueda = ref(''); // Campo de búsqueda
 const buscarTiposPago = async () => {
   try {
     const respuesta = await axios.get(`http://127.0.0.1:8080/tipo_pago/id_sucursal/${nit}`);
-    tiposPago.value = respuesta.data;
+    tiposPago.value = respuesta.data.filter(tipo_pago => tipo_pago.activo !== "INACTIVO");
 
-    console.log("Tipos pagos cargados:", tiposPago.value);
   } catch (error) {
     console.error("Error al cargar tipos de pago", error);
     Swal.fire({

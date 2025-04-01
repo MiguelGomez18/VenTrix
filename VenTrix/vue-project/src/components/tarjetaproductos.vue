@@ -62,7 +62,7 @@
         
         const respuesta = await axios.get(url);
 
-        productos.value = respuesta.data;
+        productos.value = respuesta.data.filter(producto => producto.activo !== "INACTIVO");
 
         console.log("Productos cargados: ",productos.value)
     } catch (error) {

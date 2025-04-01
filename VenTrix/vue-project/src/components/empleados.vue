@@ -58,7 +58,7 @@ const buscar = async () => {
   try {
     if (cart.rol == "ADMINISTRADOR") {
       const respuesta1 = await axios.get(`http://127.0.0.1:8080/sucursal/restaurante/${cart.restaurante}`);
-      const sucursales = respuesta1.data;
+      const sucursales = respuesta1.data.filter(sucursal => sucursal.estado !== "INACTIVO");
       habilitado.value = false;
 
       const empleadosPromises = sucursales.map(async (sucursal) => {
@@ -77,7 +77,7 @@ const buscar = async () => {
 
     } else {
       const respuesta1 = await axios.get(`http://127.0.0.1:8080/usuario/sucursales/${nit}`);
-      empleados.value = respuesta1.data;
+      empleados.value = respuesta1.data.filter(usuario => usuario.estado !== "INACTIVO");
     
       for (let index = 0; index < empleados.value.length; index++) {
         if (empleados.value[index].rol == "ADMINISTRADOR_SUCURSAL") {

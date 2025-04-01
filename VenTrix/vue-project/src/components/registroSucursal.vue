@@ -63,7 +63,7 @@ rol.value = '';
 const buscar = async () => {
     const empleados = ref([]);
     const respuesta1 = await axios.get(`http://127.0.0.1:8080/usuario/sucursales/${cart.nit}`);
-    empleados.value = respuesta1.data;
+    empleados.value = respuesta1.data.filter(usuario => usuario.estado !== "INACTIVO");
 
     for (let index = 0; index < empleados.value.length; index++) {
         if (empleados.value[index].rol == "COCINA") {           

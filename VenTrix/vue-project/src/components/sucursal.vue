@@ -84,7 +84,7 @@ const loginSucursal = async () => {
         if (usuario.value) {
             const response1 = await axios.get(`http://127.0.0.1:8080/usuario/${usuario.value}`);
         
-            if (!response1.data || response1.data.value === '' || response1.data.rol !== "ADMINISTRADOR_SUCURSAL") {
+            if (!response1.data || response1.data.value == '' || response1.data.rol !== "ADMINISTRADOR_SUCURSAL" && response.data.estado != "INACTIVO") {
                 await Swal.fire({
                     icon: 'error',
                     title: 'Error en el administrador',

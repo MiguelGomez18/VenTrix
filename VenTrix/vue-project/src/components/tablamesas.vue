@@ -86,7 +86,7 @@ const consultaBusqueda = ref('');
 const buscarMesas = async (nit) => {
   try {
     const respuesta = await axios.get(`http://localhost:8080/mesa/id_sucursal/${nit}`);
-    mesas.value = respuesta.data;
+    mesas.value = respuesta.data.filter(mesa => mesa.activo !== "INACTIVO");
   } catch (error) {
     console.error("Error al cargar mesas", error);
   }

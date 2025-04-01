@@ -95,7 +95,8 @@ const navegarARuta = async (mesaId) => {
       mesa: { id: mesaId },
       nombre: user.value.nombre,
       sucursal: nit.value,
-      estado: 'ORDENADO'
+      estado: 'ORDENADO', 
+      activo: 'ACTIVO'
     };
 
     const { data: pedidoCreado } = await axios.post('http://127.0.0.1:8080/pedidos', nuevoPedido);

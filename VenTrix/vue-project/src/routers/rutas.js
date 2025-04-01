@@ -21,8 +21,9 @@ import settings from "@/sections/settings.vue";
 import editUsuario from "@/components/editUsuario.vue";
 import editSucursal from "@/components/editSucursal.vue";
 import editRestaurante from "@/components/editRestaurante.vue";
+import demoDePagos from "@/components/demodepagos.vue";
 import empleados from "@/components/empleados.vue";
-import demoDePagos from "@/components/demoDePagos.vue";
+
 
 const routes = [
   {
@@ -111,7 +112,7 @@ const routes = [
     path: '/restaurante/:usuario/:mes',
     name: 'Restaurante',
     component: restaurante,
-    props: true // Esto permite pasar el parámetro como prop al componente
+    props: true,
   },
   {
     path: '/cocinero/:nit',
