@@ -22,7 +22,7 @@
             class="fecha_pago" 
             :class="{ 'disabled-btn': !boleano }"
             large 
-            @click="navegarARuta('Informes', boleano)"
+            @click="navegarARuta('Pagos', boleano)"
             :disabled="!boleano"
           >
             <span>Pagar</span>

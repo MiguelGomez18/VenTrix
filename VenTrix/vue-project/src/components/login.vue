@@ -33,6 +33,11 @@
             <a href=""><img src="../components/icons/icons8-facebook-nuevo-50 (1).png" alt="Facebook"></a>
         </div>
         <span>Use su correo electrónico para registrarse</span>
+        <select v-model="mesesSeleccionados">
+            <option value="3">3 meses - $24.900</option>
+            <option value="6">6 meses - $54.900</option>
+            <option value="12">12 meses - $169.900</option>
+        </select>
         <div class="container-input">
             <img src="../components/icons/icons8-tarjeta-de-identificación-50.png" alt="Documento">
             <input type="text" placeholder="Documento" v-model="documento" required>
@@ -103,6 +108,7 @@ const fecha_creacion = ref(`${año}-${mes}-${dia}`);
 const frmlogin = ref(true);
 const menError = ref('');
 const isToggled = ref(false);
+const mesesSeleccionados = ref("3"); // Valor por defecto
 
 const limpiarInputs = () => {
   documento.value = '';
@@ -215,7 +221,7 @@ const loginPropietario = async () => {
                         allowOutsideClick: false, 
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = '/ruta-de-pago'; 
+                            window.location.href = '/demopagos'; 
                         }
                     });
                 } else if (estadoUsuario.rol == "ADMINISTRADOR_SUCURSAL") {
@@ -253,7 +259,7 @@ const loginPropietario = async () => {
                             allowOutsideClick: false, 
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                window.location.href = '/ruta-de-pago'; 
+                                window.location.href = '/demopagos'; 
                             }
                         });
                     } else {
@@ -280,7 +286,7 @@ const loginPropietario = async () => {
                             allowOutsideClick: false, 
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                window.location.href = '/ruta-de-pago'; 
+                                window.location.href = '/demopagos'; 
                             }
                         });
                     } else {
@@ -304,7 +310,7 @@ const loginPropietario = async () => {
 
                 if (idrestaurante.value == '') {
                     cart.rol = rol1.value;
-                    router.push({ name: 'Restaurante', params: { usuario: documento1.value } });
+                    router.push({ name: 'Restaurante', params: { usuario: documento1.value,mes:mesesSeleccionados.value } });
 
                 } else {
                     Swal.fire({

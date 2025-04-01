@@ -22,8 +22,14 @@ import editUsuario from "@/components/editUsuario.vue";
 import editSucursal from "@/components/editSucursal.vue";
 import editRestaurante from "@/components/editRestaurante.vue";
 import empleados from "@/components/empleados.vue";
+import demoDePagos from "@/components/demoDePagos.vue";
 
 const routes = [
+  {
+    path: '/demopagos',
+    name: 'Pagos',
+    component: demoDePagos,
+  },
   {
     path: '/registro',
     name: 'Registro',

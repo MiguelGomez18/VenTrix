@@ -12,7 +12,7 @@
                 <li class="li">Ve en 3 dispositivos a la vez.</li>
             </ul>
             <h3>Igual a $17.633,33 al mes</h3>
-            <a class="plan" href="">ELIGE ESTE PLAN</a>
+            <a class="plan" @click.prevent="seleccionarPlan">CREAR CUENTA</a>
         </article>
         <article class="cua">
             <h2>12 meses</h2>
@@ -23,7 +23,7 @@
                 <li class="li">Ve en 3 dispositivos a la vez.</li>
             </ul>
             <h3>Igual a $14.158,33 al mes</h3>
-            <a class="plan" href="">ELIGE ESTE PLAN</a>
+            <a class="plan" @click.prevent="seleccionarPlan">CREAR CUENTA</a>
         </article>
         <article class="cua1">
             <h2>3 meses</h2>
@@ -33,12 +33,29 @@
                 <li class="li">Chromecast y Airplay disponibles.</li>
                 <li class="li">Ve en 3 dispositivos a la vez.</li>
             </ul>
-            <a class="plan" href="">ELIGE ESTE PLAN</a>
+            <a class="plan" @click.prevent="seleccionarPlan">CREAR CUENTA</a>
         </article>
-    </section>
-    <h3> *Requiere pago anticipado. Ahorro basado en el precio del plan estándar anual comparado con el precio del plan estándar mensual por 12 meses, excluyendo impuestos. Aplican términos. </h3>
+      </section>
+      <h3>*Requiere pago anticipado. Ahorro basado en el precio del plan estándar anual comparado con el precio del plan estándar mensual por 12 meses, excluyendo impuestos. Aplican términos.</h3>
     </div>
 </template>
+
+<script>
+import { useRouter } from 'vue-router';
+
+export default {
+    setup() {
+        const router = useRouter();
+
+        const seleccionarPlan = () => {
+            router.push('/registro'); // Redirige a la página de registro
+        };
+
+        return { seleccionarPlan };
+    },
+};
+</script>
+
 
 <style scoped>
 #cuadro{
