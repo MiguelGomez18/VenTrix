@@ -116,6 +116,7 @@ const actualizar = async () => {
     formData.append("descripcion", userData.value.descripcion);
     formData.append("telefono", userData.value.telefono);
     formData.append("direccion", userData.value.direccion);
+    formData.append("fecha_finalizacion", userData.value.fecha_finalizacion);
     formData.append("correo", userData.value.correo);
 
     if (file.value != null) {

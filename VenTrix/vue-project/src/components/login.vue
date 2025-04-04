@@ -108,7 +108,7 @@ const fecha_creacion = ref(`${año}-${mes}-${dia}`);
 const frmlogin = ref(true);
 const menError = ref('');
 const isToggled = ref(false);
-const mesesSeleccionados = ref("3"); // Valor por defecto
+const mesesSeleccionados = ref(''); // Valor por defecto
 
 const limpiarInputs = () => {
   documento.value = '';
@@ -153,6 +153,11 @@ const loginPropietario = async () => {
 
                 await buscarid_restaurante(documento1.value);
                 cart.restaurante = idrestaurante.value;
+                if (idrestaurante.value == '') {
+                    cart.rol = rol1.value;
+                    router.push({ name: 'Restaurante', params: { usuario: documento1.value, mes: mesesSeleccionados.value } });
+
+                }
                 const fechaFinalizacionResponse = await axios.get(`http://127.0.0.1:8080/restaurante/${cart.restaurante}`);
                 fechaFinalizacionStr = fechaFinalizacionResponse.data.fecha_finalizacion; 
             } else if (estadoUsuario.rol == "ADMINISTRADOR_SUCURSAL") {
@@ -276,25 +281,18 @@ const loginPropietario = async () => {
             await buscarRol(correo.value);
             
             if (rol1.value == roles[0]) {
-                await buscarid_restaurante(documento1.value);
-
-                if (idrestaurante.value == '') {
-                    cart.rol = rol1.value;
-                    router.push({ name: 'Restaurante', params: { usuario: documento1.value, mes: mesesSeleccionados.value } });
-
-                } else {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Inicio de sesión exitoso',
-                        text: 'Bienvenido a tu cuenta',
-                        backdrop: false,  // Evita problemas con el fondo modal
-                        allowOutsideClick: false, 
-                    });
-                    cart.restaurante = idrestaurante.value;
-                    cart.rol = rol1.value;
-                    
-                    router.push({ name: 'TarjetasSucursales', params: { idrestaurante: idrestaurante.value } });
-                }
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Inicio de sesión exitoso',
+                    text: 'Bienvenido a tu cuenta',
+                    backdrop: false,  // Evita problemas con el fondo modal
+                    allowOutsideClick: false, 
+                });
+                cart.rol = rol1.value;
+                
+                router.push({ name: 'TarjetasSucursales', params: { idrestaurante: idrestaurante.value } });
+                
 
             } else if (rol1.value == roles[1]) {
                 await buscarSucursal(documento1);

@@ -34,20 +34,22 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useCart } from '@/stores/cart';
 import Swal from 'sweetalert2';
 
 
 const router = useRouter();
-
+const cart = useCart();
 const metodoPago = ref('');
 const mesesSeleccionados = ref('');
+const fecha_finalizacion = ref('');
 const planes = ref([
   { meses: 3, precio: 24900 },
   { meses: 6, precio: 54900 },
   { meses: 12, precio: 169900 }
 ]);
 
-const realizarPago = () => {
+const realizarPago = async () => {
   if (!metodoPago.value) {
     Swal.fire('Error', 'Selecciona un método de pago', 'error');
     return;
@@ -57,16 +59,61 @@ const realizarPago = () => {
     return;
   }
 
-  const valorPlan = planes.value.find(plan => plan.meses === mesesSeleccionados.value)?.precio || 0;
+  const valorPlan = planes.value.find(plan => plan.meses == mesesSeleccionados.value)?.precio || 0;
+
+  const today = new Date();
+  const mesNumero = parseInt(mesesSeleccionados.value);
+  
+  const nuevaFecha = new Date(today);
+  nuevaFecha.setMonth(today.getMonth() + mesNumero);
+  
+  const año = nuevaFecha.getFullYear();
+  const mes = (nuevaFecha.getMonth() + 1).toString().padStart(2, '0');
+  const dia = nuevaFecha.getDate().toString().padStart(2, '0');
+  
+  fecha_finalizacion.value = `${año}-${mes}-${dia}`;
+
+  const responseUsuario = await axios.get(`http://127.0.0.1:8080/restaurante/${cart.restaurante}`);
+  userData.value = responseUsuario.data;
+
+  const formData = new FormData();
+  formData.append("nombre", userData.value.nombre);
+  formData.append("descripcion", userData.value.descripcion);
+  formData.append("telefono", userData.value.telefono);
+  formData.append("direccion", userData.value.direccion);
+  formData.append("fecha_finalizacion", fecha_finalizacion.value);
+  formData.append("correo", userData.value.correo);
+
+  try {
+    const imagenUrl = `http://127.0.0.1:8080${userData.value.imagen}`;
+    const respuesta = await fetch(imagenUrl);
+    
+    if (!respuesta.ok) {
+      throw new Error('No se pudo obtener la imagen');
+    }
+
+    const imagenBlob = await respuesta.blob();
+    const imagenFile = new File([imagenBlob], userData.value.imagen.split('/imagenes/restaurantes/'+userData.value.id+'-').pop(), { type: imagenBlob.type });
+
+    formData.append('imagen', imagenFile);
+  } catch (error) {
+    console.error('Error al obtener la imagen existente:', error);
+  }
+
+  const response = await axios.put(`http://127.0.0.1:8080/restaurante/${userData.value.id}`, formData, {
+    headers: {
+        'Content-Type': 'multipart/form-data'
+    }
+  });
 
   Swal.fire(
     'Pago Exitoso',
     `Pago de $${valorPlan} realizado con ${metodoPago.value}`,
     'success'
   ).then(() => {
+    cart.resetCart();
     router.push({ 
-      name: 'RegistroRestaurante', 
-      query: { mes: mesesSeleccionados.value } 
+      name: 'Registro', 
     });
   });
 };
