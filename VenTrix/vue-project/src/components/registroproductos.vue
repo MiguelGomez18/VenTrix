@@ -51,7 +51,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
-import axios from 'axios';
+import axios from '@/axios';
 import { useCart } from '@/stores/cart';
 import productos from './productos.vue';
 import tablacategoria from '@/components/tablacategoria.vue';
@@ -66,7 +66,7 @@ const filasPorPagina = 6;
 
 const buscarSucursales = async () => {
   try {
-    const respuesta = await axios.get(`http://localhost:8080/sucursal/restaurante/${cart.restaurante}`);
+    const respuesta = await axios.get(`/sucursal/restaurante/${cart.restaurante}`);
     sucursales.value = respuesta.data.filter(sucursal => sucursal.estado !== "INACTIVO");
   } catch (error) {
     console.error("Error al cargar sucursales", error);

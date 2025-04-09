@@ -38,7 +38,7 @@
             </td>
             <td :class="{ 'full-width': Rol === 'CAJERO' }">{{ producto.precio * producto.cantidad || currency }}</td>
             <td class="tdimg" :class="{ 'full-width': Rol === 'CAJERO' }" :style="{ '--tamaño-section3': `${tamañoImagen}px` }">
-              <img :src="`http://127.0.0.1:8080${producto.imagen}`" alt="">
+              <img :src="`http://localhost:8888${producto.imagen}`" alt="">
             </td>
             <td :class="['tdinput',{ 'full-width': Rol === 'CAJERO' }]" :style="{ '--tamaño-section4': `${tamaño1}px` }">
               <textarea 
@@ -71,7 +71,7 @@ import { useRoute } from 'vue-router';
 import { useCart } from '../stores/cart';
 import { ref, computed, defineEmits, defineProps, onMounted } from 'vue';
 import Swal from 'sweetalert2';
-import axios from 'axios';
+import axios from '@/axios';
 
 const props = defineProps({
     rol: {
@@ -99,7 +99,7 @@ const obtenerProductos = computed(() => {
 
 const obtenerProductosDesdeAPI = async () => {
   try {
-    const { data: detalles } = await axios.get(`http://127.0.0.1:8080/detalles-pedido/pedidos/${pedido}`);
+    const { data: detalles } = await axios.get(`/detalles-pedido/pedidos/${pedido}`);
 
     const productos = detalles.map(detalle => ({
       id_producto: detalle.producto.id_producto,
@@ -199,10 +199,10 @@ const comandar = async () => {
         pedido: { id_pedido: pedido1.id_pedido },
       };
       console.log(detalle);
-      await axios.post('http://127.0.0.1:8080/detalles-pedido', detalle);
+      await axios.post('/detalles-pedido', detalle);
     }
 
-    await axios.put(`http://127.0.0.1:8080/pedidos/${pedido}`, {
+    await axios.put(`/pedidos/${pedido}`, {
       total_pedido: 0.0,
       estado: 'COMANDADO'
     });

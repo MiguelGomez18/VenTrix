@@ -68,7 +68,7 @@
           <td>
             {{ categoriasFiltradas.find(cate => cate.producto.some(pro => pro.id_producto === prod.id_producto))?.nombre || 'Sin Categoría' }}
           </td>
-          <td><img :src="`http://127.0.0.1:8080${prod.imagen}`" alt=""></td>
+          <td><img :src="`http://localhost:8888${prod.imagen}`" alt=""></td>
           <td v-if="!mostrar1">
             <button class="btnEditar" @click="editarProducto(indice)">Editar</button>
             <button class="btnEliminar" @click="eliminarProducto(indice)">Eliminar</button>
@@ -95,7 +95,7 @@
 import Swal from 'sweetalert2';
 import { defineProps } from 'vue';
 import { ref, computed, onMounted } from 'vue';
-import axios from 'axios';
+import axios from '@/axios';
 import { useCart } from '@/stores/cart';
 import ModalSucursales from '@/components/ModalSucursales.vue';
 
@@ -138,7 +138,7 @@ const consultaBusqueda1 = ref('');
 
 const buscar = async () => {
   try {
-    const respuesta = await axios.get(`http://127.0.0.1:8080/producto/id_sucursal/${nit}`);
+    const respuesta = await axios.get(`/producto/id_sucursal/${nit}`);
     productos.value = respuesta.data.filter(producto => producto.activo !== "INACTIVO");
   } catch (error) {
     console.error("Error al cargar productos", error);
@@ -147,7 +147,7 @@ const buscar = async () => {
 
 const buscarcategorias = async () => {
   try {
-    const respuesta = await axios.get(`http://127.0.0.1:8080/categoria/id_sucursal/${nit}`);
+    const respuesta = await axios.get(`/categoria/id_sucursal/${nit}`);
     categorias.value = respuesta.data.filter(categoria => categoria.activo !== "INACTIVO");
   } catch (error) {
     console.error("Error al cargar categorias", error);
@@ -196,7 +196,7 @@ const sucursalesSeleccionadas = ref([]);
 
 const cargarTodasLasSucursales = async () => {
   try {
-    const respuesta = await axios.get(`http://localhost:8080/sucursal/restaurante/${cart.restaurante}`);
+    const respuesta = await axios.get(`/sucursal/restaurante/${cart.restaurante}`);
     todasLasSucursales.value = respuesta.data;
   } catch (error) {
     console.error("Error al cargar todas las sucursales", error);
@@ -251,7 +251,7 @@ const agregarProducto = async () => {
       
       for (const sucursalId of sucursalesAUsar) {
         // Buscar la categoría correspondiente en cada sucursal
-        const categoriasSucursal = await axios.get(`http://127.0.0.1:8080/categoria/id_sucursal/${sucursalId}`);
+        const categoriasSucursal = await axios.get(`/categoria/id_sucursal/${sucursalId}`);
         const categoriaSucursal = categoriasSucursal.data.find(c => c.nombre === nombreCategoria);
         
         if (!categoriaSucursal) {
@@ -263,7 +263,7 @@ const agregarProducto = async () => {
         formData.set("id_sucursal", sucursalId);
 
         await axios.post(
-          'http://127.0.0.1:8080/producto/registrar_producto', 
+          '/producto/registrar_producto', 
           formData, 
           { headers: { 'Content-Type': 'multipart/form-data' } }
         );
@@ -292,7 +292,7 @@ const agregarProducto = async () => {
       formData.append("imagen", file.value);
       
       const response = await axios.post(
-        'http://127.0.0.1:8080/producto/registrar_producto', 
+        '/producto/registrar_producto', 
         formData, 
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );
@@ -354,7 +354,7 @@ const actualizarProducto = async () => {
           const productoEncontrado = productos.value.find(p => p.id_producto === producto.value.id_producto);
 
           try {
-            const imagenUrl = `http://127.0.0.1:8080${productoEncontrado.imagen}`;
+            const imagenUrl = `http://localhost:8888${productoEncontrado.imagen}`;
             const respuesta = await fetch(imagenUrl);
             
             if (!respuesta.ok) {
@@ -370,7 +370,7 @@ const actualizarProducto = async () => {
           }
         }
 
-        const response = await axios.put(`http://127.0.0.1:8080/producto/${producto.value.id_producto}`, formData, {
+        const response = await axios.put(`/producto/${producto.value.id_producto}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -417,7 +417,7 @@ const eliminarProducto = async (indice) => {
   if (result.isConfirmed) {
     try {
       const productoAEliminar = productos.value[indice];
-      await axios.delete(`http://127.0.0.1:8080/producto/${productoAEliminar.id_producto}`);
+      await axios.delete(`/producto/${productoAEliminar.id_producto}`);
       productos.value.splice(indice, 1);
 
       Swal.fire({

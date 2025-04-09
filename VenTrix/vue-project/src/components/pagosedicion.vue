@@ -53,7 +53,7 @@
 import Swal from 'sweetalert2';
 import { defineProps } from 'vue';
 import { ref, computed, onMounted } from 'vue';
-import axios from 'axios';
+import axios from '@/axios';
 import { useCart } from '@/stores/cart';
 import ModalSucursales from '@/components/ModalSucursales.vue';
 
@@ -84,7 +84,7 @@ const consultaBusqueda = ref(''); // Campo de búsqueda
 // Función para cargar los tipos de pago
 const buscarTiposPago = async () => {
   try {
-    const respuesta = await axios.get(`http://127.0.0.1:8080/tipo_pago/id_sucursal/${nit}`);
+    const respuesta = await axios.get(`/tipo_pago/id_sucursal/${nit}`);
     tiposPago.value = respuesta.data.filter(tipo_pago => tipo_pago.activo !== "INACTIVO");
 
   } catch (error) {
@@ -126,7 +126,7 @@ const sucursalesSeleccionadas = ref([]);
 
 const cargarTodasLasSucursales = async () => {
   try {
-    const respuesta = await axios.get(`http://localhost:8080/sucursal/restaurante/${cart.restaurante}`);
+    const respuesta = await axios.get(`/sucursal/restaurante/${cart.restaurante}`);
     todasLasSucursales.value = respuesta.data;
   } catch (error) {
     console.error("Error al cargar todas las sucursales", error);
@@ -156,7 +156,7 @@ const agregarTipoPago = async () => {
         tipoPago.value.sucursal = sucursalId;
 
         const nuevoTipoPago = { ...tipoPago.value };
-        const response = await axios.post('http://127.0.0.1:8080/tipo_pago/registrar', nuevoTipoPago); 
+        const response = await axios.post('/tipo_pago/registrar', nuevoTipoPago); 
       }
 
       await buscarTiposPago()
@@ -171,7 +171,7 @@ const agregarTipoPago = async () => {
     } else {
 
       const nuevoTipoPago = { ...tipoPago.value };
-      const response = await axios.post('http://127.0.0.1:8080/tipo_pago/registrar', nuevoTipoPago); 
+      const response = await axios.post('/tipo_pago/registrar', nuevoTipoPago); 
       await buscarTiposPago()
 
       Swal.fire({
@@ -208,7 +208,7 @@ const editarTipoPago = (indice) => {
 const actualizarTipoPago = async () => {
   try {
     const tipoPagoActualizado = { ...tipoPago.value };
-    await axios.put(`http://127.0.0.1:8080/tipo_pago/${tipoPagoActualizado.id}`, tipoPagoActualizado); // Cambiar URL aquí
+    await axios.put(`/tipo_pago/${tipoPagoActualizado.id}`, tipoPagoActualizado); // Cambiar URL aquí
 
     await buscarTiposPago(); // Volver a cargar toda la lista de tipos de pago
 
@@ -237,7 +237,7 @@ const eliminarTipoPago = async (indice) => {
   try {
     const tipoPagoAEliminar = tiposPago.value[indice];
     // Enviar la solicitud DELETE con el ID del tipo de pago
-    await axios.delete(`http://127.0.0.1:8000/tipo_pago/${tipoPagoAEliminar.id}`); // Cambiar URL aquí
+    await axios.delete(`/tipo_pago/${tipoPagoAEliminar.id}`); // Cambiar URL aquí
     await buscarTiposPago() // Eliminar el tipo de pago de la lista
 
     Swal.fire({

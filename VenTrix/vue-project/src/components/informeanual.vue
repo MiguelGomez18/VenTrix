@@ -8,7 +8,7 @@
 
 <script>
 import { Chart, registerables } from 'chart.js'; // Importamos la librería Chart.js y sus componentes necesarios
-import axios from 'axios'; // Importamos Axios para hacer la llamada a la API
+import axios from '@/axios'; // Importamos Axios para hacer la llamada a la API
 import { useCart } from '@/stores/cart'; 
 // Registramos todos los elementos necesarios de Chart.js
 Chart.register(...registerables);
@@ -28,7 +28,7 @@ export default {
     async fetchVentas() {
       try {
         // Obtener los pedidos y filtrarlos solo por estado "PAGADO"
-        const { data: pedidos } = await axios.get('http://127.0.0.1:8080/pedidos');
+        const { data: pedidos } = await axios.get('/pedidos');
         const cart = useCart(); // Asumimos que "useCart" es una función para obtener el carrito actual (puedes ajustarlo)
 
         // Filtrar los pedidos que están en estado "PAGADO" y pertenecen a la sucursal correcta

@@ -52,7 +52,7 @@
           </button>
         </div>
       </form>
-      <div class="content-img"><img :src="`http://127.0.0.1:8080${userData.imagen}`" alt=""></div>
+      <div class="content-img"><img :src="`http://localhost:8888${userData.imagen}`" alt=""></div>
     </div>
   </div>
 </template>
@@ -60,7 +60,7 @@
 <script setup>
 import Swal from 'sweetalert2';
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import axios from '@/axios';
 import { useCart } from '@/stores/cart';
 import { useRouter } from 'vue-router'; 
 
@@ -98,7 +98,7 @@ const navegarARuta = (name,boleano) => {
 
 const buscar = async () => {
   try {   
-    const response = await axios.get(`http://127.0.0.1:8080/restaurante/${cart.restaurante}`);
+    const response = await axios.get(`/restaurante/${cart.restaurante}`);
     userData.value = response.data;
   } catch (error) {
     console.error('Error buscar user data:', error);
@@ -126,7 +126,7 @@ const actualizar = async () => {
     } else {
 
       try {
-        const imagenUrl = `http://127.0.0.1:8080${userData.value.imagen}`;
+        const imagenUrl = `http://localhost:8888${userData.value.imagen}`;
         const respuesta = await fetch(imagenUrl);
         
         if (!respuesta.ok) {
@@ -142,7 +142,7 @@ const actualizar = async () => {
       }
     }
 
-    const response = await axios.put(`http://127.0.0.1:8080/restaurante/${userData.value.id}`, formData, {
+    const response = await axios.put(`/restaurante/${userData.value.id}`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }

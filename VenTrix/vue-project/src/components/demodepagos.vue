@@ -9,7 +9,7 @@
         <div class="form-group">
           <label for="metodoPago" class="label">Método de Pago</label>
           <select v-model="metodoPago" id="metodoPago" class="select">
-            <option value="">Selecciona un método</option>
+            <option value="" disabled>Selecciona un método</option>
             <option value="Efectivo">Efectivo</option>
             <option value="Tarjeta">Tarjeta</option>
             <option value="Transferencia">Transferencia</option>
@@ -17,8 +17,9 @@
         </div>
   
         <div class="form-group">
-          <label for="planes" class="label">Selecciona un Plan</label>
+          <label for="planes" class="label">Planes de Membresias</label>
           <select v-model="mesesSeleccionados" id="planes" class="select">
+            <option value="" disabled>Seleccione un plan</option>
             <option v-for="(plan, index) in planes" :key="index" :value="plan.meses">
               {{ plan.meses }} meses - ${{ plan.precio }}
             </option>
@@ -36,10 +37,11 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCart } from '@/stores/cart';
 import Swal from 'sweetalert2';
-
+import axios from '@/axios';
 
 const router = useRouter();
 const cart = useCart();
+const userData = ref('');
 const metodoPago = ref('');
 const mesesSeleccionados = ref('');
 const fecha_finalizacion = ref('');
@@ -73,7 +75,7 @@ const realizarPago = async () => {
   
   fecha_finalizacion.value = `${año}-${mes}-${dia}`;
 
-  const responseUsuario = await axios.get(`http://127.0.0.1:8080/restaurante/${cart.restaurante}`);
+  const responseUsuario = await axios.get(`/restaurante/${cart.restaurante}`);
   userData.value = responseUsuario.data;
 
   const formData = new FormData();
@@ -85,7 +87,7 @@ const realizarPago = async () => {
   formData.append("correo", userData.value.correo);
 
   try {
-    const imagenUrl = `http://127.0.0.1:8080${userData.value.imagen}`;
+    const imagenUrl = `http://localhost:8888${userData.value.imagen}`;
     const respuesta = await fetch(imagenUrl);
     
     if (!respuesta.ok) {
@@ -100,7 +102,7 @@ const realizarPago = async () => {
     console.error('Error al obtener la imagen existente:', error);
   }
 
-  const response = await axios.put(`http://127.0.0.1:8080/restaurante/${userData.value.id}`, formData, {
+  const response = await axios.put(`/restaurante/${userData.value.id}`, formData, {
     headers: {
         'Content-Type': 'multipart/form-data'
     }

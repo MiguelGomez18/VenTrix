@@ -65,7 +65,7 @@
 <script setup>
 import Swal from 'sweetalert2';
 import { ref, defineProps, watch, onMounted } from 'vue';
-import axios from 'axios';
+import axios from '@/axios';
 import { useRouter } from 'vue-router';
 import { useCart } from '@/stores/cart';
 
@@ -182,12 +182,12 @@ const registerRestaurant = async () => {
         formData.append("usuario", JSON.stringify({ documento: usuario }));
 
         const response = await axios.post(
-        'http://127.0.0.1:8080/restaurante', 
+        '/restaurante', 
         formData, 
         { headers: { 'Content-Type': 'multipart/form-data' } }
         );
 
-        console.log('Restaurante registrado exitosamente', response.data);
+        cart.restaurante = id.value;
 
         Swal.fire({
             icon: 'success',
@@ -196,7 +196,6 @@ const registerRestaurant = async () => {
             backdrop: false,  // Evita problemas con el fondo modal
             allowOutsideClick: false, 
         });
-        cart.restaurante = id.value;
 
         router.push({ name: 'TarjetasSucursales', params: { idrestaurante: id.value } });
         limpiarInputs();

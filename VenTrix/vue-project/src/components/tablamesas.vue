@@ -54,7 +54,7 @@ import Swal from 'sweetalert2';
 import { defineProps } from 'vue';
 import { ref, computed, onMounted } from 'vue';
 import { useCart } from '../stores/cart';
-import axios from 'axios';
+import axios from '@/axios';
 import ModalSucursales from '@/components/ModalSucursales.vue';
 
 const paginaActual = ref(1);
@@ -85,7 +85,7 @@ const consultaBusqueda = ref('');
 // Cargar mesas al montar el componente
 const buscarMesas = async (nit) => {
   try {
-    const respuesta = await axios.get(`http://localhost:8080/mesa/id_sucursal/${nit}`);
+    const respuesta = await axios.get(`/mesa/id_sucursal/${nit}`);
     mesas.value = respuesta.data.filter(mesa => mesa.activo !== "INACTIVO");
   } catch (error) {
     console.error("Error al cargar mesas", error);
@@ -125,7 +125,7 @@ const sucursalesSeleccionadas = ref([]);
 
 const cargarTodasLasSucursales = async () => {
   try {
-    const respuesta = await axios.get(`http://localhost:8080/sucursal/restaurante/${cart.restaurante}`);
+    const respuesta = await axios.get(`/sucursal/restaurante/${cart.restaurante}`);
     todasLasSucursales.value = respuesta.data;
   } catch (error) {
     console.error("Error al cargar todas las sucursales", error);
@@ -156,7 +156,7 @@ const agregarMesa = async () => {
         mesa.value.sucursal.id = sucursalId;
 
         const nuevaMesa = { ...mesa.value };
-        const response = await axios.post('http://localhost:8080/mesa', nuevaMesa);
+        const response = await axios.post('/mesa', nuevaMesa);
         mesas.value.push(response.data);
       }
         
@@ -172,7 +172,7 @@ const agregarMesa = async () => {
     } else {
 
       const nuevaMesa = { ...mesa.value };
-      const response = await axios.post('http://localhost:8080/mesa', nuevaMesa);
+      const response = await axios.post('/mesa', nuevaMesa);
       mesas.value.push(response.data);
       Swal.fire({
         icon: 'success',
@@ -208,7 +208,7 @@ const editarMesa = (indice) => {
 const actualizarMesa = async () => {
   try {
     const mesaActualizada = { ...mesa.value };
-    const response = await axios.put(`http://localhost:8080/mesa/${mesaActualizada.id}`, mesaActualizada);
+    const response = await axios.put(`/mesa/${mesaActualizada.id}`, mesaActualizada);
     mesas.value[indiceEdicion.value] = response.data;
     resetearFormulario();
     Swal.fire({
@@ -234,7 +234,7 @@ const actualizarMesa = async () => {
 const eliminarMesa = async (indice) => {
   try {
     const mesaAEliminar = mesas.value[indice];
-    await axios.delete(`http://localhost:8080/mesa/${mesaAEliminar.id}`);
+    await axios.delete(`/mesa/${mesaAEliminar.id}`);
     mesas.value.splice(indice, 1);
     Swal.fire({
       icon: 'success',

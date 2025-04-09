@@ -27,7 +27,7 @@
   <script setup>
   import Swal from 'sweetalert2';
   import { ref, onMounted } from 'vue';
-  import axios from 'axios';
+  import axios from '@/axios';
   import { useCart } from '@/stores/cart';
   
   const userData = ref([]);
@@ -42,7 +42,7 @@
 
   const buscar = async () => {
     try {   
-      const response = await axios.get(`http://127.0.0.1:8080/usuario/${cart.documento}`);
+      const response = await axios.get(`/usuario/${cart.documento}`);
       userData.value = response.data;
       if (userData.value.rol === "ADMINISTRADOR_SUCURSAL") {
         rol.value = "ADMINISTRADOR SUCURSAL";
@@ -70,7 +70,7 @@
         });
         return; 
       }
-      const response = await axios.put(`http://127.0.0.1:8080/usuario/${userData.value.documento}`, userData.value);
+      const response = await axios.put(`/usuario/${userData.value.documento}`, userData.value);
       await buscar();
       editMode.value = false; 
       Swal.fire({

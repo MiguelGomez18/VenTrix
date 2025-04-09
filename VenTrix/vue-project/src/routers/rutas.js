@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import login from "@/components/login.vue";
+import password from "@/components/password.vue";
+import passwordRestablecer from "@/components/passwordRestablecer.vue";
 import cuerpo from "@/pages/cuerpo.vue";
 import inicio from "@/pages/inicio.vue";
 import admin from "@/pages/admin.vue";
@@ -35,6 +37,17 @@ const routes = [
     path: '/registro',
     name: 'Registro',
     component: login,
+  },
+  {
+    path: '/password',
+    name: 'Password',
+    component: password,
+  },
+  {
+    path: '/restablecer/:email',
+    name: 'Restablecer',
+    component: passwordRestablecer,
+    props: true,
   },
   {
     path: '/',

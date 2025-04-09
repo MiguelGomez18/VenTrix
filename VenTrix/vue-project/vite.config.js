@@ -7,10 +7,11 @@ export default defineConfig({
   plugins: [
     vue(),
   ],
-  server: {
-    host: '192.168.100.5',
-    port: 5173
-  },
+  /*server: {
+    host: '0.0.0.0',
+    port: 5173,
+    allowedHosts: ['330b-179-19-88-150.ngrok-free.app']
+  },*/
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

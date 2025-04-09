@@ -41,7 +41,7 @@
 import { ref, computed, onMounted, defineEmits } from 'vue';
 import { useCart } from '../stores/cart'; // Store del carrito
 import { useRoute } from 'vue-router'; // Para obtener el mesaId de la ruta
-import axios from 'axios';
+import axios from '@/axios';
 import Swal from 'sweetalert2';
 
 // Store del carrito
@@ -61,7 +61,7 @@ const consultaBusqueda = ref(''); // Campo de búsqueda
 // Función para cargar los tipos de pago
 const buscarTiposPago = async () => {
   try {
-    const respuesta = await axios.get(`http://127.0.0.1:8080/tipo_pago/id_sucursal/${nit}`);
+    const respuesta = await axios.get(`/tipo_pago/id_sucursal/${nit}`);
     tiposPago.value = respuesta.data.filter(tipo_pago => tipo_pago.activo !== "INACTIVO");
 
   } catch (error) {
@@ -140,7 +140,7 @@ const closeModal = async () => {
       allowOutsideClick: false, 
     });
     
-    await axios.put(`http://127.0.0.1:8080/pedidos/${pedido}`, {
+    await axios.put(`/pedidos/${pedido}`, {
       total_pedido: totalCarrito.value,
       tipo_pago: {
         id: paymentMethods.value[0].type,

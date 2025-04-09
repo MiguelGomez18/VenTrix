@@ -43,7 +43,7 @@
 <script setup>
 import Swal from 'sweetalert2';
 import { ref, computed, onMounted } from 'vue';
-import axios from 'axios';
+import axios from '@/axios';
 import { useCart } from '@/stores/cart';
 
 const habilitado = ref(true);
@@ -57,12 +57,12 @@ const consultaBusqueda = ref('');
 const buscar = async () => {
   try {
     if (cart.rol == "ADMINISTRADOR") {
-      const respuesta1 = await axios.get(`http://127.0.0.1:8080/sucursal/restaurante/${cart.restaurante}`);
+      const respuesta1 = await axios.get(`/sucursal/restaurante/${cart.restaurante}`);
       const sucursales = respuesta1.data.filter(sucursal => sucursal.estado !== "INACTIVO");
       habilitado.value = false;
 
       const empleadosPromises = sucursales.map(async (sucursal) => {
-        const respuesta = await axios.get(`http://127.0.0.1:8080/usuario/sucursales/${sucursal.id}`);
+        const respuesta = await axios.get(`/usuario/sucursales/${sucursal.id}`);
         return respuesta.data;
       });
       empleados.value = (await Promise.all(empleadosPromises))
@@ -76,7 +76,7 @@ const buscar = async () => {
       }
 
     } else {
-      const respuesta1 = await axios.get(`http://127.0.0.1:8080/usuario/sucursales/${nit}`);
+      const respuesta1 = await axios.get(`/usuario/sucursales/${nit}`);
       empleados.value = respuesta1.data.filter(usuario => usuario.estado !== "INACTIVO");
     
       for (let index = 0; index < empleados.value.length; index++) {
@@ -135,7 +135,7 @@ const eliminarEmpleado = async (indice) => {
       const empleadoAEliminar = empleados.value[indice];
       console.log(empleadoAEliminar);
       
-      await axios.delete(`http://127.0.0.1:8080/usuario/${empleadoAEliminar.documento}`);
+      await axios.delete(`/usuario/${empleadoAEliminar.documento}`);
       await buscar();
 
       Swal.fire('Eliminado', 'El empleado ha sido eliminado.', 'success', 'backdrop: false', 'allowOutsideClick: false', );

@@ -41,7 +41,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
-import axios from 'axios';
+import axios from '@/axios';
 import { useCart } from '@/stores/cart';
 import router from '@/routers/rutas';
 
@@ -67,7 +67,7 @@ const handleClickOutside = (event) => {
 
 const fetchUserData = async () => {
   try {    
-    const response = await axios.get(`http://127.0.0.1:8080/usuario/${cart.documento}`);
+    const response = await axios.get(`/usuario/${cart.documento}`);
     userData.value = response.data;
     if (userData.value.rol == "ADMINISTRADOR_SUCURSAL") {
       userData.value.rol = "ADMINISTRADOR SUCURSAL"

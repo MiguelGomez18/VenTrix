@@ -8,7 +8,7 @@
 
 <script>
 import { Chart, registerables } from 'chart.js';
-import axios from 'axios';
+import axios from '@/axios';
 import { useCart } from '@/stores/cart';
 
 Chart.register(...registerables);
@@ -39,7 +39,7 @@ export default {
         
 
         // Obtenemos los pedidos y filtramos solo los del día actual y estado "PAGADO"
-        const { data: pedidos } = await axios.get('http://127.0.0.1:8080/pedidos');
+        const { data: pedidos } = await axios.get('/pedidos');
         const cart = useCart();
         
         const pedidosHoy = pedidos.filter(
@@ -57,7 +57,7 @@ export default {
 
         // Obtenemos detalles de cada pedido
         const detallesPromises = pedidosHoy.map((pedido) =>
-          axios.get(`http://127.0.0.1:8080/detalles-pedido/pedidos/${pedido.id_pedido}`)
+          axios.get(`/detalles-pedido/pedidos/${pedido.id_pedido}`)
         );
 
         const detalles = await Promise.all(detallesPromises);

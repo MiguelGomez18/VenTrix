@@ -26,7 +26,7 @@
   
   <script setup>
   import { ref, onMounted } from 'vue';
-  import axios from 'axios';
+  import axios from '@/axios';
   import { useCart } from '@/stores/cart';
   
   const userData = ref([]);
@@ -35,7 +35,7 @@
   
   const buscar = async () => {
     try {   
-      const response = await axios.get(`http://127.0.0.1:8080/sucursal/${cart.nit}`);
+      const response = await axios.get(`/sucursal/${cart.nit}`);
       userData.value = response.data;
     } catch (error) {
       console.error('Error buscar user data:', error);
@@ -48,7 +48,7 @@
   
   const actualizar = async () => {
     try {
-        const response = await axios.put(`http://127.0.0.1:8080/sucursal/${userData.value.id}`, userData.value);
+        const response = await axios.put(`/sucursal/${userData.value.id}`, userData.value);
         await buscar();
         editMode.value = false; 
     } catch (error) {

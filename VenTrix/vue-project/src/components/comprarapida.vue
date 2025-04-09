@@ -16,7 +16,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import axios from '@/axios';
 import { useRouter, useRoute } from 'vue-router';
 import { useCart } from '@/stores/cart';
 
@@ -43,7 +43,7 @@ const minutos = (date.getMinutes() < 10 ? '0':'') + date.getMinutes();
 
 const buscarMesas = async (nit) => {
   try {
-    const respuesta = await axios.get(`http://127.0.0.1:8080/mesa/mesa_rapida/id_sucursal/${nit.value}`);
+    const respuesta = await axios.get(`/mesa/mesa_rapida/id_sucursal/${nit.value}`);
     mesaCompraRapida.value = respuesta.data;
   } catch (error) {
     console.error("Error al cargar mesas", error);
@@ -55,7 +55,7 @@ const navegarARuta = async (mesaId) => {
     cart.rapida = 'RAPIDA';
     window.dispatchEvent(new Event('ocultarInicio'));
 
-    const { data: pedidos } = await axios.get(`http://127.0.0.1:8080/mesa/${mesaId}`);
+    const { data: pedidos } = await axios.get(`/mesa/${mesaId}`);
     
     let pedidoActivo = pedidos.pedido.find(p => p.estado === 'COMANDADO' || p.estado === 'LISTO');
     if (pedidoActivo) {
@@ -86,7 +86,7 @@ const navegarARuta = async (mesaId) => {
     }
 
     const user = ref([]);
-    const { data: usuario } = await axios.get(`http://127.0.0.1:8080/usuario/${cart.documento}`);
+    const { data: usuario } = await axios.get(`/usuario/${cart.documento}`);
     user.value = usuario;
 
     const nuevoPedido = {
@@ -99,7 +99,7 @@ const navegarARuta = async (mesaId) => {
       activo: 'ACTIVO'
     };
 
-    const { data: pedidoCreado } = await axios.post('http://127.0.0.1:8080/pedidos', nuevoPedido);
+    const { data: pedidoCreado } = await axios.post('/pedidos', nuevoPedido);
 
     cart.addPedido(mesaId, pedidoCreado);
     router.push({ name: 'SeleccionarProductos', params: { id_mesa: mesaId, pedido: pedidoCreado } });
@@ -114,7 +114,7 @@ const agregarMesa = async () => {
   if (mesaCompraRapida.value.length == 0) {
     try {
       const nuevaMesa = { ...mesa.value };
-      const response = await axios.post('http://127.0.0.1:8080/mesa', nuevaMesa);
+      const response = await axios.post('/mesa', nuevaMesa);
       await buscarMesas(nit); 
     } catch (error) {
       console.error("Mesa ya existente", error);

@@ -14,7 +14,7 @@
         @click="seleccionarProducto(prod)"
         :class="{ animated: selectedProductId === prod.id_producto }">
             <div class="imagenProducto">
-                <img :src="`http://127.0.0.1:8080${prod.imagen}`" alt="Imagen del producto" class="imagen" />
+                <img :src="`http://localhost:8888${prod.imagen}`" alt="Imagen del producto" class="imagen" />
             </div>
             <p class="nombreProducto">{{ prod.nombre }}</p>
             <p class="valorProducto">{{ prod.precio }}</p>
@@ -26,7 +26,7 @@
   import { onMounted, ref, watch, computed} from 'vue';
   import { defineProps } from 'vue';
   import { useCart } from '../stores/cart';
-  import axios from 'axios';
+  import axios from '@/axios';
   import { useRoute } from 'vue-router'; 
 
   const props = defineProps({
@@ -57,8 +57,8 @@
     try {
         const nit = props.nit;
         const url = categoria.value > 0
-            ? `http://127.0.0.1:8080/producto/categoria/${nit}/${categoria.value}`
-            : `http://127.0.0.1:8080/producto/disponibilidad/${nit}`;
+            ? `/producto/categoria/${nit}/${categoria.value}`
+            : `/producto/disponibilidad/${nit}`;
         
         const respuesta = await axios.get(url);
 

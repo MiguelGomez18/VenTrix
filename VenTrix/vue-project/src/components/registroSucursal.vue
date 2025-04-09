@@ -18,6 +18,11 @@
             <img src="../components/icons/icons8-contraseña-50.png" alt="Contraseña">
             <input type="password" placeholder="Password" v-model="password" required>
         </div>
+        <div class="container-input">
+            <img src="../components/icons/icons8-contraseña-50.png" alt="Contraseña confirmacion">
+            <input type="password" placeholder="Confirmar Contraseña" v-model="confirmPassword" required>
+        </div>
+        <p class="contra" v-if="passwordMismatch">Las contraseñas no coinciden</p>
         <select v-model="rol" required>
             <option value="" disabled>Seleccione su rol...</option>
             <option v-for="ro in roles" :key="ro" :value="ro">
@@ -31,8 +36,8 @@
 
 <script setup>
 import Swal from 'sweetalert2';
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import { ref, onMounted, computed } from 'vue';
+import axios from '@/axios';
 import { useRoute } from 'vue-router';
 import { useCart } from '@/stores/cart';
 
@@ -45,6 +50,7 @@ const rol = ref('');
 const nombre = ref('');
 const correo = ref('');
 const password = ref('');
+const confirmPassword = ref('');
 const date = new Date();
 const dia = (date.getDate() < 10 ? '0':'') + date.getDate();
 const mes = ((date.getMonth() + 1) < 10 ? '0':'') + (date.getMonth() + 1);
@@ -62,7 +68,7 @@ rol.value = '';
 
 const buscar = async () => {
     const empleados = ref([]);
-    const respuesta1 = await axios.get(`http://127.0.0.1:8080/usuario/sucursales/${cart.nit}`);
+    const respuesta1 = await axios.get(`/usuario/sucursales/${cart.nit}`);
     empleados.value = respuesta1.data.filter(usuario => usuario.estado !== "INACTIVO");
 
     for (let index = 0; index < empleados.value.length; index++) {
@@ -71,6 +77,13 @@ const buscar = async () => {
         }
     }   
 }
+
+const passwordMismatch = computed(() => {
+    if (confirmPassword.value == '') {
+        return false;
+    }
+    return password.value != confirmPassword.value || confirmPassword.value == '';
+})
 
 const validarPassword = (password) => {
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¡¿])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¡¿]{8,}$/;
@@ -90,7 +103,7 @@ try {
         return; 
     };
 
-    const response = await axios.post('http://127.0.0.1:8080/usuario', {
+    const response = await axios.post('/usuario', {
         documento: documento.value,
         nombre: nombre.value,
         correo: correo.value,

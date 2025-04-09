@@ -39,7 +39,7 @@
 <script setup>
 import Swal from 'sweetalert2';
 import { ref } from 'vue';
-import axios from 'axios';
+import axios from '@/axios';
 import { useRouter } from 'vue-router';
 import { useCart } from '../stores/cart'
 
@@ -82,7 +82,7 @@ const limpiarInputs = () => {
 const loginSucursal = async () => {
     try {
         if (usuario.value) {
-            const response1 = await axios.get(`http://127.0.0.1:8080/usuario/${usuario.value}`);
+            const response1 = await axios.get(`/usuario/${usuario.value}`);
         
             if (!response1.data || response1.data.value == '' || response1.data.rol !== "ADMINISTRADOR_SUCURSAL" && response.data.estado != "INACTIVO") {
                 await Swal.fire({
@@ -96,7 +96,7 @@ const loginSucursal = async () => {
             }
         }
         
-        const response = await axios.post('http://127.0.0.1:8080/sucursal', {
+        const response = await axios.post('/sucursal', {
             id: id.value,
             nombre: nombre.value,
             direccion: direccion.value,
@@ -144,7 +144,7 @@ const editar = async () => {
         limpiarInputs();
     } else {
         editMode.value = true;
-        const response = await axios.get(`http://127.0.0.1:8080/sucursal/${id.value}`);
+        const response = await axios.get(`/sucursal/${id.value}`);
         data.value = response.data;
         id.value = data.value.id;
         nombre.value = data.value.nombre;

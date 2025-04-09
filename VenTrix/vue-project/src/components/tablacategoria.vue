@@ -53,7 +53,7 @@
 import Swal from 'sweetalert2';
 import { defineProps } from 'vue';
 import { ref, computed, onMounted } from 'vue';
-import axios from 'axios';
+import axios from '@/axios';
 import { useCart } from '@/stores/cart';
 import ModalSucursales from '@/components/ModalSucursales.vue';
 
@@ -82,7 +82,7 @@ const consultaBusqueda = ref('');
 
 const buscarCategorias = async () => {
   try {
-    const respuesta = await axios.get(`http://127.0.0.1:8080/categoria/id_sucursal/${nit}`);
+    const respuesta = await axios.get(`/categoria/id_sucursal/${nit}`);
     categorias.value = respuesta.data.filter(categoria => categoria.activo !== "INACTIVO");
 
   } catch (error) {
@@ -123,7 +123,7 @@ const sucursalesSeleccionadas = ref([]);
 
 const cargarTodasLasSucursales = async () => {
   try {
-    const respuesta = await axios.get(`http://localhost:8080/sucursal/restaurante/${cart.restaurante}`);
+    const respuesta = await axios.get(`/sucursal/restaurante/${cart.restaurante}`);
     todasLasSucursales.value = respuesta.data;
   } catch (error) {
     console.error("Error al cargar todas las sucursales", error);
@@ -151,7 +151,7 @@ const agregarCategoria = async () => {
         categoria.value.sucursal = sucursalId;
 
         const nuevaCategoria = { ...categoria.value };
-        const response = await axios.post('http://127.0.0.1:8080/categoria', nuevaCategoria);
+        const response = await axios.post('/categoria', nuevaCategoria);
       }
 
       await buscarCategorias()
@@ -165,7 +165,7 @@ const agregarCategoria = async () => {
       resetearFormulario();
     } else {
       const nuevaCategoria = { ...categoria.value };
-      const response = await axios.post('http://127.0.0.1:8080/categoria', nuevaCategoria);
+      const response = await axios.post('/categoria', nuevaCategoria);
 
       await buscarCategorias()
       Swal.fire({
@@ -199,7 +199,7 @@ const editarCategoria = (indice) => {
 const actualizarCategoria = async () => {
   try {
     const categoriaActualizada = { ...categoria.value };
-    const response = await axios.put(`http://127.0.0.1:8080/categoria/${categoriaActualizada.id}`, categoriaActualizada);
+    const response = await axios.put(`/categoria/${categoriaActualizada.id}`, categoriaActualizada);
 
     await buscarCategorias();
     Swal.fire({
@@ -225,7 +225,7 @@ const actualizarCategoria = async () => {
 const eliminarCategoria = async (indice) => {
   try {
     const categoriaAEliminar = categorias.value[indice];
-    await axios.delete(`http://127.0.0.1:8080/categoria/${categoriaAEliminar.id}`);
+    await axios.delete(`/categoria/${categoriaAEliminar.id}`);
     await buscarCategorias();
 
     Swal.fire({

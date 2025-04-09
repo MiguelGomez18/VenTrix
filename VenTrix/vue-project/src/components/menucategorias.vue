@@ -28,7 +28,7 @@
   <script setup>
   import { ref, computed, onMounted, defineProps } from 'vue';
   import { useRouter } from 'vue-router'; 
-  import axios from 'axios';
+  import axios from '@/axios';
 
   const props = defineProps({
     nit: {
@@ -44,7 +44,7 @@
   
   const buscarCategorias = async () => {
     try {
-      const respuesta = await axios.get(`http://127.0.0.1:8080/categoria/id_sucursal/${nit}`);
+      const respuesta = await axios.get(`/categoria/id_sucursal/${nit}`);
       categorias.value = respuesta.data.filter(categoria => categoria.activo !== "INACTIVO");
       
     } catch (error) {

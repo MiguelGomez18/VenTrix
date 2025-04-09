@@ -22,6 +22,11 @@
                 <img src="../components/icons/icons8-contraseña-50.png" alt="Contraseña">
                 <input type="password" placeholder="Password" v-model="password" required>
             </div>
+            <div class="container-input">
+                <img src="../components/icons/icons8-contraseña-50.png" alt="Contraseña confirmacion">
+                <input type="password" placeholder="Confirmar Contraseña" v-model="confirmPassword" required>
+            </div>
+            <p class="contra" v-if="passwordMismatch">Las contraseñas no coinciden</p>
             <button class="button2" type="submit">REGISTRAR</button>
             </form>
         </div>
@@ -29,14 +34,15 @@
 
 <script setup>
 import Swal from 'sweetalert2';
-import { ref } from 'vue';
-import axios from 'axios';
+import { ref, computed } from 'vue';
+import axios from '@/axios';
 
 const documento = ref('');
 const sucursal = ref('');
 const nombre = ref('');
 const correo = ref('');
 const password = ref('');
+const confirmPassword = ref('');
 const date = new Date();
 const dia = (date.getDate() < 10 ? '0':'') + date.getDate();
 const mes = ((date.getMonth() + 1) < 10 ? '0':'') + (date.getMonth() + 1);
@@ -53,6 +59,13 @@ const limpiarInputs = () => {
   sucursal.value = '';
 };
 
+const passwordMismatch = computed(() => {
+    if (confirmPassword.value == '') {
+        return false;
+    }
+    return password.value != confirmPassword.value || confirmPassword.value == '';
+})
+
 const validarPassword = (password) => {
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¡¿])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¡¿]{8,}$/;
     return regex.test(password);
@@ -60,7 +73,7 @@ const validarPassword = (password) => {
 
 const loginPropietario = async () => {
     try {
-        const response1 = await axios.get(`http://127.0.0.1:8080/sucursal/${sucursal.value}`);
+        const response1 = await axios.get(`/sucursal/${sucursal.value}`);
         if (!response1.data || response1.data.value === '') {
             await Swal.fire({
                 icon: 'error',
@@ -83,7 +96,7 @@ const loginPropietario = async () => {
             return;
         }
 
-        const response = await axios.post('http://127.0.0.1:8080/usuario', {
+        const response = await axios.post('/usuario', {
             documento: documento.value,
             nombre: nombre.value,
             correo: correo.value,

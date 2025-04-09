@@ -18,7 +18,7 @@
             <img src="../components/icons/icons8-contraseña-50.png" alt="Contraseña">
             <input type="password" placeholder="Password" v-model="password" required>
         </div>
-        <a href="#">¿Olvidaste tu contraseña?</a>
+        <router-link to="/password">¿Olvidaste tu contraseña?</router-link>
         <router-link to="/">Volver..</router-link>
         <button class="button" type="submit">{{ frmlogin ? 'INICIAR SESIÓN' : 'REGISTRARSE' }}</button>
         </form>
@@ -34,6 +34,7 @@
         </div>
         <span>Use su correo electrónico para registrarse</span>
         <select v-model="mesesSeleccionados">
+            <option value="" disabled>Seleccione una Membresia</option>
             <option value="3">3 meses - $24.900</option>
             <option value="6">6 meses - $54.900</option>
             <option value="12">12 meses - $169.900</option>
@@ -84,7 +85,7 @@
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { computed, ref } from 'vue';
-import axios from 'axios';
+import axios from '@/axios';
 import { useRouter } from 'vue-router';
 import { useCart } from '@/stores/cart';
 
@@ -108,7 +109,7 @@ const fecha_creacion = ref(`${año}-${mes}-${dia}`);
 const frmlogin = ref(true);
 const menError = ref('');
 const isToggled = ref(false);
-const mesesSeleccionados = ref(''); // Valor por defecto
+const mesesSeleccionados = ref(''); 
 
 const limpiarInputs = () => {
   documento.value = '';
@@ -119,7 +120,7 @@ const limpiarInputs = () => {
 
 const passwordMismatch = computed(() => {
     if (frmlogin.value == true && isToggled.value == false) {
-        return password.value !== confirmPassword.value && confirmPassword.value !== '';
+        return password.value != confirmPassword.value || confirmPassword.value == '';
     }
 })
 
@@ -132,19 +133,19 @@ const loginPropietario = async () => {
     try {
         if (frmlogin.value) {
 
-            const response = await axios.post('http://127.0.0.1:8080/usuario/login', {
+            const response = await axios.post('/usuario/login', {
                 correo: correo.value,
                 password: password.value
             });
 
             await buscardocumento(correo.value);
             cart.documento = documento1.value;
-            const estadoResponse = await axios.get(`http://127.0.0.1:8080/usuario/${cart.documento}`);
+            const estadoResponse = await axios.get(`/usuario/${cart.documento}`);
             const estadoUsuario = estadoResponse.data;
 
             if (estadoUsuario.estado == 'INACTIVO') {
                 //estadoUsuario.estado = 'ACTIVO';
-                //const response = await axios.put(`http://127.0.0.1:8080/usuario/${estadoUsuario.documento}`, estadoUsuario);
+                //const response = await axios.put(`/usuario/${estadoUsuario.documento}`, estadoUsuario);
                 return;
             }
             
@@ -154,23 +155,24 @@ const loginPropietario = async () => {
                 await buscarid_restaurante(documento1.value);
                 cart.restaurante = idrestaurante.value;
                 if (idrestaurante.value == '') {
+                    await buscarRol(correo.value);
                     cart.rol = rol1.value;
                     router.push({ name: 'Restaurante', params: { usuario: documento1.value, mes: mesesSeleccionados.value } });
-
+                    return;
                 }
-                const fechaFinalizacionResponse = await axios.get(`http://127.0.0.1:8080/restaurante/${cart.restaurante}`);
+                const fechaFinalizacionResponse = await axios.get(`/restaurante/${cart.restaurante}`);
                 fechaFinalizacionStr = fechaFinalizacionResponse.data.fecha_finalizacion; 
             } else if (estadoUsuario.rol == "ADMINISTRADOR_SUCURSAL") {
 
                 await buscarSucursal(documento1);
                 cart.nit = sucursal1.value;
-                const response = await axios.get(`http://127.0.0.1:8080/sucursal/id_restaurante/${cart.nit}`);
-                const fechaFinalizacionResponse = await axios.get(`http://127.0.0.1:8080/restaurante/${response.data}`);
+                const response = await axios.get(`/sucursal/id_restaurante/${cart.nit}`);
+                const fechaFinalizacionResponse = await axios.get(`/restaurante/${response.data}`);
                 fechaFinalizacionStr = fechaFinalizacionResponse.data.fecha_finalizacion; 
             } else {
 
-                const response = await axios.get(`http://127.0.0.1:8080/sucursal/id_restaurante/${estadoUsuario.sucursal}`);
-                const fechaFinalizacionResponse = await axios.get(`http://127.0.0.1:8080/restaurante/${response.data}`);
+                const response = await axios.get(`/sucursal/id_restaurante/${estadoUsuario.sucursal}`);
+                const fechaFinalizacionResponse = await axios.get(`/restaurante/${response.data}`);
                 fechaFinalizacionStr = fechaFinalizacionResponse.data.fecha_finalizacion; 
             }
 
@@ -194,7 +196,7 @@ const loginPropietario = async () => {
                         allowOutsideClick: false, 
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = '/ruta-de-pago'; 
+                            window.location.href = '/demopagos';
                         }
                     });
                 } else if (estadoUsuario.rol == "ADMINISTRADOR_SUCURSAL") {
@@ -343,7 +345,7 @@ const loginPropietario = async () => {
                 return; 
             }
             console.log(fecha_creacion.value);
-            const response = await axios.post('http://127.0.0.1:8080/usuario', {
+            const response = await axios.post('/usuario', {
                 documento: documento.value,
                 nombre: nombre.value,
                 correo: correo.value,
@@ -382,7 +384,7 @@ const loginPropietario = async () => {
 
 const buscardocumento = async (correo) => {
   try {
-    const respuesta = await axios.get(`http://127.0.0.1:8080/usuario/correo/${correo}`); 
+    const respuesta = await axios.get(`/usuario/correo/${correo}`); 
     documento1.value = respuesta.data;
   } catch (error) {
     console.error("Error en el documento", error);
@@ -391,7 +393,7 @@ const buscardocumento = async (correo) => {
 
 const buscardocumentoSucursal = async (documento1) => {
   try {
-    const respuesta = await axios.get(`http://127.0.0.1:8080/usuario/sucursal/${documento1.value}`); 
+    const respuesta = await axios.get(`/usuario/sucursal/${documento1.value}`); 
     sucursal1.value = respuesta.data;
   } catch (error) {
     console.error("Error al buscar la sucursal", error);
@@ -400,7 +402,7 @@ const buscardocumentoSucursal = async (documento1) => {
 
 const buscarRol = async (correo) => {
   try {
-    const respuesta = await axios.get(`http://127.0.0.1:8080/usuario/documento/${correo}`); 
+    const respuesta = await axios.get(`/usuario/documento/${correo}`); 
     rol1.value = respuesta.data;
   } catch (error) {
     console.error("Error en el rol", error);
@@ -409,7 +411,7 @@ const buscarRol = async (correo) => {
 
 const buscarid_restaurante = async (documento1) => {
   try {
-    const respuesta = await axios.get(`http://127.0.0.1:8080/restaurante/id_usuario/${documento1}`); 
+    const respuesta = await axios.get(`/restaurante/id_usuario/${documento1}`); 
     idrestaurante.value = respuesta.data;
   } catch (error) {
     console.error("Error al el id de restaurante", error);
@@ -418,7 +420,7 @@ const buscarid_restaurante = async (documento1) => {
 
 const buscarSucursal = async (documento1) => {
     try {
-        const respuesta = await axios.get(`http://127.0.0.1:8080/sucursal/id_usuario/${documento1.value}`); 
+        const respuesta = await axios.get(`/sucursal/id_usuario/${documento1.value}`); 
         sucursal1.value = respuesta.data;
     } catch (error) {
         console.error("Error al buscar la sucursal", error);
@@ -517,10 +519,15 @@ function toggleSignUp() {
     font-size: 15px;
     margin-bottom: 15px;
 }
+
+.sign-up select {
+    margin-bottom: 10px;
+}
+
 .container-input{
     width: 400px;
     height: 60px;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
     display: flex;
     justify-content: center;
     align-items: center;

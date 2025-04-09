@@ -35,7 +35,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import axios from '@/axios';
 import { useCart } from '@/stores/cart';
 
 const cart = useCart();
@@ -75,7 +75,7 @@ const agruparPedidos = (detalles) => {
 
 const buscar = async () => {
   try {
-    const respuesta = await axios.get(`http://127.0.0.1:8080/detalles-pedido/sucursal/${cart.nit}`);
+    const respuesta = await axios.get(`/detalles-pedido/sucursal/${cart.nit}`);
     const data = ref([]);
     const filtrados = ref([]);
     data.value = respuesta.data
@@ -101,7 +101,7 @@ const eliminarPedido = async (key) => {
       if (index == key) {
         for (let index = 0; index < element.length; index++) {
           const element1 = element[index];
-          await axios.put(`http://127.0.0.1:8080/detalles-pedido/${element1.id_detalle_pedido}`, {
+          await axios.put(`/detalles-pedido/${element1.id_detalle_pedido}`, {
             estado: "LISTO",
           });
         }
