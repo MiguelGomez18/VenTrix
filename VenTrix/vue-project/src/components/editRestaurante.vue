@@ -52,7 +52,7 @@
           </button>
         </div>
       </form>
-      <div class="content-img"><img :src="`http://localhost:8888${userData.imagen}`" alt=""></div>
+      <div class="content-img"><img :src="getImagen(userData.imagen)" alt="Imagen del producto" /></div>
     </div>
   </div>
 </template>
@@ -61,6 +61,7 @@
 import Swal from 'sweetalert2';
 import { ref, onMounted } from 'vue';
 import axios from '@/axios';
+import getBaseUrl from '@/getBaseUrl'
 import { useCart } from '@/stores/cart';
 import { useRouter } from 'vue-router'; 
 
@@ -70,6 +71,7 @@ const fileInput = ref(null);
 const onFileChange = (event) => {
   file.value = event.target.files[0];
 };
+const getImagen = (path) => `${getBaseUrl()}${path}`;
 const userData = ref([]);
 const cart = useCart();
 const editMode = ref(false);
@@ -126,8 +128,8 @@ const actualizar = async () => {
     } else {
 
       try {
-        const imagenUrl = `http://localhost:8888${userData.value.imagen}`;
-        const respuesta = await fetch(imagenUrl);
+        const imagenUrl = computed(() => `${getBaseUrl()}${userData.value.imagen}`);
+        const respuesta = await fetch(imagenUrl.value);
         
         if (!respuesta.ok) {
           throw new Error('No se pudo obtener la imagen');

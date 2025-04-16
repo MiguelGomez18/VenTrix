@@ -68,7 +68,7 @@
           <td>
             {{ categoriasFiltradas.find(cate => cate.producto.some(pro => pro.id_producto === prod.id_producto))?.nombre || 'Sin Categoría' }}
           </td>
-          <td><img :src="`http://localhost:8888${prod.imagen}`" alt=""></td>
+          <td><img :src="getImagen(prod.imagen)" alt="Imagen del producto" /></td>
           <td v-if="!mostrar1">
             <button class="btnEditar" @click="editarProducto(indice)">Editar</button>
             <button class="btnEliminar" @click="eliminarProducto(indice)">Eliminar</button>
@@ -96,6 +96,7 @@ import Swal from 'sweetalert2';
 import { defineProps } from 'vue';
 import { ref, computed, onMounted } from 'vue';
 import axios from '@/axios';
+import getBaseUrl from '@/getBaseUrl'
 import { useCart } from '@/stores/cart';
 import ModalSucursales from '@/components/ModalSucursales.vue';
 
@@ -114,6 +115,7 @@ const cart = useCart();
 const nit = cart.nit;
 const file = ref(null);
 const fileInput = ref(null);
+const getImagen = (path) => `${getBaseUrl()}${path}`
 const productos = ref([]);
 const categorias = ref([]);
 const onFileChange = (event) => {
@@ -262,8 +264,7 @@ const agregarProducto = async () => {
         formData.set("id_categoria", categoriaSucursal.id);
         formData.set("id_sucursal", sucursalId);
 
-        await axios.post(
-          '/producto/registrar_producto', 
+        await axios.post('/producto/registrar_producto', 
           formData, 
           { headers: { 'Content-Type': 'multipart/form-data' } }
         );
@@ -354,8 +355,8 @@ const actualizarProducto = async () => {
           const productoEncontrado = productos.value.find(p => p.id_producto === producto.value.id_producto);
 
           try {
-            const imagenUrl = `http://localhost:8888${productoEncontrado.imagen}`;
-            const respuesta = await fetch(imagenUrl);
+            const imagenUrl = computed(() => `${getBaseUrl()}${productoEncontrado.imagen}`)
+            const respuesta = await fetch(imagenUrl.value)
             
             if (!respuesta.ok) {
               throw new Error('No se pudo obtener la imagen');

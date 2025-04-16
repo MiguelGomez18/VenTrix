@@ -38,7 +38,7 @@
             </td>
             <td :class="{ 'full-width': Rol === 'CAJERO' }">{{ producto.precio * producto.cantidad || currency }}</td>
             <td class="tdimg" :class="{ 'full-width': Rol === 'CAJERO' }" :style="{ '--tamaño-section3': `${tamañoImagen}px` }">
-              <img :src="`http://localhost:8888${producto.imagen}`" alt="">
+              <img :src="getImagen(producto.imagen)" alt="Imagen del producto" />
             </td>
             <td :class="['tdinput',{ 'full-width': Rol === 'CAJERO' }]" :style="{ '--tamaño-section4': `${tamaño1}px` }">
               <textarea 
@@ -72,6 +72,7 @@ import { useCart } from '../stores/cart';
 import { ref, computed, defineEmits, defineProps, onMounted } from 'vue';
 import Swal from 'sweetalert2';
 import axios from '@/axios';
+import getBaseUrl from '@/getBaseUrl'
 
 const props = defineProps({
     rol: {
@@ -80,6 +81,7 @@ const props = defineProps({
   }
 });
 
+const getImagen = (path) => `${getBaseUrl()}${path}`
 let tamaño1 = 70;
 let tamañoImagen = 80;
 const isComandado = ref(false);

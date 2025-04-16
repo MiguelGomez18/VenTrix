@@ -119,9 +119,10 @@ const limpiarInputs = () => {
 };
 
 const passwordMismatch = computed(() => {
-    if (frmlogin.value == true && isToggled.value == false) {
-        return password.value != confirmPassword.value || confirmPassword.value == '';
+    if (confirmPassword.value == '') {
+        return false;
     }
+    return password.value != confirmPassword.value || confirmPassword.value == '';
 })
 
 const validarPassword = (password) => {
@@ -543,6 +544,17 @@ function toggleSignUp() {
     height: 55px;
     font-size: 17px;
     background-color: #eeeeee;
+}
+
+.contra {
+    color: red; 
+    border-radius: 8px; 
+    width: 400px;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 5px;
+    border: 1px solid rgba(255, 0, 0, 0.334); 
+    background-color: rgba(255, 0, 0, 0.199);
 }
 
 .container-input img{

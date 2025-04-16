@@ -18,7 +18,7 @@
             <img src="../components/icons/icons8-contraseña-50.png" alt="Contraseña">
             <input type="password" placeholder="Password" v-model="password" required>
         </div>
-        <div class="container-input">
+        <div class="container-input2">
             <img src="../components/icons/icons8-contraseña-50.png" alt="Contraseña confirmacion">
             <input type="password" placeholder="Confirmar Contraseña" v-model="confirmPassword" required>
         </div>
@@ -208,6 +208,17 @@ select {
     padding: 10px 15px;
     background-color: #eeeeee;
     margin-bottom: 15px;
+}
+
+.contra {
+    color: red; 
+    border-radius: 8px; 
+    width: 400px;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 5px;
+    border: 1px solid rgba(255, 0, 0, 0.334); 
+    background-color: rgba(255, 0, 0, 0.199);
 }
 
 .container-input2 input{
