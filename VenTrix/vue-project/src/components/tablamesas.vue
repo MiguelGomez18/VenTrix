@@ -67,7 +67,8 @@ const mesa = ref({
   estado: 'FISICA',
   sucursal: {
     id: nit
-  }
+  },
+  activo: 'ACTIVO'
 });
 
 const props = defineProps({

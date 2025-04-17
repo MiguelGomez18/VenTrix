@@ -263,6 +263,7 @@ const agregarProducto = async () => {
 
         formData.set("id_categoria", categoriaSucursal.id);
         formData.set("id_sucursal", sucursalId);
+        formData.append("activo", 'ACTIVO');
 
         await axios.post('/producto/registrar_producto', 
           formData, 
@@ -291,6 +292,7 @@ const agregarProducto = async () => {
       formData.append("id_categoria", producto.value.categoria.id);
       formData.append("id_sucursal", nit);
       formData.append("imagen", file.value);
+      formData.append("activo", 'ACTIVO');
       
       const response = await axios.post(
         '/producto/registrar_producto', 

@@ -65,7 +65,8 @@ const categorias = ref([]);
 const categoria = ref({
   id: '',
   nombre: '',
-  sucursal: nit
+  sucursal: nit,
+  activo: 'ACTIVO'
 });
 
 const props = defineProps({

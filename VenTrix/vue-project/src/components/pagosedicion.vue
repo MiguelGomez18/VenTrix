@@ -66,7 +66,8 @@ const tiposPago = ref([]); // Lista de tipos de pago
 const tipoPago = ref({
   id: '',         // ID del tipo de pago
   descripcion: '', // Descripción del tipo de pago
-  sucursal: nit
+  sucursal: nit,
+  activo: 'ACTIVO'
 });
 
 const props = defineProps({
