@@ -23,3 +23,29 @@ app
   .use(router)
   .use(pinia)
   .mount('#app');
+
+// Bloquear clic derecho
+document.addEventListener('contextmenu', function (e) {
+  e.preventDefault();
+});
+
+// Bloquear combinaciones de teclas peligrosas
+document.addEventListener('keydown', function (e) {
+  // Detectar F12
+  if (e.key === "F12") {
+    e.preventDefault();
+  }
+  // Detectar Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+  if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
+    e.preventDefault();
+  }
+  // Detectar Ctrl+U
+  if (e.ctrlKey && e.key === 'u') {
+    e.preventDefault();
+  }
+  // Detectar Ctrl+S (evitar guardar página)
+  if (e.ctrlKey && e.key === 's') {
+    e.preventDefault();
+  }
+});
+
