@@ -2,6 +2,7 @@
   <v-app>
     <div class="contenedor-boton-flotante">
       <v-btn class="boton-flotante" color="green" large @click="alternarBotones">
+        
         <img src="../components/icons/ecommerce-price-shop-svgrepo-com.svg" class="imagen-icono" alt="Icono de Menú" />
       </v-btn>
 
@@ -38,76 +39,91 @@ const cart = useCart();
 const restaurante = cart.restaurante;
 
 const alternarBotones = () => {
-mostrarBotones.value = !mostrarBotones.value;
+  mostrarBotones.value = !mostrarBotones.value;
 };
 
 const navegarARuta = (name) => {
-window.dispatchEvent(new Event('ocultarInicio')); 
-if (name == 'TarjetasSucursales') {
-  router.push({ name: name, params: { idrestaurante: restaurante } });
-} 
-router.push({ name: name});
+  window.dispatchEvent(new Event('ocultarInicio')); 
+  if (name == 'TarjetasSucursales') {
+    router.push({ name: name, params: { idrestaurante: restaurante } });
+  } 
+  router.push({ name: name});
 };
 </script>
 
 <style scoped>
-/* Estilos para el contenedor del botón flotante */
+/* Contenedor principal */
 .contenedor-boton-flotante {
-  position: relative;
-  bottom: 20px;
-  left: 20px; 
-  z-index: 2;
+  position: fixed;
+  
+  margin-top: 7px;/* Cambiado de margin-top a top para mejor control */
+  z-index: 1000;
 }
 
-/* Estilos del botón flotante principal */
+/* Botón flotante principal (verde) */
 .boton-flotante {
   cursor: pointer;
   background-color: #c0c6c8;
-  position: fixed;
-  bottom: 20px;
-  left: 20px; 
+  position: relative;
   z-index: 10;
-  font-size: 24px; 
-  width: 70px;     
-  height: 70px;    
-  border-radius: 50%; 
+  font-size: 24px;
+  width: 70px;
+  height: 60px;
+  border-radius: 50%;
   display: flex;
-  justify-content: center; 
-  align-items: center;     
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 .boton-flotante:hover {
   border-bottom: 8px outset rgb(50, 169, 50);
   transition: 0.1s;
 }
 
-/* Ajustar la imagen al tamaño completo del botón */
+/* Resto de tus estilos se mantienen igual */
 .imagen-icono {
   width: 40px;
   height: 40px;
-  object-fit: contain; 
+  object-fit: contain;
 }
 
-/* Contenedor de los botones secundarios */
 .contenedor-botones {
   cursor: pointer;
-  position: fixed;
-  bottom: 100px; 
-  left: 20px;    
+  position: absolute;
+  right: 0;
+  bottom: 80px;
   display: flex;
+  margin-left: 72px;
   flex-direction: column;
-  gap: 25px; }
+  gap: 15px;
+  align-items: flex-end;
+}
 
-/* Estilos para los botones secundarios */
 .boton-secundario {
-  font-size: 14px;  
-  width: 60px;      
+  font-size: 14px;
+  min-width: 60px;
   height: 60px;
   border-radius: 50%;
   display: flex;
   flex-direction: column;
-  justify-content: center; 
-  align-items: center;     
-  text-align: center;      
-  gap: 5px;         
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 5px;
+  padding: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+
+@media (max-width: 819px) {
+  .contenedor-boton-flotante {
+  position: fixed;
+  left: 10px;
+  top: 93%; /* Cambiado de margin-top a top para mejor control */
+  z-index: 1000;
+}
+
 }
 </style>

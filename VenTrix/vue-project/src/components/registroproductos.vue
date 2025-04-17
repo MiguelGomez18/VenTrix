@@ -116,7 +116,7 @@ watch(nit, (newVal) => {
     flex-direction: column;
     gap: 20px;
     width: 80%;
-    margin-left: 140px;
+    margin-left: 30px;
     margin-bottom: 80px;
 }
 
@@ -192,6 +192,9 @@ watch(nit, (newVal) => {
     .paginacion span {
     font-size: 14px;
     font-weight: bold;
+    }
+
+    @media (max-width: 819px) {
     }
 
 </style>
