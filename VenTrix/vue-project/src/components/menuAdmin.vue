@@ -125,5 +125,6 @@ const navegarARuta = (name) => {
   z-index: 1000;
 }
 
+
 }
 </style>

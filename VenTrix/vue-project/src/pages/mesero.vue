@@ -19,4 +19,10 @@ import menumesa from '@/components/menumesa.vue';
     height: 90px;
     background-color: white;
 }
+
+@media (max-width: 819px) {
+   .contenido1{
+    height: 1px;
+   }
+}
 </style>

@@ -30,7 +30,7 @@ const navegarARuta = (name) => {
     position: relative;
     bottom: 20px;
     left: 20px; 
-    z-index: 2;
+    z-index: 20;
   }
   
   /* Estilos del botón flotante principal */
@@ -40,7 +40,7 @@ const navegarARuta = (name) => {
     position: fixed;
     bottom: 20px;
     left: 20px; 
-    z-index: 10;
+    z-index: 100;
     font-size: 24px; 
     width: 70px;     
     height: 70px;    

@@ -218,13 +218,11 @@ onMounted(async () => {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto 100px;
-  padding: 20px;
+  margin: 10px;
   border-radius: 10px;
   background-color: #f9f9f9;
   border: 3px solid var(--color_principal);
-  box-sizing: border-box;
+ 
   position: relative;
   z-index: 10;
 }
@@ -359,7 +357,7 @@ onMounted(async () => {
 /* Media query para tablets (820px - 1024px) */
 @media (max-width: 1024px) {
   .cart-container {
-    padding: 15px;
+    
     margin-bottom: 80px;
   }
   
@@ -408,85 +406,129 @@ onMounted(async () => {
 }
 
 /* Media query para móviles (hasta 819px) */
+/* Media query para móviles (hasta 819px) */
 @media (max-width: 819px) {
   .cart-container {
-    padding: 10px;
-    margin-bottom: 100px;
+    padding: 12px;
+    margin: 0 auto 100px;
     width: 95%;
   }
-  
+
   .cart-title {
-    font-size: 22px;
-    margin-bottom: 15px;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 10px;
   }
-  
+
   .encabezado {
-    display: none;
+    display: none; /* Ocultamos encabezado para móvil */
   }
-  
+
+  .cart-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
   .cart-table tbody tr {
     display: grid;
     grid-template-columns: 1fr;
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    gap: 5px;
+    margin-bottom: 25px;
     padding: 10px;
-    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fafafa;
   }
-  
+
   .cart-table td {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
-    align-items: center;
-    text-align: left;
-    padding: 8px;
+    align-items: flex-start;
+    padding: 5px 0;
     border: none;
+    font-size: 14px;
   }
-  
+
   .cart-table td::before {
     content: attr(data-label);
-    font-weight: bold;
-    margin-right: 10px;
+    font-weight: 600;
     color: var(--color_principal);
-    flex: 1;
+    margin-right: 10px;
+    min-width: 100px;
+    flex-shrink: 0;
   }
-  
+
   .cart-table td > *:not(:first-child) {
-    flex: 2;
+    flex-grow: 1;
+    text-align: right;
   }
-  
+
   .quantity-btn,
-  .quantity-btn1,
+  .quantity-btn1 {
+    padding: 6px 10px;
+    font-size: 14px;
+    margin: 0 3px;
+  }
+
   .remove-btn {
-    padding: 5px 8px;
-    font-size: 12px;
+    padding: 6px 12px;
+    font-size: 13px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 5px;
   }
-  
+
   .tdimg img {
-    width: 70px;
-    height: 70px;
+    width: 80px;
+    height: 80px;
+    border-radius: 6px;
+    object-fit: cover;
   }
-  
-  .cart-table .tdinput textarea {
-    height: 60px;
-    font-size: 12px;
-    text-align: left;
+
+  .tdinput textarea {
+    font-size: 13px;
+    width: 100%;
+    min-height: 100px;
+    padding: 8px;
+    resize: vertical;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
   }
-  
+
   .cart-total {
     font-size: 20px;
     text-align: center;
-    margin: 15px 0;
+    font-weight: bold;
+    margin-top: 20px;
   }
-  
+
   .action-buttons {
+    display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
+    margin-top: 20px;
+    width: 100%;
   }
-  
+
   .pay-btn {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
+    font-size: 16px;
+    background-color: var(--color_principal, #4caf50);
+    color: white;
+    border: none;
+    border-radius: 6px;
   }
+
+  .full-width {
+    width: 100% !important;
+  }
+
+  
 }
+
+
 </style>

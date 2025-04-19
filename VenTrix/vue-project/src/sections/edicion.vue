@@ -1,5 +1,5 @@
 <template>
-    <div class="contenedorpadre">
+    <div class="contenedorpadre1">
         <productos :mostrar="mostrar"></productos>
         <tablacategoria :mostrar="mostrar"></tablacategoria>
         <tablamesas :mostrar="mostrar"></tablamesas>
@@ -36,36 +36,59 @@ const navegarARuta = (name) => {
 </script>
 
 <style>
-.contenedorpadre{
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 80%;
-    margin-left: 140px;
-    margin-bottom: 80px;
+.contenedorpadre1 {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 1000px;
+  width: 90%;
+  margin: auto;
+  margin-bottom: 80px;
+  padding: 0 20px;
 }
 
 .contenedor-boton-flotante1 {
-    position: relative;
-    top: 100px;
-    right: 50px; 
-    z-index: 10;
+  position: fixed;
+  top:50px;
+  right: 20px;
+  z-index: 20;
+}
+
+/* Botón flotante estilo */
+.boton-flotante1 {
+  cursor: pointer;
+  background-color: #d8d8d8;
+  font-size: 24px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Botón en flujo normal solo visible en pantallas pequeñas */
+.boton-informes-responsive {
+  display: none;
+  text-align: right;
+  margin-top: 20px;
+  margin-right: 20px;
+}
+
+/* Mostrar versión responsiva y ocultar botón flotante si ancho <= 819px */
+@media (max-width: 819px) {
+  .boton-flotante1 {
+    width: 60px;
+    height: 60px;
+    font-size: 20px;
   }
 
-  .boton-flotante1 {
-    cursor: pointer;
-    background-color: #d8d8d8;
-    position: fixed;
-    top: 100px;
-    right: 50px; 
-    z-index: 10;
-    font-size: 24px; 
-    width: 70px;     
-    height: 70px;    
-    border-radius: 50%; 
-    display: flex;
-    justify-content: center; 
-    align-items: center;  
+  .boton-flotante1 img {
+    width: 24px;
+    height: 24px;
   }
+}
+
+  
 
 </style>
