@@ -128,7 +128,7 @@ const routes = [
     ]
   },
   {
-    path: '/restaurante/:usuario/:mes',
+    path: '/restaurante/:usuario',
     name: 'Restaurante',
     component: restaurante,
     props: true,

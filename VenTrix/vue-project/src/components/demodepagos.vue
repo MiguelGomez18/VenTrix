@@ -38,6 +38,7 @@ import { useRouter } from 'vue-router';
 import { useCart } from '@/stores/cart';
 import Swal from 'sweetalert2';
 import axios from '@/axios';
+import getBaseUrl from '@/getBaseUrl'
 
 const router = useRouter();
 const cart = useCart();
@@ -87,8 +88,8 @@ const realizarPago = async () => {
   formData.append("correo", userData.value.correo);
 
   try {
-    const imagenUrl = `http://localhost:8888${userData.value.imagen}`;
-    const respuesta = await fetch(imagenUrl);
+    const imagenUrl = computed(() => `${getBaseUrl()}${userData.value.imagen}`);
+    const respuesta = await fetch(imagenUrl.value);
     
     if (!respuesta.ok) {
       throw new Error('No se pudo obtener la imagen');

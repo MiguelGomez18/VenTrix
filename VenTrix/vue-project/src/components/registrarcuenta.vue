@@ -8,12 +8,6 @@
           <a href=""><img src="../components/icons/icons8-facebook-nuevo-50 (1).png" alt="Facebook"></a>
         </div>
         <span>Use su correo electrónico para registrarse</span>
-        <select v-model="mesesSeleccionados" class="register-select">
-          <option value="" disabled>Seleccione una Membresia</option>
-          <option value="3">3 meses - $24.900</option>
-          <option value="6">6 meses - $54.900</option>
-          <option value="12">12 meses - $169.900</option>
-        </select>
         <div class="register-input-group">
           <img src="../components/icons/icons8-tarjeta-de-identificación-50.png" alt="Documento">
           <input type="text" placeholder="Documento" v-model="documento" required>
@@ -41,33 +35,44 @@
     </div>
 </template>
   
-  <script setup>
+<script setup>
   import Swal from 'sweetalert2';
   import { computed, ref } from 'vue';
   import axios from '@/axios';
   import { useRouter } from 'vue-router';
-  
+
   const router = useRouter();
   const documento = ref('');
   const nombre = ref('');
   const correo = ref('');
   const password = ref('');
+  const date = new Date();
+  const dia = (date.getDate() < 10 ? '0':'') + date.getDate();
+  const mes = ((date.getMonth() + 1) < 10 ? '0':'') + (date.getMonth() + 1);
+  const año = date.getFullYear();
+  const fecha_creacion = ref(`${año}-${mes}-${dia}`);
   const confirmPassword = ref('');
-  const mesesSeleccionados = ref('');
   
   const passwordMismatch = computed(() => {
     return password.value !== confirmPassword.value && confirmPassword.value !== '';
   });
+
+  const validarPassword = (password) => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¡¿])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¡¿]{8,}$/;
+    return regex.test(password);
+  };
   
   const registerPropietario = async () => {
     try {
-      if (passwordMismatch.value) {
+      if (!validarPassword(password.value)) {
         Swal.fire({
           icon: 'error',
-          title: 'Error',
-          text: 'Las contraseñas no coinciden.',
+          title: 'Error de contraseña',
+          text: 'La contraseña debe tener al menos 8 caracteres, incluyendo letras con almenos una mayuscula, números y caracteres especiales.',
+          backdrop: false,  // Evita problemas con el fondo modal
+          allowOutsideClick: false, 
         });
-        return;
+        return; 
       }
   
       const response = await axios.post('/usuario', {
@@ -76,25 +81,28 @@
         correo: correo.value,
         password: password.value,
         rol: "ADMINISTRADOR", // Cambia esto según tu lógica
-        fecha_creacion: new Date().toISOString().split('T')[0], // Fecha actual en formato YYYY-MM-DD
+        fecha_creacion: fecha_creacion.value, // Fecha actual en formato YYYY-MM-DD
         estado: "ACTIVO"
       });
-  
+
       Swal.fire({
         icon: 'success',
-        title: 'Registro Exitoso',
+        title: 'Propietario Registrado',
         text: 'Se registró de manera exitosa',
+        backdrop: false,  // Evita problemas con el fondo modal
+        allowOutsideClick: false, 
       });
   
-      // Limpiar los campos después del registro
       limpiarInputs();
-      router.push('/'); // Redirigir a la página principal o a donde desees
+      router.push('/registro'); 
     } catch (error) {
       console.error("Error al registrar", error);
       Swal.fire({
         icon: 'error',
         title: 'Error al registrar',
         text: 'No se pudo registrar. Por favor, revisa los datos ingresados.',
+        backdrop: false,  // Evita problemas con el fondo modal
+        allowOutsideClick: false, 
       });
     }
   };
@@ -105,7 +113,6 @@
     correo.value = '';
     password.value = '';
     confirmPassword.value = '';
-    mesesSeleccionados.value = '';
   };
   
   </script>
@@ -167,34 +174,18 @@
       display: block;
       text-align: center;
       margin-bottom: 1.5rem;
-      color: #666;
       font-size: 0.95rem;
   }
   
-  .register-select {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      margin-bottom: 1.25rem;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 1rem;
-      background-color: #f9f9f9;
-      appearance: none;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right 1rem center;
-      background-size: 1em;
-  }
-  
   .register-input-group {
-      width: 90%;
-      display: flex;
-      align-items: center;
-      margin-bottom: 1rem;
-      background-color: #f5f5f5;
-      border-radius: 6px;
-      padding: 0.5rem 1rem;
-      transition: all 0.3s ease;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    background-color: #f5f5f5;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
   }
   
   .register-input-group:focus-within {
@@ -231,13 +222,12 @@
 }
   
   .register-link {
-      display: block;
-      text-align: center;
-      color: #505050;
-      margin: 0.75rem 0;
-      font-size: 0.95rem;
-      text-decoration: none;
-      transition: color 0.2s ease;
+    display: block;
+    text-align: center;
+    margin: 0.75rem 0;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
   }
   
   .register-link:hover {
@@ -313,11 +303,7 @@
         width: 70%;
         height: 30px;
       }
-      
-      .register-select {
-        font-size: 0.9rem;
-        width: 100%;
-      }
+
       .register-input-group{
           font-size: 0.9rem;
           width: auto;

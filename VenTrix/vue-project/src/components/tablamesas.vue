@@ -158,9 +158,8 @@ const agregarMesa = async () => {
 
         const nuevaMesa = { ...mesa.value };
         const response = await axios.post('/mesa', nuevaMesa);
-        mesas.value.push(response.data);
       }
-        
+      await buscarMesas(nit);
       Swal.fire({
         icon: 'success',
         title: 'Mesa Agregada',
@@ -174,7 +173,7 @@ const agregarMesa = async () => {
 
       const nuevaMesa = { ...mesa.value };
       const response = await axios.post('/mesa', nuevaMesa);
-      mesas.value.push(response.data);
+      await buscarMesas(nit);
       Swal.fire({
         icon: 'success',
         title: 'Mesa Agregada',
@@ -199,10 +198,11 @@ const agregarMesa = async () => {
 };
 
 // Función para editar una mesa existente
-const editarMesa = (indice) => {
-  mesa.value = { ...mesas.value[indice] };
+const editarMesa = (indicePagina) => {
+  const indiceReal = (paginaActual.value - 1) * filasPorPagina + indicePagina;
+  mesa.value = { ...mesasFiltradas.value[indiceReal] };
   estaEditando.value = true;
-  indiceEdicion.value = indice;
+  indiceEdicion.value = indiceReal;
 };
 
 // Función para actualizar una mesa
@@ -210,7 +210,7 @@ const actualizarMesa = async () => {
   try {
     const mesaActualizada = { ...mesa.value };
     const response = await axios.put(`/mesa/${mesaActualizada.id}`, mesaActualizada);
-    mesas.value[indiceEdicion.value] = response.data;
+    await buscarMesas(nit);
     resetearFormulario();
     Swal.fire({
       icon: 'success',
@@ -232,11 +232,12 @@ const actualizarMesa = async () => {
 };
 
 // Función para eliminar una mesa
-const eliminarMesa = async (indice) => {
+const eliminarMesa = async (indicePagina) => {
   try {
-    const mesaAEliminar = mesas.value[indice];
+    const indiceReal = (paginaActual.value - 1) * filasPorPagina + indicePagina;
+    const mesaAEliminar = mesasFiltradas.value[indiceReal];
     await axios.delete(`/mesa/${mesaAEliminar.id}`);
-    mesas.value.splice(indice, 1);
+    await buscarMesas(nit);
     Swal.fire({
       icon: 'success',
       title: 'Mesa Eliminada',
@@ -244,6 +245,9 @@ const eliminarMesa = async (indice) => {
       backdrop: false,  // Evita problemas con el fondo modal
       allowOutsideClick: false, 
     });
+    if (mesasPaginadas.value.length === 0 && paginaActual.value > 1) {
+      paginaActual.value--;
+    }
   } catch (error) {
     console.error('Error al eliminar la mesa:', error);
     Swal.fire({
@@ -263,9 +267,10 @@ const cancelarEdicion = () => {
 
 // Resetear formulario y estado
 const resetearFormulario = () => {
-  mesa.value = { nombre: '', estado: 'FISICA', sucursal: {id: nit} };
+  mesa.value = { nombre: '', estado: 'FISICA', sucursal: {id: nit}, activo: 'ACTIVO' };
   estaEditando.value = false;
   indiceEdicion.value = null;
+  sucursalesSeleccionadas.value = [];
 };
 </script>
 

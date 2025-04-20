@@ -2,10 +2,12 @@
     <div class="sucursales-container">
       <h2>Sucursales de {{ restauranteNombre }}</h2>
       
-      <!-- Mostrar mensaje de error si ocurre un problema al cargar las sucursales -->
       <div v-if="error" class="error">{{ error }}</div>
+
+      <div v-if="sucursales.length === 0" class="cart-empty">
+        <p>No cuentas con ninguna Sucursal.</p>
+      </div>
   
-      <!-- Mostrar las tarjetas de sucursales -->
       <div class="cards-container">
         <div v-for="sucursal in sucursales" :key="sucursal.id" class="card">
           <h3>{{ sucursal.nombre }}</h3>
@@ -95,6 +97,9 @@
     text-align: center;
     padding: 20px;
     margin-bottom: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   
   .loading {
@@ -105,6 +110,18 @@
   .error {
     font-size: 18px;
     color: red;
+  }
+
+  .cart-empty {
+    width: 50%;
+    text-align: center;
+    font-style: italic;
+    margin-top: 20px;
+    color: red; 
+    border-radius: 8px; 
+    padding: 10px;
+    border: 1px solid rgba(255, 0, 0, 0.334); 
+    background-color: rgba(255, 0, 0, 0.199);
   }
   
   .cards-container {
@@ -151,7 +168,13 @@
     .sucursales-container {
       text-align: center;
       padding: 10px;
+      padding-top: 30px;
       margin-bottom: 80px;
+    }
+    .cart-empty {
+      width: 70%;
+      margin-top: 30px;
+      padding: 10px;
     }
     .card {
       background-color: #fff;

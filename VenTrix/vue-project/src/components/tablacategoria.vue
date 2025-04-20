@@ -191,10 +191,11 @@ const agregarCategoria = async () => {
   }
 };
 
-const editarCategoria = (indice) => {
-  categoria.value = { ...categorias.value[indice] };
+const editarCategoria = (indicePagina) => {
+  const indiceReal = (paginaActual.value - 1) * filasPorPagina + indicePagina;
+  categoria.value = { ...categorias.value[indiceReal] };
   estaEditando.value = true;
-  indiceEdicion.value = indice;
+  indiceEdicion.value = indiceReal;
 };
 
 const actualizarCategoria = async () => {
@@ -223,9 +224,10 @@ const actualizarCategoria = async () => {
   }
 };
 
-const eliminarCategoria = async (indice) => {
+const eliminarCategoria = async (indicePagina) => {
   try {
-    const categoriaAEliminar = categorias.value[indice];
+    const indiceReal = (paginaActual.value - 1) * filasPorPagina + indicePagina;
+    const categoriaAEliminar = categorias.value[indiceReal];
     await axios.delete(`/categoria/${categoriaAEliminar.id}`);
     await buscarCategorias();
 
@@ -236,6 +238,9 @@ const eliminarCategoria = async (indice) => {
       backdrop: false,  // Evita problemas con el fondo modal
       allowOutsideClick: false, 
     });
+    if (categoriasPaginadas.value.length === 0 && paginaActual.value > 1) {
+      paginaActual.value--;
+    }
   } catch (error) {
     console.error('Error al eliminar la categoría:', error);
     Swal.fire({
@@ -253,9 +258,10 @@ const cancelarEdicion = () => {
 };
 
 const resetearFormulario = () => {
-  categoria.value = { id: '', nombre: '', sucursal: nit };
+  categoria.value = { id: '', nombre: '', sucursal: nit, activo: 'ACTIVO' };
   estaEditando.value = false;
   indiceEdicion.value = null;
+  sucursalesSeleccionadas.value = [];
 };
 </script>
 

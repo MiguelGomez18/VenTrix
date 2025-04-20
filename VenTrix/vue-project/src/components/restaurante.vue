@@ -3,6 +3,12 @@
         <div class="container1">
             <form class="sign-up1" @submit.prevent="registerRestaurant">
                 <h2>REGISTRAR RESTAURANTE</h2>
+                <select v-model="mesesSeleccionados" class="register-select">
+                    <option value="" disabled>Seleccione una Membresia</option>
+                    <option value="3">3 meses - $24.900</option>
+                    <option value="6">6 meses - $54.900</option>
+                    <option value="12">12 meses - $169.900</option>
+                </select>
                 <div class="container-input1">
                     <img src="../components/icons/face_id_icon_148536.png" alt="Id">
                     <input type="text" placeholder="ID Restaurante" v-model="id" required>
@@ -41,7 +47,7 @@
                         ref="fileInput"
                     />
                 </div>
-                <div class="container-input1">
+                <div v-if="calcularFechaFinalizacion" class="container-input1">
                     <img src="../components/icons/3586371-calendar-date-event-schedule_107943.png" alt="Fecha_finalizacion">
                     <input 
                         type="text" 
@@ -64,17 +70,13 @@
     
 <script setup>
 import Swal from 'sweetalert2';
-import { ref, defineProps, watch, onMounted } from 'vue';
+import { ref, defineProps, computed } from 'vue';
 import axios from '@/axios';
 import { useRouter } from 'vue-router';
 import { useCart } from '@/stores/cart';
 
 const props = defineProps({
     usuario: {
-        type: String,
-        required: true
-    },
-    mes: {
         type: String,
         required: true
     }
@@ -97,6 +99,7 @@ const fecha_creacion = ref(`${año}-${mes}-${dia}`);
 const fecha_finalizacion = ref('');
 const usuario = props.usuario;
 const router = useRouter();
+const mesesSeleccionados = ref('');
 
 const limpiarInputs = () => {
     id.value = '';
@@ -107,6 +110,7 @@ const limpiarInputs = () => {
     correo.value = '';
     fecha_creacion.value = '';
     fecha_finalizacion.value = '';
+    mesesSeleccionados.value = '';
 };
 
 const onFileChange = (event) => {
@@ -133,11 +137,11 @@ const onFileChange = (event) => {
     }
 };
 
-const calcularFechaFinalizacion = () => {
-    if (!props.mes) return;
+const calcularFechaFinalizacion = computed(() => {
+    if (!mesesSeleccionados.value) return;
     
     const today = new Date();
-    const mesNumero = parseInt(props.mes);
+    const mesNumero = parseInt(mesesSeleccionados.value);
     
     if (isNaN(mesNumero)) {
         console.error('El valor de mes no es un número válido');
@@ -151,8 +155,8 @@ const calcularFechaFinalizacion = () => {
     const mes = (nuevaFecha.getMonth() + 1).toString().padStart(2, '0');
     const dia = nuevaFecha.getDate().toString().padStart(2, '0');
     
-    fecha_finalizacion.value = `${año}-${mes}-${dia}`;
-};
+    return fecha_finalizacion.value = `${año}-${mes}-${dia}`;
+});
 
 const registerRestaurant = async () => {
     try { 
@@ -212,13 +216,6 @@ const registerRestaurant = async () => {
     }
 };
 
-onMounted(() => {
-    calcularFechaFinalizacion();
-});
-
-watch(() => props.mes, () => {
-    calcularFechaFinalizacion();
-});
 </script>
     
     <style scoped>
@@ -263,6 +260,21 @@ watch(() => props.mes, () => {
     .container1 span{
         font-size: 15px;
         margin-bottom: 15px;
+    }
+
+    .register-select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        margin-bottom: 1.25rem;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 1rem;
+        background-color: #f9f9f9;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1em;
     }
     
     .container-input1{

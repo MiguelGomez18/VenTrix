@@ -327,17 +327,17 @@ const agregarProducto = async () => {
   }
 };
 
-const editarProducto = (indice) => {
+const editarProducto = (indicePagina) => {
+  const indiceReal = (paginaActual.value - 1) * filasPorPagina + indicePagina;
+  const id_categoria = categorias.value.find(cate => cate.producto.some(prod => prod.id_producto === productos.value[indiceReal].id_producto))?.id;
 
-  const id_categoria = categorias.value.find(cate => cate.producto.some(prod => prod.id_producto === productos.value[indice].id_producto))?.id;
-
-  const { id_producto, nombre, precio, imagen, disponibilidad } = productos.value[indice];
+  const { id_producto, nombre, precio, imagen, disponibilidad } = productos.value[indiceReal];
 
   producto.value = { id_producto, nombre, precio, categoria: { id: id_categoria }, imagen, disponibilidad };
   
   estaEditando.value = true;
   indiceEdicion.value = id_producto; 
-  indiceEd.value = indice;
+  indiceEd.value = indiceReal;
 };
 
 const actualizarProducto = async () => {
@@ -405,7 +405,7 @@ const actualizarProducto = async () => {
   }
 };
 
-const eliminarProducto = async (indice) => {
+const eliminarProducto = async (indicePagina) => {
   const result = await Swal.fire({
     title: '¿Estás seguro?',
     text: "Esta acción no se puede deshacer",
@@ -421,9 +421,11 @@ const eliminarProducto = async (indice) => {
   
   if (result.isConfirmed) {
     try {
-      const productoAEliminar = productos.value[indice];
+      const indiceReal = (paginaActual.value - 1) * filasPorPagina + indicePagina;
+      const productoAEliminar = productos.value[indiceReal];
       await axios.delete(`/producto/${productoAEliminar.id_producto}`);
-      productos.value.splice(indice, 1);
+      await buscar();
+      await buscarcategorias();
 
       Swal.fire({
         title: 'Eliminado',
@@ -432,6 +434,9 @@ const eliminarProducto = async (indice) => {
         backdrop: false,
         allowOutsideClick: false
       });
+      if (productosPaginados.value.length === 0 && paginaActual.value > 1) {
+        paginaActual.value--;
+      }
     } catch (error) {
       console.error('Error al eliminar el producto:', error);
       Swal.fire({
@@ -456,12 +461,14 @@ const resetearFormulario = () => {
     categoria: { id: '' },
     nombre: '',
     imagen: '',      
-    disponibilidad: false 
+    disponibilidad: false, 
+    activo: 'ACTIVO'
   };
   file.value = null;
   fileInput.value.value = null;
   estaEditando.value = false;
   indiceEdicion.value = null;
+  sucursalesSeleccionadas.value = [];
 };
 </script>
 

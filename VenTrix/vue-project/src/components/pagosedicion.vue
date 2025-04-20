@@ -199,10 +199,11 @@ const agregarTipoPago = async () => {
 };
 
 // Función para editar un tipo de pago
-const editarTipoPago = (indice) => {
-  tipoPago.value = { ...tiposPago.value[indice] }; // Cargar datos en el formulario
+const editarTipoPago = (indicePagina) => {
+  const indiceReal = (paginaActual.value - 1) * filasPorPagina + indicePagina;
+  tipoPago.value = { ...tiposPago.value[indiceReal] }; // Cargar datos en el formulario
   estaEditando.value = true;
-  indiceEdicion.value = indice;
+  indiceEdicion.value = indiceReal;
 };
 
 // Función para actualizar un tipo de pago
@@ -234,9 +235,10 @@ const actualizarTipoPago = async () => {
 };
 
 // Función para eliminar un tipo de pago
-const eliminarTipoPago = async (indice) => {
+const eliminarTipoPago = async (indicePagina) => {
   try {
-    const tipoPagoAEliminar = tiposPago.value[indice];
+    const indiceReal = (paginaActual.value - 1) * filasPorPagina + indicePagina;
+    const tipoPagoAEliminar = tiposPago.value[indiceReal];
     // Enviar la solicitud DELETE con el ID del tipo de pago
     await axios.delete(`/tipo_pago/${tipoPagoAEliminar.id}`); // Cambiar URL aquí
     await buscarTiposPago() // Eliminar el tipo de pago de la lista
@@ -248,6 +250,9 @@ const eliminarTipoPago = async (indice) => {
       backdrop: false,  // Evita problemas con el fondo modal
       allowOutsideClick: false, 
     });
+    if (mesasPaginadas.value.length === 0 && paginaActual.value > 1) {
+      paginaActual.value--;
+    }
   } catch (error) {
     console.error('Error al eliminar el tipo de pago:', error);
     Swal.fire({
@@ -267,9 +272,10 @@ const cancelarEdicion = () => {
 
 // Función para resetear el formulario
 const resetearFormulario = () => {
-  tipoPago.value = { id: '', descripcion: '', sucursal: nit };
+  tipoPago.value = { id: '', descripcion: '', sucursal: nit, activo: 'ACTIVO' };
   estaEditando.value = false;
   indiceEdicion.value = null;
+  sucursalesSeleccionadas.value = [];
 };
 </script>
 

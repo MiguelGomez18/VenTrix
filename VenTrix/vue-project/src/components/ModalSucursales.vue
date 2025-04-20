@@ -3,34 +3,38 @@
     <div class="modal-content">
       <h2>Seleccionar Sucursales</h2>
       <p>Seleccione las sucursales donde desea agregar:</p>
+
+      <div v-if="sucursales.length === 0" class="cart-empty">
+        <p>No cuentas con ninguna Sucursal.</p>
+      </div>
       
-      <div class="sucursales-list">
+      <div v-if="sucursales.length != 0" class="sucursales-list">
         <table>
-      <thead class="encabezado">
-        <tr>
-          <th>Nit</th>
-          <th>Nombre</th>
-          <th>Selección</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="sucursal in sucursalesPaginadas" :key="sucursal.id" class="tr">
-          <td :for="'sucursal-'+sucursal.id">{{ sucursal.id }}</td>
-          <td :for="'sucursal-'+sucursal.id">{{ sucursal.nombre }}</td>
-          <td>
-            <input
-              type="checkbox"
-              :id="'sucursal-'+sucursal.id"
-              :value="sucursal.id"
-              v-model="seleccionadasLocales"
-            />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          <thead class="encabezado">
+            <tr>
+              <th>Nit</th>
+              <th>Nombre</th>
+              <th>Selección</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="sucursal in sucursalesPaginadas" :key="sucursal.id" class="tr">
+              <td :for="'sucursal-'+sucursal.id">{{ sucursal.id }}</td>
+              <td :for="'sucursal-'+sucursal.id">{{ sucursal.nombre }}</td>
+              <td>
+                <input
+                  type="checkbox"
+                  :id="'sucursal-'+sucursal.id"
+                  :value="sucursal.id"
+                  v-model="seleccionadasLocales"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <div class="paginacion">
+      <div v-if="sucursales.length != 0" class="paginacion">
         <button :disabled="paginaActual === 1" @click="paginaAnterior">Anterior</button>
         <span>Página {{ paginaActual }} de {{ totalPaginas }}</span>
         <button :disabled="paginaActual === totalPaginas" @click="paginaSiguiente">Siguiente</button>
@@ -38,7 +42,7 @@
 
       <div class="modal-buttons">
         <button @click="cerrarModal">Cancelar</button>
-        <button @click="confirmarSeleccion">Confirmar</button>
+        <button v-if="sucursales.length != 0" @click="confirmarSeleccion">Confirmar</button>
       </div>
     </div>
   </div>
@@ -134,6 +138,18 @@ watch(() => props.mostrar, (newVal) => {
   max-width: 600px;
   max-height: 80vh;
   overflow-y: auto;
+}
+
+.cart-empty {
+  width: auto;
+  text-align: center;
+  font-style: italic;
+  margin-top: 20px;
+  color: red; 
+  border-radius: 8px; 
+  padding: 10px;
+  border: 1px solid rgba(255, 0, 0, 0.334); 
+  background-color: rgba(255, 0, 0, 0.199);
 }
 
 .sucursales-list {

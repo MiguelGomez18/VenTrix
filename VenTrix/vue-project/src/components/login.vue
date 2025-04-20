@@ -47,35 +47,17 @@ const sucursal1 = ref('');
 const nombre = ref('');
 const correo = ref('');
 const password = ref('');
-const confirmPassword = ref('');
 const roles = ["ADMINISTRADOR","ADMINISTRADOR_SUCURSAL","CAJERO","MESERO","COCINA"];
-const date = new Date();
-const dia = (date.getDate() < 10 ? '0':'') + date.getDate();
-const mes = ((date.getMonth() + 1) < 10 ? '0':'') + (date.getMonth() + 1);
-const año = date.getFullYear();
-const fecha_creacion = ref(`${año}-${mes}-${dia}`);
 const frmlogin = ref(true);
 const menError = ref('');
 const isToggled = ref(false);
-const mesesSeleccionados = ref(''); 
+const mesesSeleccionados = ref(cart.mes); 
 
 const limpiarInputs = () => {
   documento.value = '';
   nombre.value = '';
   correo.value = '';
   password.value = '';
-};
-
-const passwordMismatch = computed(() => {
-    if (confirmPassword.value == '') {
-        return false;
-    }
-    return password.value != confirmPassword.value || confirmPassword.value == '';
-})
-
-const validarPassword = (password) => {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¡¿])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?¡¿]{8,}$/;
-    return regex.test(password);
 };
 
 const loginPropietario = async () => {
@@ -102,13 +84,13 @@ const loginPropietario = async () => {
             if (estadoUsuario.rol == "ADMINISTRADOR") {
 
                 await buscarid_restaurante(documento1.value);
-                cart.restaurante = idrestaurante.value;
                 if (idrestaurante.value == '') {
                     await buscarRol(correo.value);
                     cart.rol = rol1.value;
-                    router.push({ name: 'Restaurante', params: { usuario: documento1.value, mes: mesesSeleccionados.value } });
+                    router.push({ name: 'Restaurante', params: { usuario: documento1.value } });
                     return;
                 }
+                cart.restaurante = idrestaurante.value;
                 const fechaFinalizacionResponse = await axios.get(`/restaurante/${cart.restaurante}`);
                 fechaFinalizacionStr = fechaFinalizacionResponse.data.fecha_finalizacion; 
             } else if (estadoUsuario.rol == "ADMINISTRADOR_SUCURSAL") {
@@ -281,41 +263,7 @@ const loginPropietario = async () => {
 
             limpiarInputs();
 
-        } else {
-
-            if (!validarPassword(password.value)) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error de contraseña',
-                    text: 'La contraseña debe tener al menos 8 caracteres, incluyendo letras con almenos una mayuscula, números y caracteres especiales.',
-                    backdrop: false,  // Evita problemas con el fondo modal
-                    allowOutsideClick: false, 
-                });
-                return; 
-            }
-            console.log(fecha_creacion.value);
-            const response = await axios.post('/usuario', {
-                documento: documento.value,
-                nombre: nombre.value,
-                correo: correo.value,
-                password: password.value,
-                rol: "ADMINISTRADOR",
-                fecha_creacion: fecha_creacion.value,
-                estado: "ACTIVO"
-            });
-            
-            console.log('Registro OK');
-            Swal.fire({
-                icon: 'success',
-                title: 'Propietario Registrado',
-                text: 'Se registró de manera exitosa',
-                backdrop: false,  // Evita problemas con el fondo modal
-                allowOutsideClick: false, 
-            });
-
-            limpiarInputs();
-            toggleSignUp();
-        }
+        } 
     } catch (error) {
 
         console.error("Error al iniciar sesión", error);
