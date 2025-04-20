@@ -51,31 +51,33 @@
       </form>
     </div>
 
-    <table>
-      <thead class="encabezado">
-        <tr>
-          <th>Nombre</th>
-          <th>Precio</th>
-          <th>Categoría</th>
-          <th>Imagen</th>
-          <th v-if="!mostrar1">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="tr" v-for="(prod, indice) in productosPaginados" :key="prod.id_producto">
-          <td>{{ prod.nombre }}</td>
-          <td>{{ prod.precio }}</td>
-          <td>
-            {{ categoriasFiltradas.find(cate => cate.producto.some(pro => pro.id_producto === prod.id_producto))?.nombre || 'Sin Categoría' }}
-          </td>
-          <td><img :src="getImagen(prod.imagen)" alt="Imagen del producto" /></td>
-          <td v-if="!mostrar1">
-            <button class="btnEditar" @click="editarProducto(indice)">Editar</button>
-            <button class="btnEliminar" @click="eliminarProducto(indice)">Eliminar</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-container">
+      <table>
+        <thead class="encabezado">
+          <tr>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Categoría</th>
+            <th>Imagen</th>
+            <th v-if="!mostrar1">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="tr" v-for="(prod, indice) in productosPaginados" :key="prod.id_producto">
+            <td>{{ prod.nombre }}</td>
+            <td>{{ prod.precio }}</td>
+            <td>
+              {{ categoriasFiltradas.find(cate => cate.producto.some(pro => pro.id_producto === prod.id_producto))?.nombre || 'Sin Categoría' }}
+            </td>
+            <td><img :src="getImagen(prod.imagen)" alt="Imagen del producto" /></td>
+            <td v-if="!mostrar1">
+              <button class="btnEditar" @click="editarProducto(indice)">Editar</button>
+              <button class="btnEliminar" @click="eliminarProducto(indice)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <div class="paginacion">
       <button :disabled="paginaActual === 1" @click="paginaActual--">Anterior</button>
       <span>Página {{ paginaActual }} de {{ totalPaginas }}</span>
@@ -510,6 +512,12 @@ const resetearFormulario = () => {
     padding: 30px;
     border: solid 3px var(--color_principal);
   }
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Para un mejor scroll en iOS */
+    margin-top: 20px;
+  }
   table {
     width: 100%;
     border-collapse: collapse;
@@ -649,7 +657,7 @@ const resetearFormulario = () => {
   }
 
   .titulobuscar input {
-    width: 40%;
+    width: 100%;
   }
 
   .formulario {
@@ -697,15 +705,15 @@ const resetearFormulario = () => {
 
 @media (max-width: 819px) {
   .contenedorProductos {
-    width: 100%;
-    padding: 10px;
-    border: none;
+    padding: 15px;
+    width: auto;
   }
 
   .titulobuscar {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
+    padding: 5px;
   }
 
   .titulobuscar h1 {
@@ -713,7 +721,7 @@ const resetearFormulario = () => {
   }
 
   .titulobuscar input {
-    width: 100%;
+    width: 95%;
   }
 
   .formulario {
@@ -736,7 +744,7 @@ const resetearFormulario = () => {
   }
 
   table {
-    font-size: 12px;
+    font-size: 14px;
   }
 
   th,
@@ -745,7 +753,7 @@ const resetearFormulario = () => {
   }
 
   td img {
-    width: 50px;
+    width: 60px;
   }
 
   .btnEditar,

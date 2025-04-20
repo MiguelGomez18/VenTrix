@@ -136,7 +136,7 @@ onMounted(async () => {
 <style>
   
   .compra-rapida-container {
-    width: 16%; 
+    width: 50%; 
     height: 500px; 
     background-color: var(--color_principal); 
     border: 5px solid #f0f0f0;
@@ -158,7 +158,17 @@ onMounted(async () => {
     width: 100%;
     height: 350px;
   }
-  </style>
+
+  
+  @media (max-width: 819px) {
+    .compra-rapida-container {
+      width: 70%; 
+    }
+    .compra-rapida span {
+      text-align: center;
+    }
+  }
+</style>
   
 
   

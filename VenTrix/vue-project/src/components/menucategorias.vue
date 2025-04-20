@@ -103,7 +103,7 @@
   .categoria-item {
     display: flex;
     align-items: center;
-    border: 1px solid var(--color_principal);
+    border: 1.5px solid var(--color_principal);
     border-radius: 10px;
     padding: 10px;
     cursor: pointer;
@@ -119,5 +119,23 @@
     font-size: 16px;
   }
 
-  </style>
+  @media (max-width: 819px) {
+    .contenedor-categorias {
+      top: 70px;
+      padding: 15px;
+    }
+
+    .categorias-lista {
+      gap: 10px;
+    }
+    
+    .categoria-item {
+      padding: 8px;
+    }
+    .categoria-nombre {
+      font-size: 13px;
+    }
+  }
+
+</style>
   

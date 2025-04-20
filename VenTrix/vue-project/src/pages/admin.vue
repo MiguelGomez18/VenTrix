@@ -21,6 +21,11 @@ const { idrestaurante } = props;
 
 <style>
 .contenido {
-    margin-top: 80px;
+  margin-top: 80px;
+}
+@media (max-width: 768px) {
+  .contenido {
+    margin-top: 60px;
+  }
 }
 </style>

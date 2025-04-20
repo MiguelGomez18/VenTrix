@@ -206,17 +206,19 @@
 
 @media (max-width: 819px) {
   .container-form3 {
-    width: 100%; /* Ocupamos todo el ancho disponible */
+    width: 80%;
     padding: 15px;
   }
 
   .sign-up3 h2 {
     font-size: 24px; /* Reducimos el tamaño del título */
+    margin-bottom: 25px;
   }
 
-  .sign-up3 input {
-    width: 100%; /* Los inputs ocupan todo el ancho */
-    font-size: 14px; /* Reducimos el tamaño de la fuente */
+  .sign-up3 input{
+    width: 90%;
+    padding: 8px;
+    margin-bottom: 10px;
   }
 
   .butons {

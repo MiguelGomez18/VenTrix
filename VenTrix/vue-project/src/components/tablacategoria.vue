@@ -420,6 +420,7 @@ const resetearFormulario = () => {
 @media (max-width: 819px) {
   .contenedorCategorias {
     padding: 15px;
+    width: auto;
   }
 
   .titulobuscar {

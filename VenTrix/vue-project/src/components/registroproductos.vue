@@ -1,6 +1,6 @@
 <template>
     <div class="contenedorpadre">
-        <div>
+        <div class="contenedorhijo">
             <table>
                 <thead class="encabezado">
                     <tr>
@@ -116,7 +116,8 @@ watch(nit, (newVal) => {
     flex-direction: column;
     gap: 20px;
     width: 80%;
-    margin-left: 30px;
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: 80px;
 }
 
@@ -195,6 +196,18 @@ watch(nit, (newVal) => {
     }
 
     @media (max-width: 819px) {
+      .contenedorpadre{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: auto;
+        padding: 0 20px;
+        margin: 0 0 80px;
+      }
+      .contenedorhijo table {
+        margin: 0;
+        padding: 0;
+      }
     }
 
 </style>

@@ -147,5 +147,30 @@
   .card button:hover {
     background-color: #0bcb4f;
   }
+  @media (max-width: 819px) {
+    .sucursales-container {
+      text-align: center;
+      padding: 10px;
+      margin-bottom: 80px;
+    }
+    .card {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 15px;
+    }
+    .card h3 {
+      font-size: 18px;
+    }
+    
+    .card p {
+      font-size: 13px;
+      gap: 20px;
+    }
+  }
   </style>
   

@@ -90,26 +90,32 @@ const restablecer = async () => {
         transform: translate(-50%, -50%);
         border-radius: 10px;
         box-shadow: 10px 10px 40px 26px rgba(0, 0, 0, 0.15);
+        width: 90%;
+        max-width: 500px;
     }
+    
     .container .restablecimiento {
-        padding: 40px 50px;
+        padding: 30px;
         width: 100%;
         display: flex;
         align-items: center;
         justify-content: space-evenly;
         flex-direction: column;
+        box-sizing: border-box;
     }
 
     .restablecimiento label {
         margin-bottom: 30px;
         font-size: 30px;
         font-weight: 900;
+        text-align: center;
     }
 
     .restablecimiento input {
         border: none;
         outline: none;
-        width: 400px;
+        width: 100%;
+        max-width: 400px;
         height: 45px;
         font-size: 17px;
         padding-left: 15px;
@@ -118,13 +124,57 @@ const restablecer = async () => {
         background-color: #eeeeee;
     }
 
+    .contra {
+        color: red; 
+        border-radius: 8px; 
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+        padding: 10px;
+        margin-bottom: 5px;
+        border: 1px solid rgba(255, 0, 0, 0.334); 
+        background-color: rgba(255, 0, 0, 0.199);
+    }
+
     .restablecimiento button {
         width: 50%;
+        max-width: 200px;
         background-color: var(--color_principal);
         color: var(--color_letra_blanca);
         font-size: 15px;
         border: none;
         border-radius: 10px;
         padding: 12px 0px;
+    }
+
+    @media (max-width: 768px) {
+        .restablecimiento label {
+            font-size: 24px;
+        }
+        
+        .restablecimiento input {
+            height: 40px;
+            font-size: 15px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .container {
+            box-shadow: 5px 5px 20px 13px rgba(0, 0, 0, 0.15);
+        }
+        
+        .restablecimiento {
+            padding: 20px;
+        }
+        
+        .restablecimiento label {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .restablecimiento button {
+            width: 60%;
+            padding: 10px 0;
+        }
     }
 </style>

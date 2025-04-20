@@ -20,21 +20,33 @@
           </v-btn>
         </div>
       </div>
+      <div v-if="mostrarBotones" class="boton-salir" :class="{ show: mostrarBotones }" ref="mostrarbotonRef"></div>
     </v-app>
   </template>
   
   <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router'; 
 import { useCart } from '@/stores/cart';
 
 const mostrarBotones = ref(false);
+const mostrarbotonRef = ref(null);
 const router = useRouter(); 
 const cart = useCart();
 const nit = cart.nit;
 
 const alternarBotones = () => {
   mostrarBotones.value = !mostrarBotones.value;
+};
+
+const handleClickOutside = (event) => {
+  if (mostrarbotonRef.value && !mostrarbotonRef.value.contains(event.target)) {
+    const userIcon = document.querySelector('.contenedor-boton-flotante');
+    const boton = document.querySelector('.contenedor-botones');
+    if (event.target !== userIcon && !userIcon.contains(event.target) || boton.contains(event.target)) {
+      mostrarBotones.value = false;
+    }
+  }
 };
 
 const navegarARuta = (name) => {
@@ -44,6 +56,14 @@ const navegarARuta = (name) => {
   }
   router.push({ name: name });
 };
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside);
+});
 </script>
   
   <style>

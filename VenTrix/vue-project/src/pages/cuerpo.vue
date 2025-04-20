@@ -14,4 +14,9 @@ import menuinteractivo from '@/components/menuinteractivo.vue';
 .contenido {
     margin-top: 80px;
 }
+@media (max-width: 768px) {
+  .contenido {
+    margin-top: 60px;
+  }
+}
 </style>

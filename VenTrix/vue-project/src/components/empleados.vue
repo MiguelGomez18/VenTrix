@@ -8,30 +8,32 @@
             placeholder="Buscar Empleado por documento" 
         />
         </div>
-        <table>
-        <thead class="encabezado">
-            <tr>
-            <th>Documento</th>
-            <th v-if="!habilitado">Nit</th>
-            <th>Nombre</th>
-            <th>Correo</th>
-            <th>Rol</th>
-            <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="tr" v-for="(user, indice) in empleadosPaginados" :key="user.documento">
-            <td>{{ user.documento }}</td>
-            <td v-if="!habilitado">{{ user.sucursal }}</td>
-            <td>{{ user.nombre }}</td>
-            <td>{{ user.correo }}</td>
-            <td>{{ user.rol }}</td>
-            <td>
-                <button class="btnEliminar" @click="eliminarEmpleado(indice)">Eliminar</button>
-            </td>
-            </tr>
-        </tbody>
-        </table>
+        <div class="table-container">
+          <table>
+          <thead class="encabezado">
+              <tr>
+              <th>Documento</th>
+              <th v-if="!habilitado">Nit</th>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Rol</th>
+              <th>Acciones</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr class="tr" v-for="(user, indice) in empleadosPaginados" :key="user.documento">
+              <td>{{ user.documento }}</td>
+              <td v-if="!habilitado">{{ user.sucursal }}</td>
+              <td>{{ user.nombre }}</td>
+              <td>{{ user.correo }}</td>
+              <td>{{ user.rol }}</td>
+              <td>
+                  <button class="btnEliminar" @click="eliminarEmpleado(indice)">Eliminar</button>
+              </td>
+              </tr>
+          </tbody>
+          </table>
+        </div>
         <div class="paginacion">
           <button :disabled="paginaActual === 1" @click="paginaActual--">Anterior</button>
           <span>Página {{ paginaActual }} de {{ totalPaginas }}</span>
@@ -178,6 +180,12 @@ const eliminarEmpleado = async (indice) => {
     padding: 30px;
     border: none;
   }
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Para un mejor scroll en iOS */
+    margin-top: 20px;
+  }
   table {
     width: 100%;
     border-collapse: collapse;
@@ -276,7 +284,7 @@ const eliminarEmpleado = async (indice) => {
 
 @media (max-width: 819px) {
   .contenedorEmpleados {
-    width: 100%; /* El contenedor ocupa todo el ancho */
+    width: 90%; /* El contenedor ocupa todo el ancho */
     padding: 15px; /* Reducimos el padding */
   }
 
@@ -316,11 +324,6 @@ const eliminarEmpleado = async (indice) => {
 
   .paginacion button {
     width: 100%; /* Los botones ocupan todo el ancho */
-  }
-
-  /* Ocultar columnas no esenciales */
-  th:nth-child(2), td:nth-child(2) {
-    display: none; /* Ocultamos la columna "Nit" */
   }
 }
 </style>

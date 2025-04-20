@@ -83,5 +83,37 @@ const navegarARuta = (name) => {
     align-items: center;     
     text-align: center;      
     gap: 5px;         
-}
+  }
+
+  @media (max-width: 819px) {
+    .contenedor-boton-flotante {
+      bottom: 10px;
+      left: 10px; 
+    }
+    .boton-flotante {
+      bottom: 10px;
+      left: 10px; 
+      width: 60px;     
+      height: 60px;      
+    }
+    .imagen-icono {
+      width: 35px;
+      height: 35px; 
+    }
+    .contenedor-botones {
+      bottom: 80px; 
+      left: 10px;    
+      gap: 5px; 
+    }
+    
+    .boton-secundario {
+      font-size: 11px;  
+      gap: 1px;      
+      background-color: #c0c6c8;
+    }
+    .boton-secundario img {
+      width: 30px;
+      height: 30px; 
+    }
+  }
 </style>

@@ -115,6 +115,7 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
   width: auto;
 }
 
@@ -125,7 +126,7 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 25px;
   background-color: #f0f0f0;
   border: 5px solid var(--color_principal);
   border-radius: 10px;
@@ -137,5 +138,17 @@ onMounted(() => {
 .mesas img {
   width: 100px;
   height: 100px;
+}
+
+@media (max-width: 819px) {
+  .mesas {
+    padding: 12px;
+    margin: 8px 8px;
+  }
+
+  .mesas img {
+    width: 70px;
+    height: 70px;
+  }
 }
 </style>

@@ -448,6 +448,7 @@ const resetearFormulario = () => {
 @media (max-width: 819px) {
   .contenedorTipoPago {
     padding: 15px;
+    width: auto;
   }
 
   .titulobuscar {

@@ -51,51 +51,54 @@ const closeModal = () => {
 };
 </script>
   
-  <style>
+<style>
   .cuadro1 {
-  margin: 0 auto 80px;
-  width: 88%;
-  display: flex;
-  justify-content: space-between;
-  align-items: start;
-  gap: 15px;
-  flex-wrap: nowrap;
-}
+    margin: 0 auto 80px;
+    width: 88%;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 15px;
+    flex-wrap: nowrap;
+  }
 
-.section1 {
-  width: calc(100% - var(--tamaño-section2, 40%));
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
+  .section1 {
+    width: calc(100% - var(--tamaño-section2, 40%));
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
 
-.section2 {
-  position: sticky;
-  top: 75px;
-  width: var(--tamaño-section2, 40%); 
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  z-index: 10;
-  background: #fff;
-  border-radius: 8px;
-}
-
-@media (max-width: 768px) {
-  .cuadro1 {
+  .section2 {
+    position: sticky;
+    top: 75px;
+    width: var(--tamaño-section2, 40%); 
+    display: flex;
     flex-direction: column;
+    gap: 10px;
+    z-index: 10;
+    background: #fff;
+    border-radius: 8px;
   }
-  .section1,
-  .section2 {
-    width: 100%;
-  }
-  .section2 {
-    position: relative;
-  }
-}
 
-  </style>
+  @media (max-width: 1024px) {
+    .cuadro1 {
+      flex-direction: column;
+      margin: 15px 20px;
+      
+    }
+    .section1,
+    .section2 {
+      width: 100%;
+    }
+    .section2 {
+      position: relative;
+      top: 35px;
+    }
+  }
+
+</style>
   
   

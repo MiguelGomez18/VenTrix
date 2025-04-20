@@ -415,13 +415,14 @@ margin-top: 7px;
 
 @media (max-width: 819px) {
   .container-form3 {
-    padding: 15px; /* Reducimos el padding */
+    padding: 0px; /* Reducimos el padding */
     flex-direction: column; /* Apilamos el formulario y la imagen */
     align-items: center; /* Centramos los elementos */
   }
 
-  .sign-up3 {
-    width: 100%; /* El formulario ocupa todo el ancho */
+  .container-form3 .sign-up3 {
+    width: 80%; /* El formulario ocupa todo el ancho */
+    justify-content: flex-start;
   }
 
   .content-img {
@@ -432,11 +433,78 @@ margin-top: 7px;
 
   .sign-up3 h2 {
     font-size: 24px; /* Reducimos el tamaño del título */
+    margin-bottom: 25px;
   }
 
-  .sign-up3 input {
-    width: 100%; /* Los inputs ocupan todo el ancho */
-    font-size: 14px; /* Reducimos el tamaño de la fuente */
+  .sign-up3 input{
+    width: 90%;
+    padding: 8px;
+    margin-bottom: 10px;
+  }
+
+  .fecha {
+    width: 100%;
+  }
+
+  .fecha label {
+    text-align: center;
+  }
+
+  .fecha input {
+    width: 40%;
+  }
+
+  .fecha .fecha_pago {
+    height: 35px;
+    padding: 0 10px;
+    margin-left: 10px;
+  }
+
+  .fecha_pago.disabled-btn {
+    background-color: #989898;
+    color: #e0e0e0;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .fecha_pago[disabled] {
+    opacity: 1;
+  }
+
+  /* Estilo para el tooltip */
+  [v-tooltip] {
+    position: relative;
+  }
+
+  [v-tooltip]::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+  }
+
+  [v-tooltip]:hover::after {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .custom-label {
+    color: black;
+    padding: 4px 10px;
+  }
+
+  .custom-label span {
+    font-size: 14px;
   }
 
   .butons {
@@ -449,15 +517,21 @@ margin-top: 7px;
     width: 100%; /* El botón ocupa todo el ancho */
     padding: 10px 15px; /* Reducimos el padding */
     font-size: 14px; /* Reducimos el tamaño de la fuente */
+    margin: 0;
   }
 
   .edit {
     width: 100%; /* El botón de editar ocupa todo el ancho */
     text-align: center; /* Centramos el ícono */
+    margin: 0;
   }
 
   .edit img {
     width: 18px; /* Reducimos el tamaño del ícono */
+  }
+  .content-img {
+    width: 70%;
+    border: 6px solid rgb(217, 217, 217);
   }
 }
 </style>

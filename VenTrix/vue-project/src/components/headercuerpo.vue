@@ -5,12 +5,6 @@
         <img src="" alt="" />
         <a href="">VENTRIX</a>
       </div>
-      <a href="#menu" class="target">
-        <img
-          src="../components/icons/icons8-menú-24.png"
-          class="icon"
-        />
-      </a>
       <ul class="ul">
         <a href="https://wa.me/573507113526"><img src="../components/icons/icons8-whatsapp-48.png" alt="WhatsApp"></a>
         <a href=""><img src="../components/icons/icons8-instagram-48.png" alt="Instagram"></a>
@@ -57,7 +51,6 @@ const toggleUserMenu = () => {
 // Cerrar menú al hacer clic fuera
 const handleClickOutside = (event) => {
   if (userMenuRef.value && !userMenuRef.value.contains(event.target)) {
-    // Verificar si el clic no fue en el ícono de usuario
     const userIcon = document.querySelector('.user1');
     if (event.target !== userIcon && !userIcon.contains(event.target)) {
       showUserMenu.value = false;
@@ -192,7 +185,7 @@ onBeforeUnmount(() => {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   border-radius: 5px;
   padding: 10px;
-  z-index: 10;
+  z-index: 12;
   display: flex;
   flex-direction: column;
   align-items: start;
@@ -289,5 +282,13 @@ onBeforeUnmount(() => {
 .icon {
   width: 0;
   height: 0;
+}
+
+
+@media (max-width: 819px) {
+  .user1 {
+    width: 100%;
+    cursor: pointer;
+  }
 }
 </style>

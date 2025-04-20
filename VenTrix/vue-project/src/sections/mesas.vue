@@ -1,12 +1,12 @@
 <template>
     <div class="contenedor-principal">
     <!-- MESAS A LA IZQUIERDA -->
-    <div class="contenedor-mesas">
+    <div class="contenedor-mesas" :style="{ '--tamaño-section3': `${mesa}%` }">
       <tarjetamesas :nit="nit" :rol="rol" />
     </div>
 
     <!-- MESA RÁPIDA A LA DERECHA -->
-    <div class="contenedor-mesa-rapida">
+    <div class="contenedor-mesa-rapida" :style="{ '--tamaño-section4': `${rapida}%` }">
       <comprarapida :nit="nit" :rol="rol" />
     </div>
   </div>
@@ -19,6 +19,7 @@
 import { defineProps } from 'vue';
 import tarjetamesas from '@/components/tarjetamesas.vue';
 import comprarapida from '@/components/comprarapida.vue';
+import { useCart } from '@/stores/cart';
 
 const props = defineProps({
   nit: {
@@ -30,6 +31,16 @@ const props = defineProps({
     required: true
   }
 });
+const cart = useCart();
+const rol = cart.rol;
+
+let mesa = 65; 
+let rapida = 25;
+
+if (cart.rol == "MESERO") {
+  mesa = 100;
+  rapida = 0;
+}
 </script>
 
 <style scoped>
@@ -61,21 +72,23 @@ const props = defineProps({
 /* RESPONSIVE */
 @media (max-width: 819px) {
   .contenedor-principal {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px;
+    position: relative;
+    top: 60px;
+    flex-wrap: nowrap;
+    justify-content: center;
+    padding: 0px;
+    gap: 0;
   }
 
   .contenedor-mesa-rapida {
-    width: 100%;
-    position: relative;
-    top: 0;
-    order: -1; /* Mover arriba */
+    width: var(--tamaño-section4);
+    min-width: 0%;
     margin-bottom: 20px;
   }
 
   .contenedor-mesas {
-    width: 100%;
+    width: var(--tamaño-section3);
+    min-width: 0%;
   }
 }
 

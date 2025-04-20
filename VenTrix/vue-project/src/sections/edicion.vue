@@ -41,8 +41,9 @@ const navegarARuta = (name) => {
   flex-direction: column;
   gap: 20px;
   max-width: 1000px;
-  width: 90%;
-  margin: auto;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 80px;
   padding: 0 20px;
 }
@@ -77,18 +78,28 @@ const navegarARuta = (name) => {
 
 /* Mostrar versión responsiva y ocultar botón flotante si ancho <= 819px */
 @media (max-width: 819px) {
+  .contenedorpadre1 {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 90%;
+    margin-bottom: 80px;
+    padding: 0;
+    margin: 0 20px 80px 20px;
+  }
+  .contenedor-boton-flotante1 {
+    top: 60px;
+    right: 10px;
+    z-index: 11;
+  }
   .boton-flotante1 {
-    width: 60px;
-    height: 60px;
-    font-size: 20px;
+    width: 50px;
+    height: 50px;
   }
 
   .boton-flotante1 img {
-    width: 24px;
-    height: 24px;
+    width: 30px;
+    height: 30px;
   }
 }
-
-  
-
 </style>

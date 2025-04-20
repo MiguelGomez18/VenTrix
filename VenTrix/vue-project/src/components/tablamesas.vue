@@ -426,6 +426,7 @@ th, td {
 @media (max-width: 819px) {
   .contenedorMesas {
     padding: 15px;
+    width: auto;
   }
 
   .titulobuscar {

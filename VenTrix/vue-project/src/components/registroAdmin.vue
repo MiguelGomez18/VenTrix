@@ -263,6 +263,7 @@ const loginPropietario = async () => {
   .sign-up2 h2 {
     font-size: 26px; 
     margin-bottom: 20px;
+    text-align: center;
   }
 
   .container-input2 {
@@ -303,6 +304,7 @@ const loginPropietario = async () => {
   .sign-up2 h2 {
     font-size: 22px;
     margin-bottom: 15px;
+    text-align: center;
   }
 
   .container-input2 {

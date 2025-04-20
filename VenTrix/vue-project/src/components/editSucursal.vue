@@ -147,4 +147,48 @@
 .button3:hover {
     background-color: #2bff75;
 }
+@media (max-width: 768px) {
+  .container-form3 {
+    padding: 10px 30px 10px;
+  }
+  .container-form3 .sign-up3{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    transition: transform 0.8s ease-in;
+  }
+  .sign-up3 h2{
+    font-size: 25px;
+    margin-bottom: 25px;
+  }
+  .sign-up3 input{
+    width: 90%;
+    padding: 8px;
+    margin-bottom: 10px;
+  }
+  .butons {
+    width: 100%; /* Los botones ocupan todo el ancho */
+    flex-direction: column; /* Apilamos los botones verticalmente */
+    gap: 10px; /* Reducimos el espacio entre botones */
+  }
+
+  .button3 {
+    width: 100%; /* El botón ocupa todo el ancho */
+    padding: 10px 15px; /* Reducimos el padding */
+    font-size: 14px; /* Reducimos el tamaño de la fuente */
+    margin: 0;
+  }
+
+  .edit {
+    width: 100%; /* El botón de editar ocupa todo el ancho */
+    text-align: center; /* Centramos el ícono */
+    margin: 0;
+  }
+
+  .edit img {
+    width: 18px; /* Reducimos el tamaño del ícono */
+  }
+}
 </style>
