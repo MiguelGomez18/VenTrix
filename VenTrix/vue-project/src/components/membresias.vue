@@ -7,9 +7,9 @@
             <h2>6 meses</h2>
             <h1>$54.900</h1>
             <ul class="menu">
-                <li class="li">Disfruta en todas tus pantallas.</li>
-                <li class="li">Chromecast y Airplay disponibles.</li>
-                <li class="li">Ve en 3 dispositivos a la vez.</li>
+                <li class="li">Accede al registro de todas tus ventas al instante.</li>
+                <li class="li">Visualiza el rendimiento de todos tus restaurantes en un solo panel.</li>
+                <li class="li">Ideal para dueños que gestionan múltiples sucursales.</li>
             </ul>
             <h3>Igual a $17.633,33 al mes</h3>
             <a class="plan" @click.prevent="seleccionarPlan">CREAR CUENTA</a>
@@ -18,9 +18,9 @@
             <h2>12 meses</h2>
             <h1>$169.900</h1>
             <ul class="menu">
-                <li class="li">Disfruta en todas tus pantallas.</li>
-                <li class="li">Chromecast y Airplay disponibles.</li>
-                <li class="li">Ve en 3 dispositivos a la vez.</li>
+                <li class="li">Accede al registro de todas tus ventas al instante.</li>
+                <li class="li">Visualiza el rendimiento de todos tus restaurantes en un solo panel.</li>
+                <li class="li">Ideal para dueños que gestionan múltiples sucursales.</li>
             </ul>
             <h3>Igual a $14.158,33 al mes</h3>
             <a class="plan" @click.prevent="seleccionarPlan">CREAR CUENTA</a>
@@ -29,9 +29,9 @@
             <h2>3 meses</h2>
             <h1>$24.900</h1>
             <ul class="menu1">
-                <li class="li">Disfruta en todas tus pantallas.</li>
-                <li class="li">Chromecast y Airplay disponibles.</li>
-                <li class="li">Ve en 3 dispositivos a la vez.</li>
+                <li class="li">Accede al registro de todas tus ventas al instante.</li>
+                <li class="li">Visualiza el rendimiento de todos tus restaurantes en un solo panel.</li>
+                <li class="li">Ideal para dueños que gestionan múltiples sucursales.</li>
             </ul>
             <a class="plan" @click.prevent="seleccionarPlan">CREAR CUENTA</a>
         </article>

@@ -1,8 +1,12 @@
-
 <template>
   <div class="contenedorLineas">
-    <h1>Gráfica de Ventas del Año</h1> <!-- Título de la sección de la gráfica -->
-    <canvas ref="ventasChart"></canvas> <!-- Elemento canvas donde se renderizará la gráfica -->
+    <h1>Gráfica de Ventas del Año</h1>
+
+    <div v-if="ventasData.every(v => v === 0)" class="mensaje-vacio">
+      <p>No se han registrado ventas en lo que va del año.</p>
+    </div>
+
+    <canvas v-else ref="ventasChart"></canvas>
   </div>
 </template>
 
@@ -101,14 +105,26 @@ export default {
 </script>
 
 <style scoped>
-canvas {
-  max-width: 600px; /* Limitar el ancho máximo del canvas para que no se extienda demasiado */
+.contenedorLineas {
+  margin: 2rem auto;
+  width: 90%;
+  max-width: 700px;
+  height: auto;
+  text-align: center;
 }
 
-.contenedorLineas {
-  margin-top: 100px;
-  margin-left: 100px;
-  width: 50%;
-  height: 400px;
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+
+.mensaje-vacio {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid #ffeeba;
+  font-size: 1.1rem;
+  margin-top: 1rem;
 }
 </style>

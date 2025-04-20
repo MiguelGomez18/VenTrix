@@ -1,10 +1,15 @@
-
 <template>
   <div class="contenedorPie">
     <h1>Gráfica de Productos Más Vendidos (Hoy)</h1>
-    <canvas ref="productosChart"></canvas>
+
+    <div v-if="productosData.length === 0" class="mensaje-vacio">
+      <p>No se han registrado ventas de productos hoy.</p>
+    </div>
+
+    <canvas v-else ref="productosChart"></canvas>
   </div>
 </template>
+
 
 <script>
 import { Chart, registerables } from 'chart.js';
@@ -116,14 +121,26 @@ export default {
 </script>
 
 <style scoped>
-canvas {
-  max-width: 600px;
+.contenedorPie {
+  margin: 2rem auto;
+  width: 90%;
+  max-width: 700px;
+  text-align: center;
 }
 
-.contenedorPie {
-  margin-top: 100px;
-  margin-left: 100px;
-  width: 50%;
-  height: 400px;
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+
+.mensaje-vacio {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid #ffeeba;
+  font-size: 1.1rem;
+  margin-top: 1rem;
 }
 </style>
+

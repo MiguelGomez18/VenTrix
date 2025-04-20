@@ -33,4 +33,12 @@ import informecategoria from '@/components/informecategoria.vue';
   width: 100%;
   margin-bottom: 80px;
 }
+@media (max-width: 780px) {
+  .padre{
+    flex-direction: column;
+  }
+  .padredos{
+    flex-direction: column;
+  }
+}
 </style>

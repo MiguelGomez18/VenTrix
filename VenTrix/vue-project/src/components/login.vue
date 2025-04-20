@@ -1,84 +1,32 @@
 <template>
-    <div class="body">
-    <div :class="{ toggle: isToggled } " class="container">
-    <div class="container-form">
-        <form class="sign-in" @submit.prevent="loginPropietario">
+    <div class="login-body">
+    <div :class="{ 'login-toggle': isToggled }" class="login-container">
+    <div class="login-container-form">
+        <form class="login-sign-in" @submit.prevent="loginPropietario">
         <h2>INICIAR SESIÓN</h2>
-        <div class="redes-sociales">
+        <div class="login-redes-sociales">
             <a href="https://wa.me/573507113526"><img src="../components/icons/icons8-whatsapp-50.png" alt="WhatsApp"></a>
             <a href=""><img src="../components/icons/icons8-instagram-50.png" alt="Instagram"></a>
             <a href=""><img src="../components/icons/icons8-facebook-nuevo-50 (1).png" alt="Facebook"></a>
         </div>
         <span>Use su correo y su contraseña</span>
-        <div class="container-input">
+        <div class="login-container-input">
             <img src="../components/icons/icons8-correo-50.png" alt="Correo">
             <input type="email" placeholder="Email" v-model="correo" required>
         </div>
-        <div class="container-input">
+        <div class="login-container-input">
             <img src="../components/icons/icons8-contraseña-50.png" alt="Contraseña">
             <input type="password" placeholder="Password" v-model="password" required>
         </div>
         <router-link to="/password">¿Olvidaste tu contraseña?</router-link>
         <router-link to="/">Volver..</router-link>
-        <button class="button" type="submit">{{ frmlogin ? 'INICIAR SESIÓN' : 'REGISTRARSE' }}</button>
+        <router-link to="/registarcuenta">Registra Una Cuenta</router-link>
+        
+        <button class="login-button" type="submit">{{ frmlogin ? 'INICIAR SESIÓN' : 'REGISTRARSE' }}</button>
         </form>
     </div>
-
-    <div class="container-form">
-        <form class="sign-up" @submit.prevent="loginPropietario">
-        <h2>REGISTRARSE</h2>
-        <div class="redes-sociales">
-            <a href="https://wa.me/573507113526"><img src="../components/icons/icons8-whatsapp-50.png" alt="WhatsApp"></a>
-            <a href=""><img src="../components/icons/icons8-instagram-50.png" alt="Instagram"></a>
-            <a href=""><img src="../components/icons/icons8-facebook-nuevo-50 (1).png" alt="Facebook"></a>
-        </div>
-        <span>Use su correo electrónico para registrarse</span>
-        <select v-model="mesesSeleccionados">
-            <option value="" disabled>Seleccione una Membresia</option>
-            <option value="3">3 meses - $24.900</option>
-            <option value="6">6 meses - $54.900</option>
-            <option value="12">12 meses - $169.900</option>
-        </select>
-        <div class="container-input">
-            <img src="../components/icons/icons8-tarjeta-de-identificación-50.png" alt="Documento">
-            <input type="text" placeholder="Documento" v-model="documento" required>
-        </div>
-        <div class="container-input">
-            <img src="../components/icons/icons8-usuario-50.png" alt="Usuario">
-            <input type="text" placeholder="Nombre" v-model="nombre" required>
-        </div>
-        <div class="container-input">
-            <img src="../components/icons/icons8-correo-50.png" alt="Correo">
-            <input type="email" placeholder="Correo" v-model="correo" required>
-        </div>
-        <div class="container-input">
-            <img src="../components/icons/icons8-contraseña-50.png" alt="Contraseña">
-            <input type="password" placeholder="Contraseña" v-model="password" required>
-        </div>
-        <div class="container-input">
-            <img src="../components/icons/icons8-contraseña-50.png" alt="Contraseña confirmacion">
-            <input type="password" placeholder="Confirmar Contraseña" v-model="confirmPassword" required>
-        </div>
-        <p class="contra" v-if="passwordMismatch">Las contraseñas no coinciden</p>
-        <router-link to="/">Volver..</router-link>
-        <button class="button" type="submit">{{ frmlogin ? 'INICIAR SESIÓN' : 'REGISTRARSE' }}</button>
-        </form>
-    </div>
-
-    <div class="container-welcome">
-        <div class="welcome-sign-up welcome">
-            <h3>¡Bienvenido!</h3>
-            <p>Por favor, introduce tus datos personales para acceder a todas las funciones del sitio.</p>
-            <button @click="toggleSignIn" class="button" id="btn-sign-up">CREAR CUENTA</button>
-        </div>
-        <div class="welcome-sign-in welcome">
-            <h3>Hola</h3>
-            <p>Crea una cuenta con tus datos personales para empezar a usar todas las funciones del sitio.</p>
-            <button @click="toggleSignUp" class="button" id="btn-sign-in">INICIAR SESIÓN</button>
-        </div>
     </div>
     </div>
-</div>
 </template>
 
 <script setup>
@@ -441,92 +389,89 @@ function toggleSignUp() {
 </script>
   
   
-<style>
-.body{
+<style scoped>
+.login-body {
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #F0F4F3;
     box-shadow: 0 0 10px rgb(0,0,0,0.3);
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-.container{
+.login-container {
     display: flex;
     position: relative;
     background-color: white;
     border-radius: 15px;
     overflow: hidden;
+    width: 100%;
+    max-width: 900px;
 }
 
-.container-form {
+.login-container-form {
     padding: 20px 40px;
     width: 100%;
     overflow: hidden;
     display: flex;
 }
 
-.container-form .sign-in{
-    padding: 60px 0;
+.login-container-form .login-sign-in {
+    padding: 40px 0;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
     transition: transform 0.8s ease-in;
+    width: 100%;
 }
 
-.container-form .sign-up{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    transition: transform 0.8s ease-in;
-}
-
-.container-form h2{
+.login-container-form h2 {
     font-size: 30px;
     margin-bottom: 20px;
+    text-align: center;
 }
 
-.container-form a:hover{
+.login-container-form a:hover {
     color: blue;
     text-decoration: underline;
 }
 
-.redes-sociales{
+.login-redes-sociales {
     display: flex;
-    gap: 10px;
-    margin-bottom: 25px;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
-.redes-sociales a{
+.login-redes-sociales a {
     cursor: pointer;
-    width: 15%;
-    height: 30px;
-    margin: 8px;
+    width: 40px;
+    height: 40px;
+    margin: 5px;
 }
 
-.redes-sociales a img{
+.login-redes-sociales a img {
     border: 1px solid #c9cccb;
     border-radius: 6px;
     padding: 8px;
     cursor: pointer;
     width: 100%;
-    height: 30px;
+    height: 100%;
 }
 
-.container-form span{
+.login-container-form span {
     font-size: 15px;
     margin-bottom: 15px;
+    text-align: center;
 }
 
-.sign-up select {
-    margin-bottom: 10px;
-}
-
-.container-input{
-    width: 400px;
+.login-container-input {
+    width: 100%;
+    max-width: 400px;
     height: 60px;
     margin-bottom: 15px;
     display: flex;
@@ -535,9 +480,10 @@ function toggleSignUp() {
     gap: 8px;
     padding: 0 15px;
     background-color: #eeeeee;
+    border-radius: 5px;
 }
 
-.container-input input{
+.login-container-input input {
     border: none;
     outline: none;
     width: 100%;
@@ -546,41 +492,20 @@ function toggleSignUp() {
     background-color: #eeeeee;
 }
 
-.contra {
-    color: red; 
-    border-radius: 8px; 
-    width: 400px;
-    text-align: center;
-    padding: 10px;
-    margin-bottom: 5px;
-    border: 1px solid rgba(255, 0, 0, 0.334); 
-    background-color: rgba(255, 0, 0, 0.199);
+.login-container-input img {
+    width: 24px;
+    height: 24px;
 }
 
-.container-input img{
-    width: 12%;
-    height: 30px;
-}
-
-.container-form a{
+.login-container-form a {
     color: black;
     font-size: 14px;
     margin-bottom: 10px;
     margin-top: 5px;
-}
-
-.contra {
-    color: red; 
-    border-radius: 8px; 
-    width: 400px;
     text-align: center;
-    padding: 10px;
-    margin-bottom: 5px;
-    border: 1px solid rgba(255, 0, 0, 0.334); 
-    background-color: rgba(255, 0, 0, 0.199);
 }
 
-.button{
+.login-button {
     width: 170px;
     height: 60px;
     font-size: 16px;
@@ -590,76 +515,74 @@ function toggleSignUp() {
     margin-top: 10px;
     background-color: #0def5c;
     color: black;
+    transition: background-color 0.3s;
 }
 
-.sign-up{
-    transform: translate(-100%);
-}
-.container.toggle .sign-in{
-    transform: translateX(100%);
-}
-.container.toggle .sign-up{
-    transform: translateX(0);
+.login-button:hover {
+    background-color: #0bd153;
 }
 
-
-/*welcome*/
-.container-welcome{
-    position: absolute;
-    width: 50%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    transform: translateX(100%);
-    background-color:#1e6838 ;
-    transition: transform 0.5 ease-in-out,border-radius 0.5s ease-in-out;
-    overflow: hidden;
-    border-radius: 20% 0 0 20%;
-}
-
-.container.toggle .container-welcome{
-    transform: translateX(0);
-    border-radius: 0 20% 20% 0;
-    background-color: #1e6838;
-}
-
-.container-welcome .welcome{
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    padding: 0 50px;
-    color: white;
-    transition: transform 0.8s ease-in-out;
-}
-
-.welcome-sign-in{
+.login-toggle .login-sign-in {
     transform: translateX(100%);
 }
 
-
-.container-welcome h3{
-    font-size: 40px;
+/* Estilos responsive */
+@media (max-width: 768px) {
+    .login-body {
+        padding: 10px;
+    }
+    .login-container-form {
+        padding: 25px;
+    }
+    
+    .login-container-form .login-sign-in {
+        padding: 20px 0;
+    }
+    
+    .login-container-input {
+        height: 50px;
+    }
+    
+    .login-container-input input {
+        height: 45px;
+        font-size: 15px;
+    }
+    
+    .login-button {
+        width: 150px;
+        height: 50px;
+        font-size: 15px;
+    }
 }
 
-.container-welcome p{
-    font-size: 17px;
-    text-align: center;
-}
+@media (max-width: 480px) {
+    .login-container-form {
+        padding: 25px;
+    }
+    
+    .login-container-form h2 {
+        font-size: 24px;
+    }
+    
+    .login-container-input {
+        height: 45px;
+        width: 90%;
+    }
+    
+    .login-container-input input {
+        height: 40px;
+        font-size: 14px;
+    }
+    
+    .login-button {
+        width: 160px;
+        height: 50px;
+        font-size: 14px;
+    }
 
-.container-welcome .button{
-    border: 2px solid white;
-    padding: 5px;
+    .login-redes-sociales a img {
+        width: 70%;
+        height: 30px;
+    }
 }
-
-.container.toggle .welcome-sign-in{
-    transform: translateX(0);
-}
-
-.container.toggle .welcome-sign-up{
-    transform: translateX(-100%);
-}
-
 </style>
-

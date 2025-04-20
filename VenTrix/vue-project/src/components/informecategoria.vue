@@ -1,7 +1,12 @@
 <template>
   <div class="contenedorPie">
     <h1>Gráfica de Productos Más Vendidos por Categoría</h1>
-    <canvas ref="productosChart"></canvas>
+    
+    <div v-if="productosData.length === 0" class="mensaje-vacio">
+      <p>No se han registrado ventas para hoy.</p>
+    </div>
+
+    <canvas v-else ref="productosChart"></canvas>
   </div>
 </template>
 
@@ -152,14 +157,27 @@ export default {
 </script>
 
 <style scoped>
-canvas {
-  max-width: 600px;
+.contenedorPie {
+  margin: 2rem auto;
+  width: 90%;
+  max-width: 700px;
+  height: auto;
+  text-align: center;
 }
 
-.contenedorPie {
-  margin-top: 100px;
-  margin-left: 100px;
-  width: 50%;
-  height: 400px;
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+
+.mensaje-vacio {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid #f5c6cb;
+  font-size: 1.1rem;
+  margin-top: 1rem;
 }
 </style>
+
