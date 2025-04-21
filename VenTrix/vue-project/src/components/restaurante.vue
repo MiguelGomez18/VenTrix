@@ -350,6 +350,72 @@ const registerRestaurant = async () => {
         background-color: #0def5c;
         color: black;
     }
+
+    @media (max-width: 819px) {
+  .body1 {
+    height: auto;
+    padding: 40px 0;
+    align-items: flex-start;
+  }
+
+  .container1 {
+    flex-direction: column;
+    padding: 20px;
+    width: 90%;
+    box-sizing: border-box;
+  }
+
+  .container1 h2 {
+    font-size: 24px;
+    text-align: center;
+  }
+
+  .container-input1 {
+    width: 100%;
+    height: 50px;
+    padding: 5px;
+    gap: 10px;
+  }
+
+  .container-input1 input {
+    height: 45px;
+    font-size: 16px;
+  }
+
+  .container-input1 img {
+    width: 25px;
+    height: 25px;
+  }
+
+  .register-select {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  .custom-label1 {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .custom-label1 span {
+    font-size: 14px;
+  }
+
+  .button1 {
+    width: 100%;
+    height: 50px;
+    font-size: 16px;
+  }
+
+  .container1 a {
+    font-size: 14px;
+    margin-top: 10px;
+  }
+}
+
     
     </style>
     
