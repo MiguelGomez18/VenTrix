@@ -414,7 +414,27 @@ const registerRestaurant = async () => {
     font-size: 14px;
     margin-top: 10px;
   }
+  .register-select {
+    width: 100%;
+    height: 45px;
+    font-size: 16px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    appearance: none;
+    background-position: right 1rem center;
+    background-size: 1em;
+  }
+
+  .register-select option {
+    width: 20%;
+    font-size: 16px;
+    padding: 10px;
+  }
 }
+
 
     
     </style>
