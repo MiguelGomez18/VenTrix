@@ -286,4 +286,64 @@ onMounted(() => {
     color: var(--color_letra_blanca);
 }
 
+@media (max-width: 819px) {
+  .modal {
+    width: 85%;
+    flex-direction: column;
+    padding: 20px 10px;
+  }
+
+  .modal h2 {
+    font-size: 20px;
+    padding: 8px 0;
+  }
+
+  .modal .division,
+  .modal .division1 {
+    width: 90%;
+    font-size: 18px;
+    margin: 15px 0;
+    text-align: center;
+  }
+
+  .modal .division1 {
+    font-size: 35px;
+  }
+
+  .linea {
+    margin: 30px 0;
+  }
+
+  .modal .agregar {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .payment-method {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .pagos,
+  .pago {
+    width: 90%;
+    font-size: 14px;
+  }
+
+  .pagar {
+    width: 100%;
+    font-size: 16px;
+    padding: 12px;
+  }
+
+  .remaining-alert {
+    font-size: 14px;
+    text-align: center;
+    margin-top: 10px;
+  }
+}
+
+
+
 </style>
