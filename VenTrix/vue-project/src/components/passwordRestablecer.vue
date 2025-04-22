@@ -63,6 +63,9 @@ const restablecer = async () => {
         });
         return; 
     }
+    if (password.value != confirmPassword.value || confirmPassword.value == '') {
+        return;
+    }
     await buscardocumento(correo.value);
     const response = await axios.get(`/usuario/${cart.documento}`);
     userData.value = response.data;

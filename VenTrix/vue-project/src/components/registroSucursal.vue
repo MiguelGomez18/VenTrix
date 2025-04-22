@@ -63,6 +63,7 @@ documento.value = '';
 nombre.value = '';
 correo.value = '';
 password.value = '';
+confirmPassword.value = '';
 rol.value = '';
 };
 
@@ -102,6 +103,10 @@ try {
         });
         return; 
     };
+
+    if (password.value != confirmPassword.value || confirmPassword.value == '') {
+      return;
+    }
 
     const response = await axios.post('/usuario', {
         documento: documento.value,

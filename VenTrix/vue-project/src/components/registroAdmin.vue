@@ -55,6 +55,7 @@ const limpiarInputs = () => {
   nombre.value = '';
   correo.value = '';
   password.value = '';
+  confirmPassword.value = '';
   fecha_creacion.value = '';
   sucursal.value = '';
 };
@@ -95,6 +96,9 @@ const loginPropietario = async () => {
             });
             return;
         }
+        if (password.value != confirmPassword.value || confirmPassword.value == '') {
+          return;
+        }
 
         const response = await axios.post('/usuario', {
             documento: documento.value,
@@ -107,7 +111,6 @@ const loginPropietario = async () => {
             estado: "ACTIVO"
         });
 
-        console.log('Registro OK');
         await Swal.fire({
             icon: 'success',
             title: 'Administrador de Sucursal Registrado',
@@ -132,7 +135,6 @@ const loginPropietario = async () => {
         limpiarInputs();
     }
 };
-
 
 </script>
   

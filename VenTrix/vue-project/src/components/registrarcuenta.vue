@@ -74,6 +74,9 @@
         });
         return; 
       }
+      if (password.value != confirmPassword.value || confirmPassword.value == '') {
+        return;
+      }
   
       const response = await axios.post('/usuario', {
         documento: documento.value,
